@@ -148,7 +148,7 @@ function Hero() {
             <span className="label">Role</span> <b>Java Backend · MSA · AI Harness</b>
           </div>
           <div className="hero-slogan">
-            메시지 브로커 없이 DB 프리미티브만으로 8서버 무중단 분산을 설계하는 백엔드 엔지니어. 미션 크리티컬 시스템의 동시성·가용성에 집중하고, AI 하네스로 개발 속도를 끌어올립니다.
+            메시지 브로커 없이 DB 락(SKIP LOCKED)만으로 8서버 HA(고가용) 분산을 설계하는 백엔드 엔지니어. 미션 크리티컬 시스템의 동시성·가용성에 집중하고, AI 하네스로 개발 속도를 끌어올립니다.
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
         </div>
@@ -456,7 +456,7 @@ const CASE_TRACE = [
     n: '02', t: '착수 후 드러난 제약',
     body: [
       '사전 인터뷰 답변대로 **L4 스위치 도입을 전제**로 제안서·계획을 작성했으나, 착수 후 L4 도입 불가가 판명됨.',
-      '파일을 받는 **다중화 송수신 솔루션이 단일 서버에 종속**돼 있고 유지보수 인력도 없어 복제 불가. → 8개 인프라 중 1대를 **단일 수신 게이트웨이(처리 겸)**로 두고 나머지로 처리를 다중화하는 구조가 강제됨.',
+      '파일을 받는 **다중화 송수신 솔루션이 단일 서버에 종속**돼 있고 유지보수 인력도 없어 복제 불가. → 8대 서버 중 1대를 **단일 수신 게이트웨이(처리 겸)**로 두고 나머지로 처리를 다중화하는 구조가 강제됨.',
     ],
   },
   {
@@ -489,17 +489,17 @@ const CASE_TRACE = [
     ],
   },
   {
-    n: '07', t: '실패 모델: soft / hard 구분',
+    n: '07', t: '실패 모드: soft / hard 구분',
     body: [
       '**Soft failure**(IO·변환·비즈니스 예외): `try-catch`로 상태를 `오류`로 마킹 + 로그 → 유지보수 조직 확인. 자동으로 동작함.',
       '**Hard crash**(`kill -9`·OOM·전원·네트워크 단절): catch가 실행되지 않아 task가 `작업중`에 stuck됨. claim 시 `worker_id`(서버 식별자)를 행에 기록해 두므로, 실시간 모니터링이 죽은 서버를 감지하면 그 식별자의 stuck 행을 **역추적해 수동 회수함**.',
-      '**리퍼(reaper)·lease 타임아웃은 의도적으로 미도입**. 무중단 자동복구가 불요한 업무 특성임. 그 덕에 **멱등성도 현재는 비필수**. (자동 회수를 넣으면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생겨, 그때는 처리-마킹 원자화나 멱등 처리가 필수가 됨.)',
+      '**리퍼(reaper)·lease 타임아웃은 의도적으로 미도입**. 무중단 자동복구가 불필요한 업무 특성임. 그 덕에 **멱등성도 현재는 비필수**. (자동 회수를 넣으면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생겨, 그때는 처리-마킹 원자화나 멱등 처리가 필수가 됨.)',
     ],
   },
   {
     n: '08', t: '설계 정리: 의도적으로 낮춘 복잡도',
     body: [
-      '수신 SPOF, 역할 pin, 설정 변경 시 재기동, 수동 회수. 이들은 약점이 아니라 **요구와 제약을 읽고 복잡도를 의도적으로 낮춘 결정**. 무중단 자동복구 불요 → 수동 회수로 충분 → 멱등성 불요 → **단순성 확보**로 이어지는 일관된 사슬임.',
+      '수신 SPOF, 역할 pin, 설정 변경 시 재기동, 수동 회수. 이들은 약점이 아니라 **요구와 제약을 읽고 복잡도를 의도적으로 낮춘 결정**. 무중단 자동복구 불필요 → 수동 회수로 충분 → 멱등성 불필요 → **단순성 확보**로 이어지는 일관된 흐름임.',
     ],
   },
 ];
@@ -507,7 +507,7 @@ const CASE_TRACE = [
 const CASE_QA = [
   { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠그고 즉시 `작업중`으로 바꿔 커밋하는 **원자적 claim**임. 이미 잠긴 행은 다른 워커가 **건너뛰므로** 중복 선점이 구조적으로 불가능함.' },
   { q: '부하는 어떻게 고르게 분산되나?', a: '분배자가 미리 나눠주는 push가 아니라 **워커가 끝나는 대로 다음 작업을 가져가는 pull(work-stealing)**이라, 파일 크기 편차가 있어도 빠른 워커가 더 처리해 **자연스럽게 부하가 평탄화됨**.' },
-  { q: '워커가 처리 도중 죽으면 그 작업은?', a: 'hard crash는 `catch`가 돌지 않아 행이 `작업중`에 고착됨. claim 시 기록한 `worker_id`로 죽은 서버의 stuck 행을 **역추적**해, 모니터링이 서버 다운을 감지한 뒤 **수동 회수함**. 자동 리퍼는 무중단 복구가 불요해 두지 않음.' },
+  { q: '워커가 처리 도중 죽으면 그 작업은?', a: 'hard crash는 `catch`가 돌지 않아 행이 `작업중`에 고착됨. claim 시 기록한 `worker_id`로 죽은 서버의 stuck 행을 **역추적**해, 모니터링이 서버 다운을 감지한 뒤 **수동 회수함**. 자동 리퍼는 무중단 복구가 불필요해 두지 않음.' },
   { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버 HA·부하분산**이지만 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 숨기지 않음. 주어진 제약 안에서 **처리 계층의 가용성과 확장성**을 확보한 것이 이 설계의 범위.' },
   { q: '배치를 줄였다 다시 키운 이유는?', a: '배치 10 → **데드락**(락 순서 비결정) → 배치 1 → 데드락은 풀렸으나 **DB 왕복↑로 처리량↓** → `SKIP LOCKED`로 **배치 복원**해 처리량까지 회복함. 줄인 게 해법이 아니라 SKIP LOCKED가 최종 해법임.' },
   { q: '멱등성은 보장하나?', a: '자동 재처리가 없어 **현재는 비필수**. 자동 회수를 도입하면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생기므로, 그때는 **처리-마킹 원자화 또는 멱등 처리**가 필수로 전환됨.' },
@@ -634,11 +634,11 @@ function CaseStudy() {
           <div className="case-cat">Distributed System · Deep Dive</div>
           <h3>L4 없이, DB 작업 큐로<br />8서버 자율 분산 처리</h3>
           <p className="case-lead">
-            행정안전부 중앙영구기록관리시스템 다중화(2024). 약 <strong>1천만 단위</strong> 파일을 중앙 분배자 없이 워커가 직접 작업을 선점하는 <strong>경쟁 소비자(self-claiming)</strong> 구조로 처리함. 제약이 설계를 바꾸고 한 해결이 다음 문제를 부른 과정을 순서대로 정리.
+            행정안전부 중앙영구기록관리시스템 다중화(2024). 약 <strong>1천만 건</strong>의 파일을 중앙 분배자 없이 워커가 직접 작업을 선점하는 <strong>경쟁 소비자(self-claiming)</strong> 구조로 처리함. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
           </p>
           <div className="case-meta">
             <div><span className="k">Role</span><span className="v">다중화 설계·구현 (재할당받아 단독 학습·해결)</span></div>
-            <div><span className="k">Scale</span><span className="v">약 1천만 단위 파일</span></div>
+            <div><span className="k">Scale</span><span className="v">약 1천만 건</span></div>
             <div><span className="k">Core</span><span className="v">SELECT … FOR UPDATE SKIP LOCKED</span></div>
             <div><span className="k">Stack</span><span className="v">Java · Spring · eGovFrame · Oracle · MyBatis</span></div>
           </div>
@@ -713,7 +713,7 @@ function Skills() {
               <span className="cnt">{String(AI_SKILL.tags.length).padStart(2, '0')}</span>
             </div>
             <div className="ai-h">
-              Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 개발 속도와 아키텍처 일관성을 보완합니다.
+              Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 개발 속도와 아키텍처 일관성을 함께 끌어올립니다.
             </div>
             <div className="tags">
               {AI_SKILL.tags.map((t) => <span key={t} className="tag">{t}</span>)}

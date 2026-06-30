@@ -33,7 +33,7 @@ const STARRED = [
     period: '2024',
     role: '다중 서버 분산 아키텍처 설계 / 동시성 제어 / SQL 성능 튜닝',
     bullets: [
-      '8개 서버 HA 구성을 L4 스위치 없이 소프트웨어 분산 처리로 설계',
+      '8서버 HA 구성을 L4 스위치 없이 소프트웨어 분산 처리로 설계',
       '`SELECT FOR UPDATE SKIP LOCKED` 기반 자율 할당 아키텍처: Master 없이 수평 확장 가능',
       '트랜잭션 레벨 락으로 중복 처리 원천 차단',
       '인수 3:품질 5 → 5:3 등 유동적 작업 분배 구조 구현',
@@ -90,14 +90,14 @@ const FEATURED_PROJECTS = [
   {
     no: '01',
     cat: 'Distributed System',
-    headline: `L4 스위치 없이, DB 프리미티브만으로
+    headline: `L4 스위치 없이, DB 락(SKIP LOCKED)만으로
 8서버 HA 자율 분산 처리`,
     problem: '중앙영구기록관리시스템은 8서버 HA 구성이 필요했으나 L4 도입이 불가했고, Master-Slave 구조는 역할이 고정되어 인수 3:품질 5 ↔ 5:3 같은 유동적 작업 배분 요구를 충족시킬 수 없었음.',
-    solutionLead: '각 서버가 스케줄링 테이블에서 `SELECT FOR UPDATE SKIP LOCKED` 로 작업을 직접 선점하는 자율 할당 구조를 설계. Master 없이 수평 확장하며, 트랜잭션 레벨 락으로 중복 처리를 원천 차단.',
+    solutionLead: '각 서버가 스케줄링 테이블에서 `SELECT FOR UPDATE SKIP LOCKED`로 작업을 직접 선점하는 자율 할당 구조를 설계. Master 없이 수평 확장하며, 트랜잭션 레벨 락으로 중복 처리를 원천 차단.',
     alternatives: [
       '**Redis 분산락(Redlock)**: 별도 인프라 추가·SPOF·락 만료 타이밍 리스크 → 운영 부담으로 제외',
       '**메시지 브로커(Kafka/MQ)**: 순서·재처리 보장은 강하나 신규 컴포넌트 도입·운영비용 과다, 단일 DB 환경엔 과설계 → 제외',
-      '**DB 프리미티브(`SKIP LOCKED`)**: 추가 인프라 0, 트랜잭션으로 정합성 보장, 기존 스택 안에서 해결 → **채택**',
+      '**DB 락(`SKIP LOCKED`)**: 추가 인프라 0, 트랜잭션으로 정합성 보장, 기존 스택 안에서 해결 → **채택**',
     ],
     resultList: [
       '추가 인프라 0대로 8서버 HA 달성 (L4·브로커·코디네이터 없음)',
@@ -111,7 +111,7 @@ const FEATURED_PROJECTS = [
     no: '02',
     cat: 'Architecture & MSA',
     headline: `대구 교육청 AI 평가 플랫폼
-12개 MSA를 K-PaaS·3계층 클라우드에 안착`,
+12개 MSA를 K-PaaS·3계층 클라우드에 안정 배포`,
     problem: '대규모 AI 채점 시스템은 서비스별 부하·릴리스 주기·보안 등급이 모두 달라 단일 모놀리식으로 운영하기 어려웠음. 특히 내부망/DMZ/외부 보안 등급이 혼재.',
     solutionLead: '도메인을 12개 마이크로서비스(UMS·FDS·TRS·COS·APS·TDS·QGS·AIS·AMS·AES·SMS·INS)로 분할하고, K-PaaS(K8s) 컨테이너 + 3계층 하이브리드 클라우드(내부망/DMZ/외부)에 배포. SMS·첨삭도구는 직접 개발.',
     alternatives: [
@@ -129,7 +129,7 @@ const FEATURED_PROJECTS = [
     no: '03',
     cat: 'Data × Backend',
     headline: `DFR 기계검수 정확도 분석
-10년치 기계 vs 육안 검수를 Confusion Matrix로`,
+10년치 기계 vs 육안 검수를 Confusion Matrix로 정량 검증`,
     problem: '기계검수 시스템이 10년간 운영됐으나, 육안검수 대비 실제 정확도가 객관적으로 검증된 적이 없었음.',
     solutionLead: '10년치 검수 로그를 Python(pandas)으로 정제한 뒤 scikit-learn 기반 Confusion Matrix로 Accuracy·Precision·Recall·F1·Specificity 5개 지표를 산출하고, 분석 결과로 검증 소프트웨어 버전을 업그레이드.',
     alternatives: [
