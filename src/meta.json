@@ -1,0 +1,111 @@
+{
+  "order": [
+    "2936455f-74f2-46a5-8189-05cb5106813e",
+    "5f216985-93e6-4f48-a842-d0b38d702068",
+    "c987cb6f-59c6-4fb5-87ed-c8d893afd06a",
+    "add3a00a-8acb-4b67-98c2-ded490bc3e47",
+    "7418bcd7-878f-4f27-ae81-f64c9842902b",
+    "6c2c907d-8a47-4bbd-b64a-cf4bac2cb5c9",
+    "91c6ffbd-f34a-40ba-a61c-7fd20ee7d54b",
+    "e4632cb3-2acf-4c0f-9ecc-2626303c8e77",
+    "8246b34d-a3c1-4790-be5b-85e2546de02e",
+    "013d6f9d-0c02-41fe-99f2-81bc6812f092",
+    "0c48f14a-2538-490a-a661-5ba148bd46ea",
+    "5f6bae58-8ab2-4332-b2e4-7ae68b4d224f",
+    "d366c3ce-0bb8-4922-97af-b4bbada404f4",
+    "7799519c-7494-47c6-b3b8-dbda28502334",
+    "a7466905-c947-4158-968d-9eba5ec9d149",
+    "c38c7387-817b-44b5-878b-9e9c861e2b9b",
+    "a1c42600-1461-48f7-9d42-835a6ed5a756",
+    "2dede6ca-ac54-4bca-a5b4-41d74a434136",
+    "13861f4a-5a35-403c-8137-a1424ca1bb66",
+    "dc4b13f5-cee9-4e16-b84c-2a177effc707",
+    "018cebe2-c9cc-4914-bf77-b9099e66a859"
+  ],
+  "assets": {
+    "2936455f-74f2-46a5-8189-05cb5106813e": {
+      "mime": "text/javascript",
+      "file": "2936455f-74f2-46a5-8189-05cb5106813e.js"
+    },
+    "5f216985-93e6-4f48-a842-d0b38d702068": {
+      "mime": "text/javascript",
+      "file": "5f216985-93e6-4f48-a842-d0b38d702068.js"
+    },
+    "c987cb6f-59c6-4fb5-87ed-c8d893afd06a": {
+      "mime": "text/javascript",
+      "file": "c987cb6f-59c6-4fb5-87ed-c8d893afd06a.js"
+    },
+    "add3a00a-8acb-4b67-98c2-ded490bc3e47": {
+      "mime": "application/javascript",
+      "file": "add3a00a-8acb-4b67-98c2-ded490bc3e47.js"
+    },
+    "7418bcd7-878f-4f27-ae81-f64c9842902b": {
+      "mime": "application/javascript",
+      "file": "7418bcd7-878f-4f27-ae81-f64c9842902b.js"
+    },
+    "6c2c907d-8a47-4bbd-b64a-cf4bac2cb5c9": {
+      "mime": "font/woff2",
+      "file": "6c2c907d-8a47-4bbd-b64a-cf4bac2cb5c9.woff2"
+    },
+    "91c6ffbd-f34a-40ba-a61c-7fd20ee7d54b": {
+      "mime": "font/woff2",
+      "file": "91c6ffbd-f34a-40ba-a61c-7fd20ee7d54b.woff2"
+    },
+    "e4632cb3-2acf-4c0f-9ecc-2626303c8e77": {
+      "mime": "font/woff2",
+      "file": "e4632cb3-2acf-4c0f-9ecc-2626303c8e77.woff2"
+    },
+    "8246b34d-a3c1-4790-be5b-85e2546de02e": {
+      "mime": "font/woff2",
+      "file": "8246b34d-a3c1-4790-be5b-85e2546de02e.woff2"
+    },
+    "013d6f9d-0c02-41fe-99f2-81bc6812f092": {
+      "mime": "font/woff2",
+      "file": "013d6f9d-0c02-41fe-99f2-81bc6812f092.woff2"
+    },
+    "0c48f14a-2538-490a-a661-5ba148bd46ea": {
+      "mime": "font/woff2",
+      "file": "0c48f14a-2538-490a-a661-5ba148bd46ea.woff2"
+    },
+    "5f6bae58-8ab2-4332-b2e4-7ae68b4d224f": {
+      "mime": "font/woff2",
+      "file": "5f6bae58-8ab2-4332-b2e4-7ae68b4d224f.woff2"
+    },
+    "d366c3ce-0bb8-4922-97af-b4bbada404f4": {
+      "mime": "font/woff2",
+      "file": "d366c3ce-0bb8-4922-97af-b4bbada404f4.woff2"
+    },
+    "7799519c-7494-47c6-b3b8-dbda28502334": {
+      "mime": "font/woff2",
+      "file": "7799519c-7494-47c6-b3b8-dbda28502334.woff2"
+    },
+    "a7466905-c947-4158-968d-9eba5ec9d149": {
+      "mime": "font/woff2",
+      "file": "a7466905-c947-4158-968d-9eba5ec9d149.woff2"
+    },
+    "c38c7387-817b-44b5-878b-9e9c861e2b9b": {
+      "mime": "font/woff2",
+      "file": "c38c7387-817b-44b5-878b-9e9c861e2b9b.woff2"
+    },
+    "a1c42600-1461-48f7-9d42-835a6ed5a756": {
+      "mime": "font/woff2",
+      "file": "a1c42600-1461-48f7-9d42-835a6ed5a756.woff2"
+    },
+    "2dede6ca-ac54-4bca-a5b4-41d74a434136": {
+      "mime": "font/woff2",
+      "file": "2dede6ca-ac54-4bca-a5b4-41d74a434136.woff2"
+    },
+    "13861f4a-5a35-403c-8137-a1424ca1bb66": {
+      "mime": "font/woff2",
+      "file": "13861f4a-5a35-403c-8137-a1424ca1bb66.woff2"
+    },
+    "dc4b13f5-cee9-4e16-b84c-2a177effc707": {
+      "mime": "font/woff2",
+      "file": "dc4b13f5-cee9-4e16-b84c-2a177effc707.woff2"
+    },
+    "018cebe2-c9cc-4914-bf77-b9099e66a859": {
+      "mime": "font/woff2",
+      "file": "018cebe2-c9cc-4914-bf77-b9099e66a859.woff2"
+    }
+  }
+}
