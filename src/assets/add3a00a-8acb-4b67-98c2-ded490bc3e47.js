@@ -119,8 +119,8 @@ function Hero() {
       <div className="container hero-content">
         <div className="hero-top">
           <div>Kim Minjune ®</div>
-          <div>Java Backend Engineer — Seoul, Republic of Korea</div>
-          <div>Portfolio · 2026 — 06</div>
+          <div>Java Backend Engineer, Seoul, Republic of Korea</div>
+          <div>Portfolio · 2026.06</div>
         </div>
 
         <div className="hero-main">
@@ -138,7 +138,7 @@ function Hero() {
             <h1 className="hero-headline">
               <span className="line"><span>Backend</span></span>
               <span className="line"><span>That Holds <span className="accent">Up.</span></span></span>
-              <span className="line"><span className="sub">김민준 — Kim Minjune · Java Backend Engineer</span></span>
+              <span className="line"><span className="sub">김민준 · Kim Minjune · Java Backend Engineer</span></span>
             </h1>
           </div>
         </div>
@@ -174,7 +174,7 @@ function Hero() {
 function Terminal() {
   const lines = [
   { type: 'cmd', text: 'whoami' },
-  { type: 'out', text: 'kim_minjune — Java Backend Engineer' },
+  { type: 'out', text: 'kim_minjune · Java Backend Engineer' },
   { type: 'spacer' },
   { type: 'cmd', text: 'cat stack.txt' },
   { type: 'out', text: 'Java, Spring Boot, eGovFrame,' },
@@ -213,7 +213,7 @@ function Terminal() {
           <span style={{ background: '#ffbd2e' }} />
           <span style={{ background: '#27c93f' }} />
         </div>
-        <span style={{ marginLeft: 8 }}>~/kim_minjune — zsh — 80×24</span>
+        <span style={{ marginLeft: 8 }}>~/kim_minjune · zsh · 80×24</span>
       </div>
       <div className="terminal-body">
         {lines.slice(0, shown).map((ln, i) => {
@@ -271,7 +271,7 @@ function StarredItem({ p, idx }) {
           <span className="period">{p.period}</span>
           {p.status && <span className="status">{p.status}</span>}
         </div>
-        <div className="role-tag">ROLE — <b>{p.role}</b></div>
+        <div className="role-tag">ROLE · <b>{p.role}</b></div>
         <ul>
           {p.bullets.map((b, i) => {
             // parse ` ` for code
@@ -320,7 +320,7 @@ function Experience() {
 
         <div className="exp-company reveal">
           <div className="exp-company-meta">
-            <div className="period">2023.02 — 2026.04</div>
+            <div className="period">2023.02 ~ 2026.04</div>
             <h3>(주)아키아카 ·
 Akiaka</h3>
             <div className="role-line">
@@ -353,7 +353,7 @@ Akiaka</h3>
         <div className="exp-extra reveal">
           <div className="label">추가 활동</div>
           <ul>
-            <li>부서 연차사업 제안서 작성 참여<span className="yr">2024 — 2026</span></li>
+            <li>부서 연차사업 제안서 작성 참여<span className="yr">2024 ~ 2026</span></li>
             <li>공공 입찰 제안서 작성 경험<span className="yr">다수</span></li>
           </ul>
         </div>
@@ -460,46 +460,46 @@ const CASE_TRACE = [
     ],
   },
   {
-    n: '03', t: '설계 선택 ① — 공유 디렉토리 대신 DB 작업 큐',
+    n: '03', t: '설계 선택 ①: 공유 디렉토리 대신 DB 작업 큐',
     body: [
       '모든 서버가 공유 디렉토리를 폴링하며 파일을 집어가는 방식을 검토했으나 기각. ① 수신이 1서버 종속이라 대칭 수신+처리가 불가, ② **파일시스템엔 원자적 claim 수단이 없어** 1천만 건에서 여러 워커가 같은 파일을 동시에 집는 것을 막기 어려움.',
       '반면 메타데이터는 DB에 있어 **트랜잭션 락으로 원자적 claim이 가능**. 어쩔 수 없이가 아니라 더 우월한 claim 수단을 보고 **DB 작업 큐를 능동적으로 선택함**.',
     ],
   },
   {
-    n: '04', t: '설계 선택 ② — 중앙 분배(push)에서 자율 선점(pull)으로',
+    n: '04', t: '설계 선택 ②: 중앙 분배(push)에서 자율 선점(pull)으로',
     body: [
-      '처음엔 master가 작업을 나눠주는 방식을 구상. 그러나 단순 시퀀셜(round-robin) 분배는 **파일 크기 편차로 일부 서버만 혹사**되는 부하 불균형(makespan 악화)이 문제였음 — 가용성이 아니라 부하분산 문제.',
+      '처음엔 master가 작업을 나눠주는 방식을 구상. 그러나 단순 시퀀셜(round-robin) 분배는 **파일 크기 편차로 일부 서버만 혹사**되는 부하 불균형(makespan 악화)이 문제였음. 가용성이 아니라 부하분산 문제임.',
       '여기에 고객이 **인수:품질 서버 비율을 3:5 / 2:6 등으로 유동 운영**하려는 요구를 추가. → 분배자를 두지 않고 **워커가 직접 선점하는 자율 할당(경쟁 소비자 / work-stealing)**으로 전환함.',
     ],
   },
   {
-    n: '05', t: '동시성 이슈 — 데드락, 그리고 SKIP LOCKED',
+    n: '05', t: '동시성 이슈: 데드락, 그리고 SKIP LOCKED',
     body: [
       '대상을 **10건씩 묶어 claim**하자 워커들이 경합하며 **데드락 발생**. 여러 행을 한 트랜잭션에서 잠글 때 일관된 `ORDER BY`가 없으면 락 획득 순서가 비결정적이 되어 **순환 대기**에 빠짐.',
       '**배치=1**로 줄이자 단일 락이라 순환 대기가 불가능해 데드락은 사라졌으나, DB 왕복이 급증해 **처리량이 저하됨**.',
-      '최종 해법은 `SELECT … FOR UPDATE SKIP LOCKED` — 잠긴 행을 건너뛰므로 배치를 다시 키워도 락 대기·순환 대기 없이 **처리량을 회복함**.',
+      '최종 해법은 `SELECT … FOR UPDATE SKIP LOCKED`. 잠긴 행을 건너뛰므로 배치를 다시 키워도 락 대기·순환 대기 없이 **처리량을 회복함**.',
     ],
   },
   {
-    n: '06', t: '리소스 이슈 — 커넥션 풀 사이징',
+    n: '06', t: '리소스 이슈: 커넥션 풀 사이징',
     body: [
       '8서버 × 멀티스레드 워커의 동시 사용 주체가 풀 크기를 초과해 **커넥션 획득 실패 발생**. claim 트랜잭션은 이미 짧아 점유 시간이 아니라 **순수 동시성 사이징** 문제였음.',
-      '인프라팀과 조율해 워커 동시성에 맞춰 풀을 증설함 — 이 경우의 증설은 임시방편(band-aid)이 아니라 **정당한 리소스 사이징**.',
+      '인프라팀과 조율해 워커 동시성에 맞춰 풀을 증설함. 이 경우의 증설은 임시방편(band-aid)이 아니라 **정당한 리소스 사이징**.',
     ],
   },
   {
-    n: '07', t: '실패 모델 — soft / hard 구분',
+    n: '07', t: '실패 모델: soft / hard 구분',
     body: [
       '**Soft failure**(IO·변환·비즈니스 예외): `try-catch`로 상태를 `오류`로 마킹 + 로그 → 유지보수 조직 확인. 자동으로 동작함.',
       '**Hard crash**(`kill -9`·OOM·전원·네트워크 단절): catch가 실행되지 않아 task가 `작업중`에 stuck됨. claim 시 `worker_id`(서버 식별자)를 행에 기록해 두므로, 실시간 모니터링이 죽은 서버를 감지하면 그 식별자의 stuck 행을 **역추적해 수동 회수함**.',
-      '**리퍼(reaper)·lease 타임아웃은 의도적으로 미도입** — 무중단 자동복구가 불요한 업무 특성. 그 덕에 **멱등성도 현재는 비필수**. (자동 회수를 넣으면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생겨, 그때는 처리-마킹 원자화나 멱등 처리가 필수가 됨.)',
+      '**리퍼(reaper)·lease 타임아웃은 의도적으로 미도입**. 무중단 자동복구가 불요한 업무 특성임. 그 덕에 **멱등성도 현재는 비필수**. (자동 회수를 넣으면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생겨, 그때는 처리-마킹 원자화나 멱등 처리가 필수가 됨.)',
     ],
   },
   {
-    n: '08', t: '설계 정리 — 의도적으로 낮춘 복잡도',
+    n: '08', t: '설계 정리: 의도적으로 낮춘 복잡도',
     body: [
-      '수신 SPOF, 역할 pin, 설정 변경 시 재기동, 수동 회수 — 이들은 약점이 아니라 **요구와 제약을 읽고 복잡도를 의도적으로 낮춘 결정**. 무중단 자동복구 불요 → 수동 회수로 충분 → 멱등성 불요 → **단순성 확보**로 이어지는 일관된 사슬임.',
+      '수신 SPOF, 역할 pin, 설정 변경 시 재기동, 수동 회수. 이들은 약점이 아니라 **요구와 제약을 읽고 복잡도를 의도적으로 낮춘 결정**. 무중단 자동복구 불요 → 수동 회수로 충분 → 멱등성 불요 → **단순성 확보**로 이어지는 일관된 사슬임.',
     ],
   },
 ];
@@ -508,7 +508,7 @@ const CASE_QA = [
   { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠그고 즉시 `작업중`으로 바꿔 커밋하는 **원자적 claim**임. 이미 잠긴 행은 다른 워커가 **건너뛰므로** 중복 선점이 구조적으로 불가능함.' },
   { q: '부하는 어떻게 고르게 분산되나?', a: '분배자가 미리 나눠주는 push가 아니라 **워커가 끝나는 대로 다음 작업을 가져가는 pull(work-stealing)**이라, 파일 크기 편차가 있어도 빠른 워커가 더 처리해 **자연스럽게 부하가 평탄화됨**.' },
   { q: '워커가 처리 도중 죽으면 그 작업은?', a: 'hard crash는 `catch`가 돌지 않아 행이 `작업중`에 고착됨. claim 시 기록한 `worker_id`로 죽은 서버의 stuck 행을 **역추적**해, 모니터링이 서버 다운을 감지한 뒤 **수동 회수함**. 자동 리퍼는 무중단 복구가 불요해 두지 않음.' },
-  { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버 HA·부하분산**이지만 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 숨기지 않음 — 주어진 제약 안에서 **처리 계층의 가용성과 확장성**을 확보한 것이 이 설계의 범위.' },
+  { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버 HA·부하분산**이지만 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 숨기지 않음. 주어진 제약 안에서 **처리 계층의 가용성과 확장성**을 확보한 것이 이 설계의 범위.' },
   { q: '배치를 줄였다 다시 키운 이유는?', a: '배치 10 → **데드락**(락 순서 비결정) → 배치 1 → 데드락은 풀렸으나 **DB 왕복↑로 처리량↓** → `SKIP LOCKED`로 **배치 복원**해 처리량까지 회복함. 줄인 게 해법이 아니라 SKIP LOCKED가 최종 해법임.' },
   { q: '멱등성은 보장하나?', a: '자동 재처리가 없어 **현재는 비필수**. 자동 회수를 도입하면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생기므로, 그때는 **처리-마킹 원자화 또는 멱등 처리**가 필수로 전환됨.' },
 ];
@@ -532,7 +532,7 @@ const CASE_SQL = `<!-- JobQueueMapper.xml · Oracle -->
    <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
 </update>`;
 
-const CASE_JAVA = `// 폴링은 기존 단일서버 방식 유지 — 무한 루프 + sleep
+const CASE_JAVA = `// 폴링은 기존 단일서버 방식 유지 (무한 루프 + sleep)
 while (running) {
     try {
         List<Job> jobs = claim();            // ① 짧은 선점 트랜잭션
@@ -644,7 +644,7 @@ function CaseStudy() {
           </div>
         </div>
 
-        <div className="case-section-label"><span>01 — 문제 해결 과정</span></div>
+        <div className="case-section-label"><span>01. 문제 해결 과정</span></div>
         <div className="case-trace">
           {CASE_TRACE.map((b, i) =>
           <div className="case-beat reveal" key={i}>
@@ -657,22 +657,22 @@ function CaseStudy() {
           )}
         </div>
 
-        <div className="case-section-label"><span>02 — 아키텍처</span></div>
+        <div className="case-section-label"><span>02. 아키텍처</span></div>
         <div className="case-diagram reveal"><CaseDiagram /></div>
         <div className="case-fig">수신 게이트웨이 1대(처리 겸)가 메타데이터를 큐에 적재 → 8개 워커가 <code>SKIP LOCKED</code>로 직접 선점. 분배자(dispatcher) 없음.</div>
 
-        <div className="case-section-label"><span>03 — 핵심 구현</span></div>
+        <div className="case-section-label"><span>03. 핵심 구현</span></div>
         <div className="case-code reveal">
-          <div className="cbar">JobQueueMapper.xml — Oracle · MyBatis</div>
+          <div className="cbar">JobQueueMapper.xml · Oracle · MyBatis</div>
           <pre>{CASE_SQL}</pre>
         </div>
         <div className="case-code reveal">
-          <div className="cbar">JobWorker.java — 무한 루프 폴링 + 짧은 claim 트랜잭션</div>
+          <div className="cbar">JobWorker.java · 무한 루프 폴링 + 짧은 claim 트랜잭션</div>
           <pre>{CASE_JAVA}</pre>
         </div>
         <p className="case-note-inline">* 상태는 코드값으로 운영되며 named 파라미터로 주입한다. 위 스니펫은 핵심 패턴을 보이기 위한 대표 코드.</p>
 
-        <div className="case-section-label"><span>04 — 설계 노트 · 실패 모드</span></div>
+        <div className="case-section-label"><span>04. 설계 노트 · 실패 모드</span></div>
         <div className="case-qa-grid">
           {CASE_QA.map((q, i) =>
           <div className="case-qa reveal" key={i}>
@@ -733,7 +733,7 @@ function Education() {
         <SectionHeader slug="education" title="EDUCATION" meta="07 / 08" />
         <div className="edu-grid">
           <div className="edu-school reveal">
-            <div className="period">2026.03 — <b>재학 중</b></div>
+            <div className="period">2026.03 ~ <b>재학 중</b></div>
             <h3>서강대학교 AI·SW융합대학원</h3>
             <div className="dept">데이터사이언스학과<span className="deg">· Master's Course</span></div>
           </div>
@@ -808,7 +808,7 @@ function App() {
         <Contact />
       </main>
       <footer className="footer">
-        <div>© 2026 Kim Minjune — Built with React, Vanilla CSS, and a lot of espresso.</div>
+        <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
         <div>v.3.2.0 · last updated 2026.06.30</div>
       </footer>
     </div>);
