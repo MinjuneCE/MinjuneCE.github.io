@@ -391,6 +391,30 @@ function ProjectCard({ p }) {
         <React.Fragment key={i}>{s}{i < arr.length - 1 ? <br /> : null}</React.Fragment>
       ))}</h3>
 
+      {p.overview ?
+      <React.Fragment>
+      <div className="proj-block">
+        <div className="blabel">Overview</div>
+        <p>{renderRichText(p.overview)}</p>
+      </div>
+
+      {p.features &&
+      <div className="proj-block">
+        <div className="blabel">주요 기능</div>
+        <ul>
+          {p.features.map((s, i) => <li key={i}>{renderRichText(s)}</li>)}
+        </ul>
+      </div>
+      }
+
+      {p.approach &&
+      <div className="proj-block">
+        <div className="blabel">설계 · 접근</div>
+        <p>{renderRichText(p.approach)}</p>
+      </div>
+      }
+      </React.Fragment> :
+      <React.Fragment>
       <div className="proj-block">
         <div className="blabel">Problem</div>
         <p>{renderRichText(p.problem)}</p>
@@ -425,6 +449,8 @@ function ProjectCard({ p }) {
         <p>{renderRichText(p.resultList[0])}</p>
         }
       </div>
+      </React.Fragment>
+      }
 
       <div className="stack">
         {p.stack.map((s) => <span key={s} className="tag">{s}</span>)}

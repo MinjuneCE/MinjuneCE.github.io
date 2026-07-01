@@ -164,6 +164,20 @@ const FEATURED_PROJECTS = [
     ],
     stack: ['Claude Code', 'MCP', 'Skills', 'Hooks', 'Agent Teams', 'Sub-agents', 'DDD', 'Hexagonal', 'TDD'],
   },
+  {
+    no: '05',
+    cat: 'Personal Project · 진행 중',
+    headline: `KVTO — AI 가상 피팅 플랫폼
+개인적으로 설계·개발 중인 사이드 프로젝트`,
+    overview: '실사용 가능한 제품을 목표로 개인적으로 만들고 있는 한국 시장 특화 AI 가상 피팅 플랫폼. 사용자가 자신의 사진으로 옷을 가상으로 입어보고, 체형 기반 AI 코디 추천과 옷장 관리를 이용하는 웹 서비스.',
+    features: [
+      'Virtual Try-On — 사진 기반 가상 피팅 (레이어링 · 되돌리기)',
+      'AI 코디 추천 · 체형 분석 — Claude 기반 맞춤 스타일링',
+      '내 옷장 — 의류 이미지 관리 + AI 자동 카테고리 분류',
+    ],
+    approach: '백엔드 관점에서 DDD · 헥사고날로 도메인을 분리하고, Supabase(PostgreSQL) 인증 · 데이터 · 스토리지와 서버리스(Vercel) 환경에서 외부 AI(Claude · 가상 피팅 API)를 연동. 인증 · 결제 · 크레딧 · 비용 통제까지 1인이 설계 · 구현 중.',
+    stack: ['Next.js', 'TypeScript', 'Supabase (PostgreSQL)', 'Upstash Redis', 'Claude API', 'Vercel', 'DDD', 'Hexagonal', 'TDD'],
+  },
 ];
 
 const SKILLS = [
