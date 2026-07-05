@@ -1,7 +1,7 @@
 const { useState, useEffect, useRef } = React;
 
 // ============ UTILITIES ============
-function useReveal() {
+function useReveal(dep) {
   const ref = useRef(null);
   useEffect(() => {
     const root = ref.current;
@@ -12,7 +12,7 @@ function useReveal() {
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     nodes.forEach((n) => obs.observe(n));
     return () => obs.disconnect();
-  }, []);
+  }, [dep]);
   return ref;
 }
 
@@ -55,29 +55,9 @@ function SectionHeader({ slug, title, meta }) {
 }
 
 // ============ NAV ============
-function Nav() {
-  const [active, setActive] = useState('hero');
+function Nav({ page, total }) {
   const [time, setTime] = useState('');
-
-  useEffect(() => {
-    const ids = window.PORTFOLIO_DATA.NAV.map((n) => n.id);
-    const onScroll = () => {
-      let cur = ids[0];
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const r = el.getBoundingClientRect();
-        if (r.top <= window.innerHeight * 0.35) cur = id;
-      }
-      setActive(cur);
-      const p = window.scrollY / Math.max(1, document.body.scrollHeight - window.innerHeight);
-      const bar = document.getElementById('scroll-progress');
-      if (bar) bar.style.width = p * 100 + '%';
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const activeId = window.PORTFOLIO_DATA.NAV[page].id;
 
   useEffect(() => {
     const fmt = () => {
@@ -90,7 +70,7 @@ function Nav() {
 
   return (
     <React.Fragment>
-      <div id="scroll-progress" className="scroll-progress" />
+      <div id="scroll-progress" className="scroll-progress" style={{ width: (page + 1) / total * 100 + '%' }} />
       <nav className="nav">
         <a href="#hero" className="nav-brand">
           <span className="mark" />
@@ -100,7 +80,7 @@ function Nav() {
         </a>
         <div className="nav-links">
           {window.PORTFOLIO_DATA.NAV.map((n) =>
-          <a key={n.id} href={`#${n.id}`} className={active === n.id ? 'active' : ''}>{n.label}</a>
+          <a key={n.id} href={`#${n.id}`} className={activeId === n.id ? 'active' : ''}>{n.label}</a>
           )}
         </div>
         <div className="nav-right">
@@ -125,14 +105,11 @@ function Hero() {
 
         <div className="hero-main">
           <div className="hero-num">
-            <div className="cur"><b>01</b> · Hero</div>
-            <div>02 · About</div>
-            <div>03 · Experience</div>
-            <div>04 · Projects</div>
-            <div>05 · Case Study</div>
-            <div>06 · Skills</div>
-            <div>07 · Education</div>
-            <div>08 · Contact</div>
+            {window.PORTFOLIO_DATA.NAV.map((n, i) =>
+            <a key={n.id} href={`#${n.id}`} className={i === 0 ? 'cur' : ''}>
+              {i === 0 ? <b>{String(i + 1).padStart(2, '0')}</b> : String(i + 1).padStart(2, '0')} · {n.label}
+            </a>
+            )}
           </div>
           <div className="hero-headline-wrap">
             <h1 className="hero-headline">
@@ -188,11 +165,12 @@ function Terminal() {
   const ref = useRef(null);
 
   useEffect(() => {
+    let id = null;
     const obs = new IntersectionObserver((es) => {
       es.forEach((e) => {
         if (e.isIntersecting) {
           let i = 0;
-          const id = setInterval(() => {
+          id = setInterval(() => {
             i++;
             setShown(i);
             if (i >= lines.length) clearInterval(id);
@@ -202,7 +180,7 @@ function Terminal() {
       });
     }, { threshold: 0.3 });
     if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+    return () => {obs.disconnect();if (id) clearInterval(id);};
   }, []);
 
   return (
@@ -780,13 +758,16 @@ function Education() {
 // ============ CONTACT ============
 function Contact() {
   const [copied, setCopied] = useState(false);
+  const copyTimer = useRef(null);
+  useEffect(() => () => clearTimeout(copyTimer.current), []);
   const onCopy = (e) => {
     e.preventDefault();
     const email = 'richdream703@gmail.com';
     if (navigator.clipboard) {
       navigator.clipboard.writeText(email);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopied(false), 1800);
     }
     window.location.href = `mailto:${email}`;
   };
@@ -817,26 +798,123 @@ function Contact() {
 
 }
 
-// ============ APP ============
-function App() {
-  const ref = useReveal();
+// ============ PAGER ============
+function Pager({ page, total, onGo }) {
+  const nav = window.PORTFOLIO_DATA.NAV;
   return (
-    <div ref={ref}>
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <CaseStudy />
-        <Skills />
-        <Education />
-        <Contact />
+    <nav className="pager" aria-label="페이지 이동">
+      <button className="pager-btn prev" onClick={() => onGo(page - 1)} disabled={page === 0}>
+        <span className="arr" aria-hidden="true">←</span> Prev
+      </button>
+      <div className="pager-center">
+        <div className="pager-ticks">
+          {nav.map((n, i) =>
+          <button key={n.id} className={'pager-tick' + (i === page ? ' on' : '')} onClick={() => onGo(i)} aria-label={n.label} aria-current={i === page ? 'page' : undefined}>
+            {String(i + 1).padStart(2, '0')}
+          </button>
+          )}
+        </div>
+        <div className="pager-info">
+          <b>{String(page + 1).padStart(2, '0')}</b> / {String(total).padStart(2, '0')} · {nav[page].label}
+        </div>
+      </div>
+      <button className="pager-btn next" onClick={() => onGo(page + 1)} disabled={page === total - 1}>
+        Next <span className="arr" aria-hidden="true">→</span>
+      </button>
+    </nav>);
+
+}
+
+// ============ APP ============
+const SECTIONS = [Hero, About, Experience, Projects, CaseStudy, Skills, Education, Contact];
+const PAGE_IDS = window.PORTFOLIO_DATA.NAV.map((n) => n.id);
+
+function pageFromHash() {
+  const i = PAGE_IDS.indexOf(window.location.hash.replace('#', ''));
+  return i >= 0 ? i : 0;
+}
+
+function App() {
+  const [page, setPage] = useState(pageFromHash);
+  const [hint, setHint] = useState(false);
+  const total = SECTIONS.length;
+  const ref = useReveal(page);
+
+  // 페이지가 뷰포트보다 길고 아직 바닥 근처가 아니면 스크롤 힌트 표시
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      setHint(el.scrollHeight - el.clientHeight > 24 &&
+      el.scrollTop + el.clientHeight < el.scrollHeight - 32);
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      ro.disconnect();
+    };
+  }, [page]);
+
+  useEffect(() => {
+    const onHash = () => setPage(pageFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  const go = (i) => {
+    const next = Math.max(0, Math.min(total - 1, i));
+    if (next === page) return;
+    window.location.hash = PAGE_IDS[next];
+  };
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      // 브라우저 뒤로가기(Alt/Cmd+←)·텍스트 선택(Shift+→)은 그대로 통과
+      if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;
+      // 포커스된 가로 스크롤러(코드블록·다이어그램)의 스크롤을 뺏지 않음
+      if (e.target instanceof Element && e.target.closest('pre, .case-diagram, input, textarea, select, [contenteditable="true"]')) return;
+      e.preventDefault();
+      go(e.key === 'ArrowRight' ? page + 1 : page - 1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [page]);
+
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {firstRender.current = false;return;}
+    if (ref.current) ref.current.focus({ preventScroll: true });
+  }, [page]);
+
+  const Section = SECTIONS[page];
+  return (
+    <div>
+      <Nav page={page} total={total} />
+      <main className="page-viewport">
+        <div
+          className={'page-scroll' + (page === total - 1 ? ' page-scroll--dark' : '')}
+          key={page} ref={ref} tabIndex={-1} role="region"
+          aria-label={`${page + 1} / ${total} · ${window.PORTFOLIO_DATA.NAV[page].label}`}>
+          <Section />
+          {page === total - 1 &&
+          <footer className="footer">
+            <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
+            <div>v.3.2.0 · last updated 2026.06.30</div>
+          </footer>
+          }
+        </div>
       </main>
-      <footer className="footer">
-        <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
-        <div>v.3.2.0 · last updated 2026.06.30</div>
-      </footer>
+      <div className={'scroll-hint' + (hint ? ' show' : '')} aria-hidden="true">
+        <span className="sh-arr">↓</span> Scroll
+      </div>
+      <Pager page={page} total={total} onGo={go} />
     </div>);
 
 }
