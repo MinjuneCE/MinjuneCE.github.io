@@ -125,7 +125,7 @@ function Hero() {
             <span className="label">Role</span> <b>Java Backend · MSA · AI Harness</b>
           </div>
           <div className="hero-slogan">
-            메시지 브로커 없이 DB 락(SKIP LOCKED)만으로 8서버 HA(고가용) 분산을 설계하는 백엔드 엔지니어. 미션 크리티컬 시스템의 동시성·가용성에 집중하고, AI 하네스로 개발 속도를 끌어올립니다.
+            메시지 브로커 없이 DB 락(SKIP LOCKED)만으로 8서버 HA(고가용) 분산을 설계하는 백엔드 엔지니어. 공공 업무시스템의 동시성·가용성에 집중하고, AI 하네스로 개발 속도를 끌어올립니다.
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
         </div>
@@ -307,7 +307,7 @@ Akiaka</h3>
             </div>
           </div>
           <div className="exp-company-desc">
-            <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 미션 크리티컬 시스템</strong>(영구기록물·평가 플랫폼)을 신규 구축부터 기능개선·장기 유지보수까지 생명주기 전반에 걸쳐 담당했습니다.</p>
+            <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 업무시스템</strong>(영구기록물·평가 플랫폼)을 신규 구축부터 기능개선·장기 유지보수까지 생명주기 전반에 걸쳐 담당했습니다.</p>
             <p>단순 투입에 그치지 않고 <strong>SKIP LOCKED 자율 분산·MSA 전환 등 요구되지 않은 개선을 주도</strong>했고, 부서 연차사업 제안서 작성에 참여하며 개발 리더로 승격했습니다.</p>
           </div>
         </div>
