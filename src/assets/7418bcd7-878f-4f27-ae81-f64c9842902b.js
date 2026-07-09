@@ -7,8 +7,8 @@ const STARRED = [
     status: '진행 중',
     role: '서버·백엔드 담당, 아키텍처 설계 참여',
     bullets: [
-      '12개 마이크로서비스 전반 설계 (UMS·FDS·TRS·COS·APS·TDS·QGS·AIS·AMS·AES·SMS·INS)',
-      'K-PaaS (Kubernetes 기반) 컨테이너 환경 구축 및 전반 설계',
+      '12개 마이크로서비스(UMS·FDS·TRS·COS·APS·TDS·QGS·AIS·AMS·AES·SMS·INS) 아키텍처 설계 참여 — 유기적으로 얽힌 서비스 경계를 매일 스크럼으로 공동 설계',
+      'K-PaaS (Kubernetes 기반) 컨테이너 환경 설계·구축',
       'SMS 모듈 직접 개발, 별도 발주 첨삭도구 개발',
       '3계층 하이브리드 클라우드(내부망 + DMZ + 외부) 환경 설계',
     ],
@@ -20,10 +20,10 @@ const STARRED = [
     period: '2025',
     role: '데이터 분석 및 검증 소프트웨어 개선',
     bullets: [
-      '10년간 기계검수 vs 육안검수 데이터 분석 (Python 활용)',
-      'Confusion Matrix 기반 5개 지표 검증: Accuracy · Precision · Recall · F1-Score · Specificity',
+      '10년(2015~2024)간 검수 완료된 전자기록물 첨부파일 약 1억 건 전수 분석 (Python 활용)',
+      'Confusion Matrix 기반 지표 검증(Precision · Recall · F1 · FDR · FNR · Jaccard · MCC) — 전수 기준 + 오류(양성) 기준 이중 평가',
+      '기계-육안 판정 불일치 규모(전체의 절반 가까이)를 최초 정량화, 유형별 대체/병행 운용 기준 도출',
       '기계검수 시스템 내 검증 소프트웨어 버전 업그레이드',
-      '분석 결과를 바탕으로 기계검수 정확도 개선 방향 도출',
     ],
     stack: ['Python', 'pandas', 'scikit-learn', 'Java', 'Spring', 'eGovFrame', 'Oracle'],
   },
@@ -101,7 +101,7 @@ const FEATURED_PROJECTS = [
     ],
     resultList: [
       '추가 인프라 0대로 8서버 HA 달성 (L4·브로커·코디네이터 없음)',
-      '트랜잭션 레벨 락으로 중복 처리 0건 보장',
+      '중복 처리 0건 — 트랜잭션 락 설계에 더해 수차례 통합 테스트·운영 무이슈로 검증',
       '워커 증설 시 처리량 선형 확장, 워커 다운 시 잔여 작업 자동 흡수(무중단)',
       '인수:품질 작업 비율을 운영 중 실시간 조정 가능',
     ],
@@ -113,12 +113,14 @@ const FEATURED_PROJECTS = [
     headline: `대구 교육청 AI 평가 플랫폼
 12개 MSA를 K-PaaS·3계층 클라우드에 안정 배포`,
     problem: '대규모 AI 채점 시스템은 서비스별 부하·릴리스 주기·보안 등급이 모두 달라 단일 모놀리식으로 운영하기 어려웠음. 특히 내부망/DMZ/외부 보안 등급이 혼재.',
-    solutionLead: '도메인을 12개 마이크로서비스(UMS·FDS·TRS·COS·APS·TDS·QGS·AIS·AMS·AES·SMS·INS)로 분할하고, K-PaaS(K8s) 컨테이너 + 3계층 하이브리드 클라우드(내부망/DMZ/외부)에 배포. SMS·첨삭도구는 직접 개발.',
+    solutionLead: '12개 마이크로서비스(UMS·FDS·TRS·COS·APS·TDS·QGS·AIS·AMS·AES·SMS·INS) 분할 설계에 매일 스크럼 기반으로 참여하고, K-PaaS(K8s) 컨테이너 + 3계층 하이브리드 클라우드(내부망/DMZ/외부) 배포 환경을 설계·구축. SMS 모듈·첨삭도구는 직접 개발.',
     alternatives: [
       '**모놀리식**: 단순하나 보안 등급 혼재·릴리스 결합으로 공공 보안 요건 불충족 → 제외',
       '**도메인 단위 MSA + K-PaaS**: 보안 등급별 망분리 배포·독립 릴리스 가능 → **채택**. 분산 트랜잭션은 도메인 경계를 보상 트랜잭션/이벤트로 최소화',
+      '**수용한 대가**: 서비스 12개의 배포·관측 운영 복잡도 증가 → K-PaaS 표준화 배포·CI/CD로 관리',
     ],
     resultList: [
+      '12개 MSA·3계층 망분리 설계로 설계감리 통과 — 진행 중 사업의 현재까지 외부 검증 지점',
       '서비스별 독립 배포로 릴리스 결합 제거, 장애 격리',
       '보안 등급(내부망·DMZ·외부)별 분리 운영: 공공 보안 요건 충족',
       '12개 서비스를 K-PaaS 컨테이너로 표준화 배포',
@@ -129,16 +131,16 @@ const FEATURED_PROJECTS = [
     no: '03',
     cat: 'Data × Backend',
     headline: `DFR 기계검수 정확도 분석
-10년치 기계 vs 육안 검수를 Confusion Matrix로 정량 검증`,
-    problem: '기계검수 시스템이 10년간 운영됐으나, 육안검수 대비 실제 정확도가 객관적으로 검증된 적이 없었음.',
-    solutionLead: '10년치 검수 로그를 Python(pandas)으로 정제한 뒤 scikit-learn 기반 Confusion Matrix로 Accuracy·Precision·Recall·F1·Specificity 5개 지표를 산출하고, 분석 결과로 검증 소프트웨어 버전을 업그레이드.',
+10년 · 1억 건의 기계 vs 육안 검수를 Confusion Matrix로 정량 검증`,
+    problem: '기계검수 시스템이 10년(2015~2024)간 약 1억 건의 전자기록물 첨부파일을 검수하며 운영됐으나, 육안검수 대비 실제 정확도가 객관적으로 검증된 적이 없었음.',
+    solutionLead: '약 1억 건 전수 데이터를 Python(pandas)으로 정제한 뒤 scikit-learn 기반 Confusion Matrix로 Precision·Recall·F1·FDR·FNR·Jaccard·MCC를 산출. 전수 기준과 오류 문서(양성) 기준의 이중 평가 체계로 오류 유형별 성능을 분리 측정하고, 분석 결과로 검증 소프트웨어 버전을 업그레이드.',
     alternatives: [
       '**단순 정확도(Accuracy)만 평가**: 클래스 불균형에 왜곡되어 신뢰 불가 → 제외',
       '**정밀도/재현율 분리 평가**: 기록물 검수는 미탐(FN, 오류를 놓침)의 비용이 오탐(FP)보다 큼 → **재현율 우선** 관점으로 지표를 해석',
     ],
     resultList: [
-      '10년치 검수 결과를 5개 지표로 정량화: 최초의 객관적 정확도 기준 확보',
-      '오탐/미탐 비용 차이를 반영한 개선 방향 도출, 검증 SW 버전 업그레이드에 반영',
+      '약 1억 건 전수 분석: 기계-육안 판정 불일치가 전체의 절반 가까이임을 최초 정량화 — 객관적 정확도 기준 확보',
+      '유형별 재현율·정밀도 기준으로 대체 / 부분 대체 / 병행 운용 방향 도출, 검증 SW 업그레이드에 반영',
     ],
     stack: ['Python', 'pandas', 'scikit-learn', 'Java', 'Spring', 'Oracle'],
   },
@@ -157,6 +159,7 @@ const FEATURED_PROJECTS = [
     alternatives: [
       '**단순 LLM 프롬프트 반복**: 빠르나 규칙·검증이 매번 휘발, 산출물 편차 큼 → 한계',
       '**도구·규칙·검증을 코드화한 하네스**: 작업 재현성·일관성 확보 → **채택** (도입 전후 정량 eval 측정 체계는 구축 중)',
+      '**수용한 대가**: 하네스 구축·규칙 유지보수 비용, 검증 게이트를 거치는 시간 — 재현성·일관성과 맞바꿈',
     ],
     resultList: [
       '작업 규칙(DDD·TDD)을 Skills/Hooks로 코드화 → 1인 작업에서도 산출물 편차 감소',

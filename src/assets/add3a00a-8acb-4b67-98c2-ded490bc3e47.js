@@ -108,6 +108,7 @@ function Hero() {
             {window.PORTFOLIO_DATA.NAV.map((n, i) =>
             <a key={n.id} href={`#${n.id}`} className={i === 0 ? 'cur' : ''}>
               {i === 0 ? <b>{String(i + 1).padStart(2, '0')}</b> : String(i + 1).padStart(2, '0')} · {n.label}
+              {n.id === 'case-study' && <span className="hook">1천만 건 · 8서버 · 브로커 없이</span>}
             </a>
             )}
           </div>
@@ -125,7 +126,8 @@ function Hero() {
             <span className="label">Role</span> <b>Java Backend · MSA · AI Harness</b>
           </div>
           <div className="hero-slogan">
-            메시지 브로커 없이 DB 락(SKIP LOCKED)만으로 8서버 HA(고가용) 분산을 설계하는 백엔드 엔지니어. 공공 업무시스템의 동시성·가용성에 집중하고, AI 하네스로 개발 속도를 끌어올립니다.
+            설계부터 운영까지, 끝까지 책임을 다하는 백엔드 엔지니어입니다.
+            <a href="#case-study" className="case-hint">CASE STUDY 05 → 약 1천만 건 · 8서버 자율 분산 딥다이브</a>
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
         </div>
@@ -139,7 +141,7 @@ function Hero() {
             <div><Counter to={3} suffix="+" />Years Exp</div>
             <div><Counter to={5} suffix="+" />Public Domains</div>
             <div><Counter to={8} />Server HA</div>
-            <div><Counter to={10} suffix="Y" />Data Analyzed</div>
+            <div><Counter to={100} suffix="M+" />Files Analyzed</div>
           </div>
         </div>
       </div>
@@ -212,7 +214,7 @@ function About() {
         <SectionHeader slug="about" title="ABOUT" meta="02 / 08" />
         <div className="about-grid">
           <div className="about-headline reveal">
-            <h2>Backend <span className="ink-em">That Holds Up.</span></h2>
+            <h2>3 Years. 5 Domains.<br />100M Files, <span className="ink-em">8 Servers.</span></h2>
           </div>
 
           <div className="about-cols" style={{ gridColumn: '1 / -1' }}>
@@ -302,13 +304,13 @@ function Experience() {
             <h3>(주)아키아카 ·
 Akiaka</h3>
             <div className="role-line">
-              <b>백엔드 개발자 → 개발 리더</b>
+              <b>백엔드 개발자 → 리더</b>
               <span className="promo">2026 승격</span>
             </div>
           </div>
           <div className="exp-company-desc">
             <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 업무시스템</strong>(영구기록물·평가 플랫폼)을 신규 구축부터 기능개선·장기 유지보수까지 생명주기 전반에 걸쳐 담당했습니다.</p>
-            <p>단순 투입에 그치지 않고 <strong>SKIP LOCKED 자율 분산·MSA 전환 등 요구되지 않은 개선을 주도</strong>했고, 부서 연차사업 제안서 작성에 참여하며 개발 리더로 승격했습니다.</p>
+            <p>단순 투입에 그치지 않고 <strong>SKIP LOCKED 자율 분산·MSA 전환 등 요구되지 않은 개선을 주도</strong>했고, 부서 연차사업 제안서 작성에 참여하며 리더로 승격했습니다.</p>
           </div>
         </div>
 
@@ -509,7 +511,7 @@ const CASE_TRACE = [
 ];
 
 const CASE_QA = [
-  { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠그고 즉시 `작업중`으로 바꿔 커밋하는 **원자적 claim**임. 이미 잠긴 행은 다른 워커가 **건너뛰므로** 중복 선점이 구조적으로 불가능함.' },
+  { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠그고 즉시 `작업중`으로 바꿔 커밋하는 **원자적 claim**임. 이미 잠긴 행은 다른 워커가 **건너뛰므로** 중복 선점이 구조적으로 불가능함. 설계 보장에 그치지 않고 **수차례 통합 테스트와 이후 운영 기간 중복 0건**으로 확인함.' },
   { q: '부하는 어떻게 고르게 분산되나?', a: '분배자가 미리 나눠주는 push가 아니라 **워커가 끝나는 대로 다음 작업을 가져가는 pull(work-stealing)**이라, 파일 크기 편차가 있어도 빠른 워커가 더 처리해 **자연스럽게 부하가 평탄화됨**.' },
   { q: '워커가 처리 도중 죽으면 그 작업은?', a: 'hard crash는 `catch`가 돌지 않아 행이 `작업중`에 고착됨. claim 시 기록한 `worker_id`로 죽은 서버의 stuck 행을 **역추적**해, 모니터링이 서버 다운을 감지한 뒤 **수동 회수함**. 자동 리퍼는 무중단 복구가 불필요해 두지 않음.' },
   { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버 HA·부하분산**이지만 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 숨기지 않음. 주어진 제약 안에서 **처리 계층의 가용성과 확장성**을 확보한 것이 이 설계의 범위.' },
@@ -906,7 +908,7 @@ function App() {
           {page === total - 1 &&
           <footer className="footer">
             <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
-            <div>v.3.2.0 · last updated 2026.06.30</div>
+            <div>v.3.3.0 · last updated 2026.07.07</div>
           </footer>
           }
         </div>
