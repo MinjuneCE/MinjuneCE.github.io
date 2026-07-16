@@ -1,4 +1,4 @@
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useLayoutEffect, useRef } = React;
 
 // ============ UTILITIES ============
 function useReveal(dep) {
@@ -836,11 +836,46 @@ function pageFromHash() {
   return i >= 0 ? i : 0;
 }
 
+// 뷰포트를 넘치는 페이지는 zoom으로 축소해 한 화면에 맞춘다.
+// FIT_MIN 밑으로 줄여야 맞는 긴 페이지(경력·케이스 스터디)는 원배율 + 스크롤 유지.
+const FIT_MIN = 0.68;
+
 function App() {
   const [page, setPage] = useState(pageFromHash);
   const [hint, setHint] = useState(false);
   const total = SECTIONS.length;
   const ref = useReveal(page);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !('zoom' in el.style)) return;
+    const inner = el.firstElementChild;
+    if (!inner) return;
+    let raf = null;
+    const fit = () => {
+      raf = null;
+      inner.style.zoom = '';
+      let z = 1;
+      // zoom이 줄면 유효 폭이 넓어져 줄바꿈이 달라지므로 수렴할 때까지 재측정
+      for (let i = 0; i < 5 && el.scrollHeight > el.clientHeight + 1; i++) {
+        z *= el.clientHeight / el.scrollHeight;
+        if (z < FIT_MIN) { z = 1; break; }
+        inner.style.zoom = z;
+      }
+      if (z === 1) inner.style.zoom = '';
+    };
+    const schedule = () => { if (raf === null) raf = requestAnimationFrame(fit); };
+    fit();
+    const ro = new ResizeObserver(schedule);
+    ro.observe(el);
+    ro.observe(inner); // 폰트 스왑 등 콘텐츠 높이 변화 대응
+    window.addEventListener('resize', schedule);
+    return () => {
+      window.removeEventListener('resize', schedule);
+      ro.disconnect();
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, [page]);
 
   // 페이지가 뷰포트보다 길고 아직 바닥 근처가 아니면 스크롤 힌트 표시
   useEffect(() => {
