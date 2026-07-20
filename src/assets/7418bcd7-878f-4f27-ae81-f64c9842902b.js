@@ -190,7 +190,8 @@ const SKILLS = [
   { cat: 'Database', tags: ['Oracle', 'PostgreSQL 16', 'Tibero 5/6'] },
   { cat: 'Infrastructure & Cloud', tags: ['Kubernetes (K-PaaS)', 'Docker', 'Tomcat', 'GCP'] },
   { cat: 'DevOps & Observability', tags: ['Jenkins', 'GitLab CI/CD', 'Git', 'Prometheus', 'Grafana', 'Loki'] },
-  { cat: 'Architecture & Methodology', tags: ['DDD', 'Hexagonal Architecture', 'TDD', 'MSA', 'HA Design', 'Distributed Systems', 'SOLID'] },
+  { cat: 'Architecture (Production)', tags: ['MSA', 'HA Design', 'Distributed Systems', 'SOLID'] },
+  { cat: 'Methodology (Side Projects)', tags: ['DDD', 'Hexagonal Architecture', 'TDD'] },
 ];
 const AI_SKILL = { cat: 'AI Engineering (Harness)', tags: ['Claude Code', 'MCP', 'Skills', 'Hooks', 'Agent Teams', 'Sub-agents', 'Harness Engineering'] };
 
