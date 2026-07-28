@@ -170,7 +170,7 @@ const FEATURED_PROJECTS = [
   {
     no: '05',
     cat: 'Personal Project · 진행 중',
-    headline: `KVTO — AI 가상 피팅 플랫폼
+    headline: `[KVTO] AI 가상 피팅 플랫폼
 개인적으로 설계·개발 중인 사이드 프로젝트`,
     overview: '실사용 가능한 제품을 목표로 개인적으로 만들고 있는 한국 시장 특화 AI 가상 피팅 플랫폼. 사용자가 자신의 사진으로 옷을 가상으로 입어보고, 체형 기반 AI 코디 추천과 옷장 관리를 이용하는 웹 서비스.',
     features: [
