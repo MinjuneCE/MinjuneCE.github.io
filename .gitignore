@@ -4,3 +4,24 @@ PORTFOLIO_PLAN.md
 # 로컬 작업 산출물
 .playwright-mcp/
 *.png
+
+# 비공개 — 개인정보 포함 지원 서류 (공개 사이트 레포이므로 절대 커밋 금지)
+이력서_*
+경력증명서*
+경력기술서_*
+자기소개서_*
+입사지원서_*
+김민준_*
+resume-full.*
+*.hwp
+*.zip
+*.docx
+fill_*.py
+PORTFOLIO_GAPS.md
+PORTFOLIO_REVISION_PLAN.md
+
+# 로컬 스크린샷·OS 부산물
+.DS_Store
+render-*.jpeg
+check-*.jpeg
+verify-*.jpeg

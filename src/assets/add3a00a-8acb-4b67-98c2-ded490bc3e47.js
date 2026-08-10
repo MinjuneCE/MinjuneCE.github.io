@@ -108,7 +108,7 @@ function Hero() {
             {window.PORTFOLIO_DATA.NAV.map((n, i) =>
             <a key={n.id} href={`#${n.id}`} className={i === 0 ? 'cur' : ''}>
               {i === 0 ? <b>{String(i + 1).padStart(2, '0')}</b> : String(i + 1).padStart(2, '0')} · {n.label}
-              {n.id === 'case-study' && <span className="hook">중앙영구 1천만 건 · 8서버 · 브로커 없이</span>}
+              {n.id === 'case-study' && <span className="hook">중앙영구 8서버 · 추가 인프라 0대</span>}
             </a>
             )}
           </div>
@@ -127,7 +127,7 @@ function Hero() {
           </div>
           <div className="hero-slogan">
             설계부터 운영까지, 끝까지 책임을 다하는 백엔드 엔지니어입니다.
-            <a href="#case-study" className="case-hint">CASE STUDY 05 → 중앙영구기록관리 약 1천만 건 · 8서버 자율 분산 딥다이브</a>
+            <a href="#case-study" className="case-hint">CASE STUDY 05 → 중앙영구기록관리 8서버 자율 분산 딥다이브</a>
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
         </div>
@@ -211,7 +211,7 @@ function About() {
   return (
     <section id="about" className="about" data-screen-label="02 About">
       <div className="container">
-        <SectionHeader slug="about" title="ABOUT" meta="02 / 08" />
+        <SectionHeader slug="about" title="ABOUT" meta="02 / 09" />
         <div className="about-grid">
           <div className="about-headline reveal">
             <h2>3 Years. 5 Domains.<br /><span className="ink-em">Public Data Infrastructure.</span></h2>
@@ -220,7 +220,7 @@ function About() {
           <div className="about-cols" style={{ gridColumn: '1 / -1' }}>
             <div className="about-prose reveal d1">
               <p>3년간 공공·SI 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>
-국가기록원 데이터세트 관리체계</strong>, <strong>대구형 평가 플랫폼</strong> 등 안정성과 정합성이 중요한 프로젝트에 참여하며, eGovFrame부터 Spring Boot 기반 MSA·K-PaaS 환경까지 폭넓게 다뤄왔습니다.</p>
+국가기록원 데이터세트 관리체계</strong>, <strong>대구광역시교육청 AI 평가 플랫폼</strong> 등 안정성과 정합성이 중요한 프로젝트에 참여하며, eGovFrame부터 Spring Boot 기반 MSA·K-PaaS 환경까지 폭넓게 다뤄왔습니다.</p>
               <p>단순히 동작하는 코드보다 <span className="kw">변경에 강한 구조</span>를 만드는 데 관심이 많습니다. 공공 프로젝트는 전자정부프레임워크 표준(Spring MVC 계층형)을 따라야 하는 만큼, 그 제약 안에서 도메인 로직이 컨트롤러와 SQL로 흩어지지 않도록 <strong>서비스 계층의 책임을 나누는 데</strong> 집중했습니다.</p>
               <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD</strong>를 직접 적용합니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 명확한 경계와 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
             </div>
@@ -297,7 +297,7 @@ function Experience() {
   return (
     <section id="experience" className="experience" data-screen-label="03 Experience">
       <div className="container">
-        <SectionHeader slug="experience" title="EXPERIENCE" meta="03 / 08" />
+        <SectionHeader slug="experience" title="EXPERIENCE" meta="03 / 09" />
 
         <div className="exp-company reveal">
           <div className="exp-company-meta">
@@ -310,8 +310,8 @@ Akiaka</h3>
             </div>
           </div>
           <div className="exp-company-desc">
-            <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 업무시스템</strong>(영구기록물·평가 플랫폼)을 신규 구축부터 기능개선·장기 유지보수까지 생명주기 전반에 걸쳐 담당했습니다.</p>
-            <p>단순 투입에 그치지 않고 <strong>SKIP LOCKED 자율 분산·MSA 전환 등 요구되지 않은 개선을 주도</strong>했고, 부서 연차사업 제안서 작성에 참여하며 리더로 승격했습니다.</p>
+            <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 업무시스템</strong>(영구기록물·평가 플랫폼)을 맡아왔습니다. 사업에 따라 신규 구축을 하기도 했고, 기능개선이나 장기 유지보수를 맡기도 했습니다.</p>
+            <p>원래 난이도 때문에 PL이 맡기로 돼 있던 <strong>중앙영구기록관리시스템 다중화 과제를 넘겨받아, 분산 처리를 직접 공부해 혼자 설계하고 구현</strong>했습니다. 부서 연차사업 제안서 작성에도 참여했고, 리더로 승격했습니다.</p>
           </div>
         </div>
 
@@ -433,6 +433,12 @@ function ProjectCard({ p }) {
       </React.Fragment>
       }
 
+      {p.more &&
+      <div className="proj-more">
+        <a href={p.more.href}>{p.more.label} <span className="arr">→</span></a>
+      </div>
+      }
+
       <div className="stack">
         {p.stack.map((s) => <span key={s} className="tag">{s}</span>)}
       </div>
@@ -444,7 +450,7 @@ function Projects() {
   return (
     <section id="projects" className="projects" data-screen-label="04 Projects">
       <div className="container">
-        <SectionHeader slug="projects" title="PROJECTS" meta="04 / 08" />
+        <SectionHeader slug="projects" title="PROJECTS" meta="04 / 09" />
         <div className="proj-grid">
           {window.PORTFOLIO_DATA.FEATURED_PROJECTS.map((p) => <ProjectCard key={p.no} p={p} />)}
         </div>
@@ -456,8 +462,11 @@ function Projects() {
 // ============ CASE STUDY ============
 const CASE_TRACE = [
   {
-    n: '01', t: '담당 배경',
-    body: ['난이도가 높아 원래 **PL이 담당**하기로 분장됐던 다중화 task. PL이 프로젝트 중반 중도 하차하면서 PM이 재할당했고, 다중화를 직접 학습해 단독으로 맡음.'],
+    n: '01', t: '담당 배경 · 주어진 조건',
+    body: [
+      '난이도가 높아 원래 **PL이 담당**하기로 분장됐던 다중화 task. PL이 프로젝트 중반 중도 하차하면서 PM이 재할당했고, 다중화를 직접 학습해 단독으로 맡음.',
+      '**서버 8대는 이 사업에서 정한 수가 아님.** 다른 인프라 사업으로 이미 들어와 있던 서버 8대를 쓰는 것이 요구사항이었음. 그래서 풀어야 할 문제는 몇 대가 필요하냐가 아니라, **있는 8대를 어떻게 나눠 쓰느냐**였음.',
+    ],
   },
   {
     n: '02', t: '착수 후 드러난 제약',
@@ -469,30 +478,31 @@ const CASE_TRACE = [
   {
     n: '03', t: '설계 선택 ①: 공유 디렉토리 대신 DB 작업 큐',
     body: [
-      '모든 서버가 공유 디렉토리를 폴링하며 파일을 집어가는 방식을 검토했으나 기각. ① 수신이 1서버 종속이라 대칭 수신+처리가 불가, ② **파일시스템엔 원자적 claim 수단이 없어** 1천만 건에서 여러 워커가 같은 파일을 동시에 집는 것을 막기 어려움.',
+      '모든 서버가 공유 디렉토리를 폴링하며 파일을 집어가는 방식을 검토했으나 기각. ① 수신이 1서버 종속이라 대칭 수신+처리가 불가, ② **파일시스템엔 원자적 claim 수단이 없어** 파일이 몰리면 여러 워커가 같은 파일을 동시에 집는 것을 막기 어려움.',
       '반면 메타데이터는 DB에 있어 **트랜잭션 락으로 원자적 claim이 가능**. 어쩔 수 없이가 아니라 더 우월한 claim 수단을 보고 **DB 작업 큐를 능동적으로 선택함**.',
     ],
   },
   {
     n: '04', t: '설계 선택 ②: 중앙 분배(push)에서 자율 선점(pull)으로',
     body: [
-      '처음엔 master가 작업을 나눠주는 방식을 구상. 그러나 단순 시퀀셜(round-robin) 분배는 **파일 크기 편차로 일부 서버만 혹사**되는 부하 불균형(makespan 악화)이 문제였음. 가용성이 아니라 부하분산 문제임.',
-      '여기에 고객이 **인수:품질 서버 비율을 3:5 / 2:6 등으로 유동 운영**하려는 요구를 추가. → 분배자를 두지 않고 **워커가 직접 선점하는 자율 할당(경쟁 소비자 / work-stealing)**으로 전환함.',
+      '처음엔 중앙 분배자가 작업을 나눠주는 방식을 구상. 그러나 단순 시퀀셜(round-robin) 분배는 **파일 크기 편차로 일부 서버만 혹사**되는 부하 불균형(makespan 악화)이 문제였음. 가용성이 아니라 부하분산 문제임.',
+      '다만 결정적이었던 건 부하가 아니라 **역할 고정**이었음. 고객은 **인수:품질 서버 비율을 3:5 / 2:6 등으로 바꿔 쓰길** 원했는데, 분배자가 역할을 고정하는 구조로는 이 요구를 받을 수가 없었음. → 분배자를 두지 않고 **워커가 직접 선점하는 자율 할당(경쟁 소비자)**으로 전환함.',
+      '단, 각 서버의 인수/품질 역할은 **서버 설정값**이라 비율을 바꾸려면 그 서버를 다시 띄워야 함.',
     ],
   },
   {
     n: '05', t: '동시성 이슈: 데드락, 그리고 SKIP LOCKED',
     body: [
       '대상을 **10건씩 묶어 claim**하자 워커들이 경합하며 **데드락 발생**. 여러 행을 한 트랜잭션에서 잠글 때 일관된 `ORDER BY`가 없으면 락 획득 순서가 비결정적이 되어 **순환 대기**에 빠짐.',
-      '**배치=1**로 줄이자 단일 락이라 순환 대기가 불가능해 데드락은 사라졌으나, DB 왕복이 급증해 **처리량이 저하됨**.',
-      '최종 해법은 `SELECT … FOR UPDATE SKIP LOCKED`. 잠긴 행을 건너뛰므로 배치를 다시 키워도 락 대기·순환 대기 없이 **처리량을 회복함**.',
+      '`ORDER BY`를 통일하면 순환 대기는 사라짐. 대신 8대가 전부 같은 앞쪽 행들에 줄을 서서 **락 대기로 한 줄이 됨**. **배치=1**은 순환 대기를 아예 없앤 대신 DB 왕복이 급증해 **처리량을 대가로 내줬음**.',
+      '최종 해법은 `SELECT … FOR UPDATE SKIP LOCKED`. **잠긴 행은 건너뛰므로 정렬을 그대로 두고 배치를 키워도 기다릴 일이 생기지 않음.** SKIP LOCKED가 푼 건 데드락이 아니라, 데드락을 없앤 뒤에도 남는 대기임.',
     ],
   },
   {
     n: '06', t: '리소스 이슈: 커넥션 풀 사이징',
     body: [
       '8서버 × 멀티스레드 워커의 동시 사용 주체가 풀 크기를 초과해 **커넥션 획득 실패 발생**. claim 트랜잭션은 이미 짧아 점유 시간이 아니라 **순수 동시성 사이징** 문제였음.',
-      '인프라팀과 조율해 워커 동시성에 맞춰 풀을 증설함. 이 경우의 증설은 임시방편(band-aid)이 아니라 **정당한 리소스 사이징**.',
+      '인프라팀과 조율해 워커 동시성에 맞춰 풀을 증설함. **claim 트랜잭션이 짧아 커넥션을 오래 쥐고 있을 수가 없다는 것**이 진단 근거였고, 늘린 건 동시에 쓰는 주체 수에 맞춘 풀 크기임.',
     ],
   },
   {
@@ -504,58 +514,64 @@ const CASE_TRACE = [
     ],
   },
   {
-    n: '08', t: '설계 정리: 의도적으로 낮춘 복잡도',
+    n: '08', t: '결과와 수용한 대가',
     body: [
-      '수신 SPOF, 역할 pin, 설정 변경 시 재기동, 수동 회수. 이들은 약점이 아니라 **요구와 제약을 읽고 복잡도를 의도적으로 낮춘 결정**. 무중단 자동복구 불필요 → 수동 회수로 충분 → 멱등성 불필요 → **단순성 확보**로 이어지는 일관된 흐름임.',
+      '**택한 것**: 새로 들인 인프라 0대로 처리 계층 8대를 나눔. 나눠주는 서버가 없어 워커를 늘려도 조정 로직을 고칠 필요가 없고, 인수:품질 비율은 서버 설정값으로 바꿀 수 있음.',
+      '**포기한 것**: 수신 게이트웨이는 솔루션 제약 때문에 끝까지 1대. 역할 pin은 설정값이라 바꾸려면 그 서버를 다시 띄워야 함. hard crash로 멈춘 작업은 `worker_id`를 역추적해 **수동으로 회수**하기로 두고, 자동 리퍼·lease 타임아웃과 멱등성은 넣지 않음 : 무중단 자동복구가 필요한 업무가 아니라서 복잡도를 안 늘리는 쪽을 택함.',
     ],
   },
 ];
 
 const CASE_QA = [
-  { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠그고 즉시 `작업중`으로 바꿔 커밋하는 **원자적 claim**임. 이미 잠긴 행은 다른 워커가 **건너뛰므로** 중복 선점이 구조적으로 불가능함. 설계 보장에 그치지 않고 **수차례 통합 테스트와 이후 운영 기간 중복 0건**으로 확인함.' },
-  { q: '부하는 어떻게 고르게 분산되나?', a: '분배자가 미리 나눠주는 push가 아니라 **워커가 끝나는 대로 다음 작업을 가져가는 pull(work-stealing)**이라, 파일 크기 편차가 있어도 빠른 워커가 더 처리해 **자연스럽게 부하가 평탄화됨**.' },
+  { q: '같은 작업을 두 워커가 동시에 잡지 않나?', a: '`SELECT … FOR UPDATE SKIP LOCKED`로 행을 잠근 뒤, 같은 트랜잭션에서 상태를 `작업중`으로 바꾸고 커밋하는 **원자적 claim**임. 커밋 전까지 다른 트랜잭션은 그 행을 잠글 수 없고, 이미 잠긴 행은 **건너뛰므로** 두 워커가 같은 작업을 잡는 경우가 생길 수 없음. 통합 테스트에서도 재현되지 않았음.' },
+  { q: '부하는 어떻게 고르게 분산되나?', a: '분배자가 미리 나눠주는 push가 아니라 **워커가 끝나는 대로 다음 작업을 가져가는 pull(경쟁 소비자)**이라, 파일 크기 편차가 있어도 빠른 워커가 더 처리함. **미리 나눠놓고 한쪽만 밀리는 makespan 문제가 생기지 않음.**' },
   { q: '워커가 처리 도중 죽으면 그 작업은?', a: 'hard crash는 `catch`가 돌지 않아 행이 `작업중`에 고착됨. claim 시 기록한 `worker_id`로 죽은 서버의 stuck 행을 **역추적**해, 모니터링이 서버 다운을 감지한 뒤 **수동 회수함**. 자동 리퍼는 무중단 복구가 불필요해 두지 않음.' },
-  { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버 HA·부하분산**이지만 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 숨기지 않음. 주어진 제약 안에서 **처리 계층의 가용성과 확장성**을 확보한 것이 이 설계의 범위.' },
+  { q: 'DB·수신이 단일인데 완전한 HA인가?', a: '아님. **처리 계층은 8서버로 나눴지만** 수신 게이트웨이는 솔루션 제약상 **단일(SPOF)**이고 작업 큐 DB도 공유 자원임. 주어진 제약 안에서 **한 대가 멈춰도 나머지가 계속 작업을 집어가고, 워커를 늘릴 수 있게** 만든 것까지가 이 설계의 범위.' },
   { q: '배치를 줄였다 다시 키운 이유는?', a: '배치 10 → **데드락**(락 순서 비결정) → 배치 1 → 데드락은 풀렸으나 **DB 왕복↑로 처리량↓** → `SKIP LOCKED`로 **배치 복원**해 처리량까지 회복함. 줄인 게 해법이 아니라 SKIP LOCKED가 최종 해법임.' },
   { q: '멱등성은 보장하나?', a: '자동 재처리가 없어 **현재는 비필수**. 자동 회수를 도입하면 "완료 후 마킹 전 크래시 → 이중 처리" 위험이 생기므로, 그때는 **처리-마킹 원자화 또는 멱등 처리**가 필수로 전환됨.' },
 ];
 
-const CASE_SQL = `<!-- JobQueueMapper.xml · Oracle -->
-<select id="claimJobs" resultType="Job">
+const CASE_SQL = `<!-- JobQueueMapper.xml · Oracle · MyBatis -->
+<!-- 설명용으로 다시 쓴 코드 (실제 납품 소스 아님) -->
+
+<!-- ① 선점: 잠긴 행은 건너뛰고 대기 상태인 작업만 잡는다 -->
+<select id="selectClaimable" resultType="Job">
   SELECT job_id, file_path, job_type
     FROM tb_job_queue
    WHERE status   = #{statusReady}      <!-- '대기' (상태는 코드값) -->
      AND job_type = #{jobType}          <!-- 인수/품질: 서버 설정값으로 주입 -->
    ORDER BY priority                    <!-- 업무 중요도 순 -->
-   FETCH FIRST #{batchSize} ROWS ONLY
-   FOR UPDATE SKIP LOCKED               <!-- 잠긴 행은 건너뜀 → 데드락·대기 없이 병렬 선점 -->
+   FOR UPDATE SKIP LOCKED               <!-- 잠긴 행은 건너뜀 → 순환 대기·락 대기 없이 병렬 선점 -->
 </select>
 
+<!-- ② 같은 트랜잭션에서 바로 선점 표시. 커밋되면 다른 워커의 조회 대상에서 빠진다 -->
 <update id="markProcessing">
   UPDATE tb_job_queue
-     SET status    = #{statusProcessing},   <!-- '작업중' -->
+     SET status    = #{statusProcessing},   <!-- '작업중' : 선점 표시 -->
          worker_id = #{workerId}             <!-- 누가 잡았는지 기록 → 죽은 서버 stuck 회수 추적 -->
    WHERE job_id IN
    <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
 </update>`;
 
-const CASE_JAVA = `// 폴링은 기존 단일서버 방식 유지 (무한 루프 + sleep)
+const CASE_JAVA = `// JobWorker · 설명용으로 다시 쓴 코드 (실제 납품 소스 아님)
+// 폴링은 기존 단일서버 방식 유지 (무한 루프 + sleep)
 while (running) {
     try {
-        List<Job> jobs = claim();            // ① 짧은 선점 트랜잭션
-        for (Job job : jobs) process(job);   // ② 무거운 처리는 락 밖에서
+        List<Job> jobs = jobClaimer.claim();   // ① 짧은 선점 트랜잭션
+        for (Job job : jobs) process(job);     // ② 무거운 처리는 락 밖에서
     } catch (Exception e) {
         log.error("worker loop error", e);
     }
     Thread.sleep(pollIntervalMs);
 }
 
-@Transactional   // 선점 → 상태 변경 → 즉시 commit (행 락을 짧게 끊는다)
-List<Job> claim() {
-    List<Job> jobs = mapper.claimJobs(statusReady, jobType, batchSize);
+// 선점만 맡는 별도 빈. 같은 클래스에서 자기 자신을 호출하면 프록시를 안 거쳐 @Transactional 이 안 먹는다
+@Transactional   // 선점 → 상태 전이 → 즉시 commit (행 락을 짧게 끊는다)
+public List<Job> claim() {
+    List<Job> jobs = mapper.selectClaimable(statusReady, jobType);    // SELECT … FOR UPDATE SKIP LOCKED
     if (!jobs.isEmpty())
-        mapper.markProcessing(idsOf(jobs), statusProcessing, workerId);
-    return jobs;   // commit 으로 락 해제, 상태는 '작업중'으로 고정
+        mapper.markProcessing(idsOf(jobs), statusProcessing, workerId);   // 같은 트랜잭션에서 UPDATE
+    return jobs;   // 반환 시 commit → 락 해제, 상태는 '작업중'으로 고정
 }
 
 void process(Job job) {
@@ -635,17 +651,17 @@ function CaseStudy() {
   return (
     <section id="case-study" className="case" data-screen-label="05 Case Study">
       <div className="container">
-        <SectionHeader slug="case-study" title="CASE STUDY" meta="05 / 08" />
+        <SectionHeader slug="case-study" title="CASE STUDY" meta="05 / 09" />
 
         <div className="case-intro reveal">
           <div className="case-cat">Distributed System · Deep Dive</div>
-          <h3>L4 없이, DB 작업 큐로<br />8서버 자율 분산 처리</h3>
+          <h3>역할을 고정할 수 없어서,<br />새 인프라 없이 8서버 자율 선점</h3>
           <p className="case-lead">
-            행정안전부 중앙영구기록관리시스템 다중화(2024). 약 <strong>1천만 건</strong>의 파일을 중앙 분배자 없이 워커가 직접 작업을 선점하는 <strong>경쟁 소비자(self-claiming)</strong> 구조로 처리함. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
+            행정안전부 중앙영구기록관리시스템 다중화(2024). 서버 8대와 L4 없는 환경은 주어진 조건이었음. 여기에 인수:품질 비율을 바꿔 쓰려는 요구가 있어 역할을 고정하는 구조를 쓸 수 없었음. 그래서 중앙 분배자 없이 각 워커가 작업을 직접 집어가는 <strong>경쟁 소비자(self-claiming)</strong> 구조로 갔음. 나눈 것은 <strong>처리 계층</strong>이고, 파일을 받는 수신 게이트웨이는 끝까지 1대였음. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
           </p>
           <div className="case-meta">
-            <div><span className="k">Role</span><span className="v">다중화 설계·구현 (재할당받아 단독 학습·해결)</span></div>
-            <div><span className="k">Scale</span><span className="v">약 1천만 건</span></div>
+            <div><span className="k">Role</span><span className="v">다중화 과제 단독 담당 : 작업 큐 스키마 · claim 쿼리 · 워커 루프 · 실패 모드 정책</span></div>
+            <div><span className="k">Scale</span><span className="v">8서버 · 새 인프라 0대</span></div>
             <div><span className="k">Core</span><span className="v">SELECT … FOR UPDATE SKIP LOCKED</span></div>
             <div><span className="k">Stack</span><span className="v">Java · Spring · eGovFrame · Oracle · MyBatis</span></div>
           </div>
@@ -670,14 +686,14 @@ function CaseStudy() {
 
         <div className="case-section-label"><span>03. 핵심 구현</span></div>
         <div className="case-code reveal">
-          <div className="cbar">JobQueueMapper.xml · Oracle · MyBatis</div>
+          <div className="cbar">JobQueueMapper.xml · Oracle · MyBatis · 설명용으로 다시 쓴 코드</div>
           <pre>{CASE_SQL}</pre>
         </div>
         <div className="case-code reveal">
-          <div className="cbar">JobWorker.java · 무한 루프 폴링 + 짧은 claim 트랜잭션</div>
+          <div className="cbar">JobWorker.java · 짧은 claim 트랜잭션 · 설명용으로 다시 쓴 코드</div>
           <pre>{CASE_JAVA}</pre>
         </div>
-        <p className="case-note-inline">* 상태는 코드값으로 운영되며 named 파라미터로 주입한다. 위 스니펫은 핵심 패턴을 보이기 위한 대표 코드.</p>
+        <p className="case-note-inline">* 위 두 스니펫은 실제 납품 소스가 아니라 핵심 흐름(선점 → 상태 전이 → 커밋)을 보이려고 다시 쓴 코드다. 상태는 코드값으로 운영되며 named 파라미터로 주입한다. 한 번에 몇 건을 집을지 제한하는 구문은 흐름을 가리지 않도록 뺐다.</p>
 
         <div className="case-section-label"><span>04. 설계 노트 · 실패 모드</span></div>
         <div className="case-qa-grid">
@@ -692,11 +708,87 @@ function CaseStudy() {
     </section>);
 }
 
+// ============ AI HARNESS ============
+function AIHarness() {
+  const H = window.PORTFOLIO_DATA.HARNESS;
+  return (
+    <section id="ai-harness" className="case harness" data-screen-label="06 AI Harness">
+      <div className="container">
+        <SectionHeader slug="ai-harness" title="AI HARNESS" meta="06 / 09" />
+
+        <div className="case-intro reveal">
+          <div className="case-cat">{H.cat}</div>
+          <h3>{H.headline.split('\n').map((l, i) =>
+            <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+          <p className="case-lead">{renderRichText(H.lead)}</p>
+          <div className="case-meta">
+            {H.meta.map((m, i) =>
+            <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
+            )}
+          </div>
+        </div>
+
+        <div className="case-section-label"><span>01. 설계 판단</span></div>
+        <div className="case-trace">
+          {H.analyze.map((b, i) =>
+          <div className="case-beat reveal" key={i}>
+            <div className="bn">{b.n}</div>
+            <div className="bbody">
+              <h4>{b.t}</h4>
+              {b.body.map((p, j) => <p key={j}>{renderRichText(p)}</p>)}
+            </div>
+          </div>
+          )}
+        </div>
+
+        <div className="case-section-label"><span>02. 구성</span></div>
+        <div className="harness-axes">
+          {H.axes.map((a, i) =>
+          <div className="harness-axis reveal" key={i}>
+            <div className="hx-head">
+              <span className="hx-name">{a.name}</span>
+              <span className="hx-no">{a.no}</span>
+            </div>
+            <h4>{a.title}</h4>
+            <div className="hx-label">구성</div>
+            <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+            {a.result &&
+            <React.Fragment>
+              <div className="hx-label">여기서 나온 것</div>
+              <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+            </React.Fragment>
+            }
+            {a.edge &&
+            <React.Fragment>
+              <div className="hx-label">경계</div>
+              <p className="hx-edge">{renderRichText(a.edge)}</p>
+            </React.Fragment>
+            }
+            <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
+          </div>
+          )}
+        </div>
+
+        <div className="case-section-label"><span>03. 트레이드오프</span></div>
+        <p className="case-note-inline">{H.tradeLead}</p>
+        <div className="harness-trades">
+          {H.tradeoffs.map((t, i) =>
+          <div className="harness-trade reveal" key={i}>
+            <div className="ht-head"><span className="ht-n">{t.n}</span><span className="ht-t">{t.t}</span></div>
+            <p><span className="ht-k got">얻은 것</span> {renderRichText(t.got)}</p>
+            <p><span className="ht-k gave">포기한 것</span> {renderRichText(t.gave)}</p>
+          </div>
+          )}
+        </div>
+      </div>
+    </section>);
+}
+
 // ============ SKILLS ============
 function Skills() {
   const { SKILLS, AI_SKILL } = window.PORTFOLIO_DATA;
   return (
-    <section id="skills" className="skills" data-screen-label="06 Skills">
+    <section id="skills" className="skills" data-screen-label="07 Skills">
       <div className="container">
         <SectionHeader slug="skills" title="SKILLS" meta="08 categories" />
         <div className="skills-grid">
@@ -715,12 +807,12 @@ function Skills() {
             <div className="gh">
               <div>
                 <h4>{AI_SKILL.cat}</h4>
-                <div className="star-row">AUGMENTED WORKFLOW · 검증 체계 구축 중</div>
+                <div className="star-row">AUGMENTED WORKFLOW · 사후 검증 중심</div>
               </div>
               <span className="cnt">{String(AI_SKILL.tags.length).padStart(2, '0')}</span>
             </div>
             <div className="ai-h">
-              Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 개발 속도와 아키텍처 일관성을 함께 끌어올립니다.
+              Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 작업 규칙과 검증을 코드로 만들어 두고, 결과물이 매번 달라지지 않게 합니다.
             </div>
             <div className="tags">
               {AI_SKILL.tags.map((t) => <span key={t} className="tag">{t}</span>)}
@@ -735,9 +827,9 @@ function Skills() {
 // ============ EDUCATION ============
 function Education() {
   return (
-    <section id="education" className="education" data-screen-label="07 Education">
+    <section id="education" className="education" data-screen-label="08 Education">
       <div className="container">
-        <SectionHeader slug="education" title="EDUCATION" meta="07 / 08" />
+        <SectionHeader slug="education" title="EDUCATION" meta="08 / 09" />
         <div className="edu-grid">
           <div className="edu-school reveal">
             <div className="period">2026.03 ~ <b>재학 중</b></div>
@@ -775,9 +867,9 @@ function Contact() {
     window.location.href = `mailto:${email}`;
   };
   return (
-    <section id="contact" className="contact" data-screen-label="08 Contact">
+    <section id="contact" className="contact" data-screen-label="09 Contact">
       <div className="container">
-        <SectionHeader slug="contact" title="CONTACT" meta="08 / 08" />
+        <SectionHeader slug="contact" title="CONTACT" meta="09 / 09" />
         <div className="contact-prompt">Let's build something that holds up.</div>
 
         <a href="mailto:richdream703@gmail.com" className="contact-email-wrap" onClick={onCopy}>
@@ -829,7 +921,7 @@ function Pager({ page, total, onGo }) {
 }
 
 // ============ APP ============
-const SECTIONS = [Hero, About, Experience, Projects, CaseStudy, Skills, Education, Contact];
+const SECTIONS = [Hero, About, Experience, Projects, CaseStudy, AIHarness, Skills, Education, Contact];
 const PAGE_IDS = window.PORTFOLIO_DATA.NAV.map((n) => n.id);
 
 function pageFromHash() {
