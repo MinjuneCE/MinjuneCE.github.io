@@ -65,7 +65,7 @@ const MINOR = [
     no: '06',
     title: '국립중앙과학관 포털시스템 · NARIS 하자보수',
     period: '2025',
-    desc: '타 부서 사업의 하자보수 수행. 고객사와의 관계 개선을 통해 후속 별도 프로젝트로 연계 수주.',
+    desc: '타 부서 사업의 하자보수 수행. 이후 해당 기관의 별도 신규 사업 수주로 연결됨.',
     stack: ['Java', 'Spring', 'Oracle'],
   },
   {
@@ -157,7 +157,7 @@ L4 없이 DB 락(SKIP LOCKED)만으로 처리 계층 8서버 분산`,
       'AI 코디 추천 · 체형 분석 : Claude 기반 맞춤 스타일링',
       '내 옷장 : 의류 이미지 관리 + AI 자동 카테고리 분류',
     ],
-    approach: '백엔드 관점에서 DDD · 헥사고날로 도메인을 분리하고, 인증 · 데이터 · 스토리지는 Supabase(PostgreSQL)로, 외부 AI(Claude · 가상 피팅 API)는 서버리스(Vercel) 환경에서 연동함. 인증 · 결제 · 크레딧 · 비용 통제까지 1인이 설계 · 구현 중.',
+    approach: '백엔드 관점에서 DDD · 헥사고날로 도메인을 분리하고, 인증 · 데이터 · 스토리지는 Supabase(PostgreSQL)로, 외부 AI(Claude · 가상 피팅 API)는 서버리스(Vercel) 환경에서 연동함. 테스트 케이스 893건(88개 파일)으로 검증하고, 결제는 라이브 전환 전 단계에서 RPC 권한상승 위협을 모델링해 하드닝함. 인증 · 결제 · 크레딧 · 비용 통제까지 1인이 설계 · 구현 중.',
     stack: ['Next.js', 'TypeScript', 'Supabase (PostgreSQL)', 'Upstash Redis', 'Claude API', 'Vercel', 'DDD', 'Hexagonal', 'TDD'],
   },
 ];

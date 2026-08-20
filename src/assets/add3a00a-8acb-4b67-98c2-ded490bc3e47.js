@@ -219,8 +219,7 @@ function About() {
 
           <div className="about-cols" style={{ gridColumn: '1 / -1' }}>
             <div className="about-prose reveal d1">
-              <p>3년간 공공·SI 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>
-국가기록원 데이터세트 관리체계</strong>, <strong>대구광역시교육청 AI 평가 플랫폼</strong> 등 안정성과 정합성이 중요한 프로젝트에 참여하며, eGovFrame부터 Spring Boot 기반 MSA·K-PaaS 환경까지 폭넓게 다뤄왔습니다.</p>
+              <p>3년간 5개 이상의 공공 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>처리 계층 8서버 분산</strong>(중앙영구기록관리시스템), <strong>10년 · 약 1억 건 전수 분석</strong>(전자기록 기계검수), <strong>12개 MSA 배포 환경</strong>(대구광역시교육청 AI 평가 플랫폼)을 거치며, 안정성과 정합성이 중요한 시스템을 eGovFrame부터 Spring Boot 기반 MSA·K-PaaS까지 폭넓게 다뤄왔습니다.</p>
               <p>단순히 동작하는 코드보다 <span className="kw">변경에 강한 구조</span>를 만드는 데 관심이 많습니다. 공공 프로젝트는 전자정부프레임워크 표준(Spring MVC 계층형)을 따라야 하는 만큼, 그 제약 안에서 도메인 로직이 컨트롤러와 SQL로 흩어지지 않도록 <strong>서비스 계층의 책임을 나누는 데</strong> 집중했습니다.</p>
               <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD</strong>를 직접 적용합니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 명확한 경계와 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
             </div>
