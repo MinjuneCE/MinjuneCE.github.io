@@ -711,74 +711,74 @@ function CaseStudy() {
 function AIHarness() {
   const H = window.PORTFOLIO_DATA.HARNESS;
   return (
-    <section id="ai-harness" className="case harness" data-screen-label="06 AI Harness">
+    <section id="ai-harness" className="case harness" data-screen-label="06 AI Engineering">
       <div className="container">
-        <SectionHeader slug="ai-harness" title="AI HARNESS" meta="06 / 09" />
+        <SectionHeader slug="ai-harness" title="AI ENGINEERING" meta="06 / 09" />
 
-        <div className="case-intro reveal">
-          <div className="case-cat">{H.cat}</div>
-          <h3>{H.headline.split('\n').map((l, i) =>
-            <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
-          <p className="case-lead">{renderRichText(H.lead)}</p>
-          <div className="case-meta">
-            {H.meta.map((m, i) =>
-            <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
-            )}
-          </div>
-        </div>
-
-        <div className="case-section-label"><span>01. 설계 판단</span></div>
-        <div className="case-trace">
-          {H.analyze.map((b, i) =>
-          <div className="case-beat reveal" key={i}>
-            <div className="bn">{b.n}</div>
-            <div className="bbody">
-              <h4>{b.t}</h4>
-              {b.body.map((p, j) => <p key={j}>{renderRichText(p)}</p>)}
+        {H.projects.map((p, pi) =>
+        <div key={pi} className={pi > 0 ? 'harness-project sep' : 'harness-project'}>
+          <div className="case-intro reveal">
+            <div className="case-cat">{p.cat}</div>
+            <h3>{p.headline.split('\n').map((l, i) =>
+              <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+            <p className="case-lead">{renderRichText(p.lead)}</p>
+            <div className="case-meta">
+              {p.meta.map((m, i) =>
+              <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
+              )}
             </div>
           </div>
-          )}
-        </div>
 
-        <div className="case-section-label"><span>02. 구성</span></div>
-        <div className="harness-axes">
-          {H.axes.map((a, i) =>
-          <div className="harness-axis reveal" key={i}>
-            <div className="hx-head">
-              <span className="hx-name">{a.name}</span>
-              <span className="hx-no">{a.no}</span>
+          {p.blocks.map((b, bi) =>
+          <React.Fragment key={bi}>
+            <div className="case-section-label"><span>{b.label}</span></div>
+            {b.type === 'beats' &&
+            <div className="case-trace">
+              {b.items.map((x, i) =>
+              <div className="case-beat reveal" key={i}>
+                <div className="bn">{x.n}</div>
+                <div className="bbody">
+                  <h4>{x.t}</h4>
+                  {x.body.map((t, j) => <p key={j}>{renderRichText(t)}</p>)}
+                </div>
+              </div>
+              )}
             </div>
-            <h4>{a.title}</h4>
-            <div className="hx-label">구성</div>
-            <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-            {a.result &&
-            <React.Fragment>
-              <div className="hx-label">여기서 나온 것</div>
-              <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-            </React.Fragment>
             }
-            {a.edge &&
-            <React.Fragment>
-              <div className="hx-label">경계</div>
-              <p className="hx-edge">{renderRichText(a.edge)}</p>
-            </React.Fragment>
+            {b.type === 'axes' &&
+            <div className="harness-axes">
+              {b.items.map((a, i) =>
+              <div className="harness-axis reveal" key={i}>
+                <div className="hx-head">
+                  <span className="hx-name">{a.name}</span>
+                  <span className="hx-no">{a.no}</span>
+                </div>
+                <h4>{a.title}</h4>
+                <div className="hx-label">구성</div>
+                <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+                {a.result &&
+                <React.Fragment>
+                  <div className="hx-label">여기서 나온 것</div>
+                  <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+                </React.Fragment>
+                }
+                {a.edge &&
+                <React.Fragment>
+                  <div className="hx-label">경계</div>
+                  <p className="hx-edge">{renderRichText(a.edge)}</p>
+                </React.Fragment>
+                }
+                <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
+              </div>
+              )}
+            </div>
             }
-            <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
-          </div>
+          </React.Fragment>
           )}
         </div>
+        )}
 
-        <div className="case-section-label"><span>03. 트레이드오프</span></div>
-        <p className="case-note-inline">{H.tradeLead}</p>
-        <div className="harness-trades">
-          {H.tradeoffs.map((t, i) =>
-          <div className="harness-trade reveal" key={i}>
-            <div className="ht-head"><span className="ht-n">{t.n}</span><span className="ht-t">{t.t}</span></div>
-            <p><span className="ht-k got">얻은 것</span> {renderRichText(t.got)}</p>
-            <p><span className="ht-k gave">포기한 것</span> {renderRichText(t.gave)}</p>
-          </div>
-          )}
-        </div>
+        {H.note && <p className="case-note-inline">{renderRichText(H.note)}</p>}
       </div>
     </section>);
 }
