@@ -368,7 +368,10 @@ function ProjectCard({ p }) {
         <span className="pno">PROJECT · {p.no}</span>
       </div>
       <h3>{p.headline.split('\n').map((s, i, arr) => (
-        <React.Fragment key={i}>{s}{i < arr.length - 1 ? <br /> : null}</React.Fragment>
+        <React.Fragment key={i}>
+          {arr.length > 1 && i === 0 ? <span className="biz">{s}</span> : s}
+          {i < arr.length - 1 ? <br /> : null}
+        </React.Fragment>
       ))}</h3>
 
       {p.overview ?
