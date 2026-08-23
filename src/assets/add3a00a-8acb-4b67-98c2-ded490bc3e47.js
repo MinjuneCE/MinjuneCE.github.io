@@ -657,9 +657,9 @@ function CaseStudy() {
 
         <div className="case-intro reveal">
           <div className="case-cat">Distributed System · Deep Dive</div>
-          <h3>역할을 고정할 수 없어서,<br />새 인프라 없이 8서버 자율 선점</h3>
+          <h3>중앙영구기록관리시스템 다중화</h3>
           <p className="case-lead">
-            행정안전부 중앙영구기록관리시스템 다중화(2024). 서버 8대와 L4 없는 환경은 주어진 조건. 여기에 인수:품질 비율을 바꿔 쓰려는 요구가 더해져 역할을 고정하는 구조는 쓸 수 없었음. 그래서 중앙 분배자 없이 각 워커가 작업을 직접 집어가는 <strong>경쟁 소비자(self-claiming)</strong> 구조를 택함. 나눈 것은 <strong>처리 계층</strong>이고, 파일을 받는 수신 게이트웨이는 끝까지 1대. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
+            행정안전부 사업(2024). 서버 8대와 L4 없는 환경은 주어진 조건. 여기에 인수:품질 비율을 바꿔 쓰려는 요구가 더해져 역할을 고정하는 구조는 쓸 수 없었음. 그래서 중앙 분배자 없이 각 워커가 작업을 직접 집어가는 <strong>경쟁 소비자(self-claiming)</strong> 구조를 택함. 나눈 것은 <strong>처리 계층</strong>이고, 파일을 받는 수신 게이트웨이는 끝까지 1대. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
           </p>
           <div className="case-meta">
             <div><span className="k">Role</span><span className="v">다중화 과제 단독 담당 : 작업 큐 스키마 · claim 쿼리 · 워커 루프 · 실패 모드 정책</span></div>
