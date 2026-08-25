@@ -711,6 +711,222 @@ function CaseStudy() {
 }
 
 // ============ AI HARNESS ============
+const HXM = "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace";
+
+/* 색 6값 · 텍스트는 잉크/뮤트 2단, 3차 위계는 크기와 자간이 진다 */
+const HX_INK = '#111';               // 17.32:1
+const HX_MUTE = '#6a6a6a';           //  4.96:1  사이트 --mute와 동일
+const HX_AC = '#d94f1f';             //  3.79:1  강조 활자 · 강조 선
+const HX_LINE = '#8a8a8a';           //  3.17:1  중립 연결선 · 마커 · 보조 stroke
+const HX_RULE = 'rgba(0,0,0,0.12)';  //          프레임 룰 전용
+const HX_ACS = '#f5dccf';            //          도형 채움
+
+/* 활자 4단 · 비율 1.30 / 2.00 / 1.69 (max-width 1104px 기준 11.5 / 15 / 30 / 51px) */
+const HX_FS_MICRO = 10;
+const HX_FS_LABEL = 13;
+const HX_FS_NUM = 26;
+const HX_FS_HERO = 44;
+
+function HxArrows({ id }) {
+  return (
+    <defs>
+      <marker id={id + 'g'} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill={HX_LINE} /></marker>
+      <marker id={id + 'a'} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill={HX_AC} /></marker>
+    </defs>);
+}
+
+/* 01 · 게이트: 후보 51건이 좌에서 우로 기준 5종의 문을 지나 1건만 통과 */
+function HxGateDiagram() {
+  const CRIT = [
+    ['① 표본 100건', '검증 구간 20건 이상'],
+    ['② 이익폭 2배', '왕복 거래비용 대비'],
+    ['③ 샤프 1.0 이상', '연환산 기준'],
+    ['④ 3개 국면 전부', '추세 · 횡보 · 고변동'],
+    ['⑤ 모집단 대비 초과분', '절대수익으로 판정하지 않음'],
+  ];
+  const GATE_X = [542, 598, 654, 710, 766];
+  return (
+    <svg viewBox="0 46 960 266" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="후보 51건이 통과 기준 5종을 지나 1건만 통과하고 50건이 기각된 구조">
+      <HxArrows id="hxg" />
+
+      <text x="24" y="64" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">후보 51건</text>
+      <text x="654" y="64" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">GATE · 통과 기준 5종</text>
+      <text x="936" y="64" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">결과</text>
+
+      {/* 한 칸 = 한 건. 17열 × 3행 = 51 */}
+      {Array.from({ length: 51 }, (_, i) =>
+      <rect key={i} x={24 + (i % 17) * 26} y={84 + Math.floor(i / 17) * 26} width="18" height="18" rx="2"
+            fill={i < 31 ? HX_ACS : '#e4e1da'} />
+      )}
+      <text x="24" y="180" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>셋업 31개 계열 · 상향식 가설 20건</text>
+
+      <line x1="478" y1="119" x2="526" y2="119" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxgg)" />
+
+      {GATE_X.map((x, i) =>
+      <g key={i}>
+        <line x1={x} y1="78" x2={x} y2="160" stroke={HX_LINE} strokeWidth="1.5" />
+        <text x={x} y="180" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>{'①②③④⑤'[i]}</text>
+      </g>
+      )}
+
+      <line x1="790" y1="119" x2="838" y2="119" stroke={HX_AC} strokeWidth="1.4" markerEnd="url(#hxga)" />
+
+      <text x="936" y="96" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>통과</text>
+      <rect x="880" y="121" width="18" height="18" rx="2" fill={HX_AC} />
+      <text x="936" y="152" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_HERO} fill={HX_AC}>1</text>
+
+      <text x="936" y="190" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>기각</text>
+      <text x="936" y="220" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_NUM} fill={HX_MUTE}>50</text>
+
+      <line x1="24" y1="250" x2="936" y2="250" stroke={HX_RULE} strokeWidth="1" />
+      {CRIT.map((c, i) =>
+      <g key={i}>
+        <text x={24 + i * 185} y="280" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={i === 4 ? HX_AC : HX_INK}>{c[0]}</text>
+        <text x={24 + i * 185} y="300" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>{c[1]}</text>
+      </g>
+      )}
+    </svg>);
+}
+
+/* 02 · 신뢰 경계: 손절 경로가 LLM 띠를 비껴 규칙 띠로 직행 */
+function HxTrustDiagram() {
+  const GUARD = ['주문', '사이징', '손절', '강제청산', '일일 손실 한도'];
+  return (
+    <svg viewBox="0 23 960 315" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LLM 계층은 제안까지, 규칙 계층이 집행을 단독으로 맡는 2계층 구조">
+      <HxArrows id="hxt" />
+
+      <text x="24" y="44" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>손절 · 강제청산</text>
+      <text x="24" y="60" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>LLM 미경유</text>
+      <path d="M72,72 L72,196 L112,196" fill="none" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxta)" />
+
+      <rect x="120" y="48" width="816" height="92" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
+      <text x="136" y="70" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">LLM 계층 · 제안까지</text>
+      {[['DART · 뉴스 274만 건', 136, 230, false], ['Sonnet 정제', 400, 190, false], ['Fable 판단', 622, 190, true]].map((c, i) =>
+      <g key={i}>
+        <rect x={c[1]} y="88" width={c[2]} height="34" rx="3" fill={c[3] ? HX_ACS : '#f7f6f3'} stroke={c[3] ? HX_AC : HX_LINE} strokeWidth="1" />
+        <text x={c[1] + c[2] / 2} y="110" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>{c[0]}</text>
+      </g>
+      )}
+      <line x1="370" y1="105" x2="394" y2="105" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxtg)" />
+      <line x1="594" y1="105" x2="618" y2="105" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxtg)" />
+      <text x="822" y="110" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>스키마 위반 → 관망</text>
+
+      <line x1="717" y1="140" x2="717" y2="180" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxta)" />
+      <text x="730" y="166" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>제안 (JSON 스키마 강제)</text>
+
+      <rect x="120" y="184" width="816" height="96" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      <text x="136" y="206" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC} letterSpacing="0.1em">규칙 계층 (risk guard) · 집행 단독</text>
+      {GUARD.map((g, i) =>
+      <g key={i}>
+        <rect x={136 + i * 159} width="149" y="222" height="34" rx="3" fill="#ffffff" stroke={HX_LINE} strokeWidth="1" />
+        <text x={136 + i * 159 + 74} y="244" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>{g}</text>
+      </g>
+      )}
+
+      <line x1="528" y1="280" x2="528" y2="304" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxtg)" />
+      <text x="528" y="326" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_MUTE}>주문 실행 (KIS OpenAPI)</text>
+      <text x="936" y="326" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>우회 경로 자체가 없는 구조</text>
+    </svg>);
+}
+
+/* 03 · 에이전트 교차 감사: 53 도트 + 7 윤곽원, 브래킷으로 수렴 */
+function HxAgentFanDiagram() {
+  return (
+    <svg viewBox="0 26 960 393" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="판정 1건에 검증 에이전트 53개와 독립 감사 7개를 투입해 치명 결함 0으로 수렴">
+      <HxArrows id="hxf" />
+      <text x="24" y="44" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">판정 1건 (셋업 승격) · 사람은 기준만 정하고 판정은 위임</text>
+
+      <text x="24" y="112" fontFamily={HXM} fontSize={HX_FS_HERO} fill={HX_INK}>53</text>
+      <text x="24" y="140" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_MUTE}>검증 에이전트 · 병렬 스폰</text>
+      {Array.from({ length: 53 }, (_, i) => {
+        const row = i < 18 ? 0 : i < 36 ? 1 : 2;
+        const col = i < 18 ? i : i < 36 ? i - 18 : i - 36;
+        return <circle key={i} cx={32 + col * 26} cy={172 + row * 26} r="6" fill={HX_AC} fillOpacity="0.72" />;
+      })}
+
+      <text x="600" y="112" fontFamily={HXM} fontSize={HX_FS_HERO} fill={HX_AC}>7</text>
+      <text x="600" y="140" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_MUTE}>독립 감사 · 검증과 분리 스폰</text>
+      {Array.from({ length: 7 }, (_, i) =>
+      <circle key={i} cx={610 + i * 34} cy="176" r="10" fill="none" stroke={HX_AC} strokeWidth="1.6" />
+      )}
+
+      <line x1="253" y1="244" x2="253" y2="288" stroke={HX_LINE} strokeWidth="1" />
+      <line x1="712" y1="244" x2="712" y2="288" stroke={HX_LINE} strokeWidth="1" />
+      <line x1="253" y1="288" x2="712" y2="288" stroke={HX_LINE} strokeWidth="1" />
+      <line x1="482" y1="288" x2="482" y2="308" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxfa)" />
+
+      <text x="482" y="330" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">치명 결함</text>
+      <text x="482" y="364" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_NUM} fill={HX_AC}>0</text>
+
+      <line x1="24" y1="386" x2="936" y2="386" stroke={HX_RULE} strokeWidth="1" />
+      <text x="936" y="408" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>통과 선언이 아니라 반증 시도의 결과</text>
+    </svg>);
+}
+
+/* 04 · 병목 이동: 서수 삭제, 위계 역전 해소 */
+function HxBottleneckDiagram() {
+  const S = [
+    { at: '코드', sym: '처리량 · 결함', fix: 'hook 게이트', how: '편집마다 ruff + pytest' },
+    { at: '사람', sym: '세부 판단 승인', fix: 'Ultracode 위임', how: '검증 53 + 독립 감사 7' },
+    { at: '토큰', sym: '주간 예산 소진', fix: 'Skill화', how: '반복 기준 패키징' },
+    { at: '인지', sym: '세션 분산', fix: '모니터링 2화면', how: '작업판 · 운영판' },
+  ];
+  return (
+    <svg viewBox="0 54 960 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="병목이 코드 사람 토큰 인지로 옮겨간 4단계와 각 단계의 해법">
+      <HxArrows id="hxb" />
+      {S.map((s, i) => {
+        const x = 24 + i * 238;
+        return (
+          <g key={i}>
+            <text x={x} y="88" fontFamily={HXM} fontSize={HX_FS_NUM} fill={HX_INK}>{s.at}</text>
+            <text x={x} y="110" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>{s.sym}</text>
+            <line x1={x} y1="132" x2={x + 200} y2="132" stroke={HX_RULE} strokeWidth="1" />
+            <text x={x} y="160" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>{s.fix}</text>
+            <text x={x} y="180" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>{s.how}</text>
+            {i < 3 && <line x1={x + 208} y1="80" x2={x + 230} y2="80" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxba)" />}
+          </g>);
+      })}
+      <line x1="24" y1="220" x2="936" y2="220" stroke={HX_RULE} strokeWidth="1" />
+      <text x="24" y="252" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_MUTE}>해법은 더 빨리 만드는 것이 아니라 문제를 다시 정의하고 층위를 다시 긋는 것</text>
+      <text x="936" y="252" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>구현 → 문제 정의 · 설계</text>
+    </svg>);
+}
+
+/* 05 · 3팀 16역할: 팀명·수·단위를 한 락업으로 묶고 룰을 팀 규모 비례 막대로 */
+function HxAgentTeamDiagram() {
+  const T = [{ x: 24, name: '기획팀', n: 5 }, { x: 340, name: '개발팀', n: 6 }, { x: 656, name: 'QA팀', n: 5 }];
+  return (
+    <svg viewBox="0 32 960 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="기획 개발 QA 3팀 16역할 에이전트 팀과 파일 기반 핸드오프">
+      <HxArrows id="hxk" />
+      {T.map((t, ti) =>
+      <g key={ti}>
+        <text x={t.x} y="66" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>
+          {t.name}
+          <tspan dx="10" fontSize={HX_FS_NUM} fill={HX_AC}>{t.n}</tspan>
+          <tspan dx="4" fontSize={HX_FS_MICRO} fill={HX_MUTE}>역할</tspan>
+        </text>
+        {Array.from({ length: t.n }, (_, i) =>
+        <rect key={i} x={t.x + i * 34} y="96" width="26" height="26" rx="3" fill="#f7f6f3" stroke={HX_LINE} strokeWidth="1" />
+        )}
+        <line x1={t.x} y1="140" x2={t.x + t.n * 34 - 8} y2="140" stroke={HX_RULE} strokeWidth="1" />
+      </g>
+      )}
+      <line x1="308" y1="108" x2="334" y2="108" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxka)" />
+      <text x="321" y="98" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>PLAN</text>
+      <line x1="624" y1="108" x2="650" y2="108" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxka)" />
+      <text x="637" y="98" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>코드</text>
+
+      <path d="M796,148 L796,186 L480,186 L480,150" fill="none" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxkg)" />
+      <text x="638" y="206" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>QA-REPORT · ISSUES → FIX-REPORT</text>
+
+      <line x1="24" y1="236" x2="936" y2="236" stroke={HX_RULE} strokeWidth="1" />
+      <text x="24" y="264" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_MUTE}>팀 간 인계는 전부 파일. 세션이 끊겨도 다음 팀이 같은 입력에서 다시 시작</text>
+      <text x="24" y="292" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>커스텀 스킬 9종 · 훅 3종 · MCP 4종 · 최대 105 에이전트 적대적 검증</text>
+    </svg>);
+}
+
+const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram };
+
 function AIHarness() {
   const H = window.PORTFOLIO_DATA.HARNESS;
   return (
@@ -735,6 +951,12 @@ function AIHarness() {
           {p.blocks.map((b, bi) =>
           <React.Fragment key={bi}>
             <div className="case-section-label"><span>{b.label}</span></div>
+            {b.diagram && HARNESS_FIGS[b.diagram] &&
+            <React.Fragment>
+              <div className="hx-fig reveal">{React.createElement(HARNESS_FIGS[b.diagram])}</div>
+              {b.fig && <div className="case-fig">{renderRichText(b.fig)}</div>}
+            </React.Fragment>
+            }
             {b.type === 'beats' &&
             <div className="case-trace">
               {b.items.map((x, i) =>
