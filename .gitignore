@@ -3,6 +3,7 @@ PORTFOLIO_PLAN.md
 
 # 로컬 작업 산출물
 .playwright-mcp/
+.team/
 *.png
 
 # 비공개 — 개인정보 포함 지원 서류 (공개 사이트 레포이므로 절대 커밋 금지)
@@ -19,6 +20,10 @@ resume-full.*
 fill_*.py
 PORTFOLIO_GAPS.md
 PORTFOLIO_REVISION_PLAN.md
+# 비공개 — 회사 업무 기록·사이트 원자료 묶음 (회사명·레포명·협력사명 포함)
+harness-portfolio-*/
+project1_portfolio/
+project2_portfolio/
 
 # 로컬 스크린샷·OS 부산물
 .DS_Store

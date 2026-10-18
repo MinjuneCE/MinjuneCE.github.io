@@ -54,6 +54,18 @@ function SectionHeader({ slug, title, meta }) {
 
 }
 
+// 섹션 번호는 NAV 순서에서 계산 (섹션을 끼워 넣어도 번호가 따라옴)
+const pad2 = (n) => String(n).padStart(2, '0');
+function secIndex(id) {
+  return window.PORTFOLIO_DATA.NAV.findIndex((n) => n.id === id);
+}
+function secNo(id) {
+  return `${pad2(secIndex(id) + 1)} / ${pad2(window.PORTFOLIO_DATA.NAV.length)}`;
+}
+function screenLabel(id) {
+  return `${pad2(secIndex(id) + 1)} ${window.PORTFOLIO_DATA.NAV[secIndex(id)].label}`;
+}
+
 // ============ NAV ============
 function Nav({ page, total }) {
   const [time, setTime] = useState('');
@@ -76,7 +88,7 @@ function Nav({ page, total }) {
           <span className="mark" />
           <span>Kim Minjune</span>
           <span className="sep">/</span>
-          <span className="role">Backend</span>
+          <span className="role">Backend → AX · FDE</span>
         </a>
         <div className="nav-links">
           {window.PORTFOLIO_DATA.NAV.map((n) =>
@@ -95,12 +107,12 @@ function Nav({ page, total }) {
 // ============ HERO ============
 function Hero() {
   return (
-    <section id="hero" className="hero" data-screen-label="01 Hero">
+    <section id="hero" className="hero" data-screen-label={screenLabel('hero')}>
       <div className="container hero-content">
         <div className="hero-top">
           <div>Kim Minjune ®</div>
-          <div>Java Backend Engineer, Seoul, Republic of Korea</div>
-          <div>Portfolio · 2026.06</div>
+          <div>Backend Engineer → AX · FDE, Seoul, Republic of Korea</div>
+          <div>Portfolio · 2026.10</div>
         </div>
 
         <div className="hero-main">
@@ -114,19 +126,19 @@ function Hero() {
           </div>
           <div className="hero-headline-wrap">
             <h1 className="hero-headline">
-              <span className="line"><span>Backend</span></span>
-              <span className="line"><span>That Holds <span className="accent">Up.</span></span></span>
-              <span className="line"><span className="sub">김민준 · Kim Minjune · Java Backend Engineer</span></span>
+              <span className="line"><span>Systems</span></span>
+              <span className="line"><span>That Hold <span className="accent">Up.</span></span></span>
+              <span className="line"><span className="sub">김민준 · Kim Minjune · Backend → AX · FDE</span></span>
             </h1>
           </div>
         </div>
 
         <div className="hero-mid">
           <div className="hero-role">
-            <span className="label">Role</span> <b>Java Backend · MSA · AI Harness</b>
+            <span className="label">Role</span> <b>Backend · AI Harness · AX / FDE</b>
           </div>
           <div className="hero-slogan">
-            설계부터 운영까지, 끝까지 책임을 다하는 백엔드 엔지니어입니다.
+            설계부터 운영까지 끝까지 책임지던 방식 그대로, AI를 현장의 업무에 붙이는 일을 준비합니다.
             <a href="#case-study" className="case-hint">CASE STUDY 05 → 중앙영구기록관리 8서버 자율 분산 딥다이브</a>
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
@@ -153,12 +165,12 @@ function Hero() {
 function Terminal() {
   const lines = [
   { type: 'cmd', text: 'whoami' },
-  { type: 'out', text: 'kim_minjune · Java Backend Engineer' },
+  { type: 'out', text: 'kim_minjune · Backend → AX · FDE' },
   { type: 'spacer' },
   { type: 'cmd', text: 'cat stack.txt' },
   { type: 'out', text: 'Java, Spring Boot, eGovFrame,' },
-  { type: 'out', text: 'PostgreSQL, Elasticsearch,' },
-  { type: 'out', text: 'Docker, Kubernetes, K-PaaS' },
+  { type: 'out', text: 'Oracle, PostgreSQL,' },
+  { type: 'out', text: 'Kubernetes (K-PaaS), Claude Code' },
   { type: 'spacer' },
   { type: 'cmd', text: 'echo $STATUS' },
   { type: 'out', text: 'shipping production code', color: 'green' }];
@@ -209,9 +221,9 @@ function Terminal() {
 
 function About() {
   return (
-    <section id="about" className="about" data-screen-label="02 About">
+    <section id="about" className="about" data-screen-label={screenLabel('about')}>
       <div className="container">
-        <SectionHeader slug="about" title="ABOUT" meta="02 / 09" />
+        <SectionHeader slug="about" title="ABOUT" meta={secNo('about')} />
         <div className="about-grid">
           <div className="about-headline reveal">
             <h2>3 Years. 5 Domains.<br /><span className="ink-em">Public Data Infrastructure.</span></h2>
@@ -222,6 +234,7 @@ function About() {
               <p>3년간 5개 이상의 공공 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>처리 계층 8서버 분산</strong>(중앙영구기록관리시스템), <strong>10년 · 약 1억 건 전수 분석</strong>(전자기록 기계검수), <strong>12개 MSA 배포 환경</strong>(대구광역시교육청 AI 평가 플랫폼)을 거치며, 안정성과 정합성이 중요한 시스템을 eGovFrame부터 Spring Boot 기반 MSA·K-PaaS까지 폭넓게 다뤄왔습니다.</p>
               <p>단순히 동작하는 코드보다 <span className="kw">변경에 강한 구조</span>를 만드는 데 관심이 많습니다. 공공 프로젝트는 전자정부프레임워크 표준(Spring MVC 계층형)을 따라야 하는 만큼, 그 제약 안에서 도메인 로직이 컨트롤러와 SQL로 흩어지지 않도록 <strong>서비스 계층의 책임을 나누는 데</strong> 집중했습니다.</p>
               <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD</strong>를 직접 적용합니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 명확한 경계와 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
+              <p>2026년 10월부터는 글로벌 D2C 커머스(Shopify)의 <strong>풀스택 개발자</strong>로 스토어와 결제 · 물류 연동 모듈을 맡고 있습니다. 공공 백엔드에서 쌓은 설계 · 운영 감각과 에이전트 하네스 경험을 묶어, 현업 가까이에서 문제를 풀고 AI로 일하는 방식을 바꾸는 <span className="kw">AX · FDE</span>를 준비합니다.</p>
             </div>
             <div className="about-terminal reveal d2">
               <Terminal />
@@ -294,13 +307,30 @@ function MinorItem({ p }) {
 function Experience() {
   const { STARRED, MINOR } = window.PORTFOLIO_DATA;
   return (
-    <section id="experience" className="experience" data-screen-label="03 Experience">
+    <section id="experience" className="experience" data-screen-label={screenLabel('experience')}>
       <div className="container">
-        <SectionHeader slug="experience" title="EXPERIENCE" meta="03 / 09" />
+        <SectionHeader slug="experience" title="EXPERIENCE" meta={secNo('experience')} />
 
         <div className="exp-company reveal">
           <div className="exp-company-meta">
-            <div className="period">2023.02 ~ 2026.04</div>
+            <div className="period">2026.10 ~</div>
+            <h3>(주)아이피씨엑스 ·
+IPCX</h3>
+            <div className="rel">이든앤앨리스마케팅 관계사</div>
+            <div className="role-line">
+              <b>풀스택 개발자</b>
+              <span className="promo">재직 중</span>
+            </div>
+          </div>
+          <div className="exp-company-desc">
+            <p>글로벌 D2C 화장품 브랜드의 <strong>Shopify 스토어 개발 · 운영</strong>을 맡고 있습니다. 서드파티 앱 대신 자체 모듈(주문 취소 · 모니터링)을 개발해 AWS 환경에 배포하고 스토어와 연동하는 일, 해외 결제 대행(MoR) · 물류사(3PL)와의 주문 · 결제 · 출고 상태 연동을 담당합니다.</p>
+            <p>입사 첫 주에는 코드부터 고치지 않고 <strong>에이전트 하네스부터 구성</strong>했습니다. 기존 시스템을 분석하고, 실주문이 나갈 수 없는 로컬 검증 환경을 세운 뒤 재설계안을 실험 브랜치에서 검증했습니다. 구성과 원칙은 06 AI HARNESS에 정리했습니다.</p>
+          </div>
+        </div>
+
+        <div className="exp-company reveal">
+          <div className="exp-company-meta">
+            <div className="period">2023.02 ~ 2026.05</div>
             <h3>(주)아키아카 ·
 Akiaka</h3>
             <div className="role-line">
@@ -450,9 +480,9 @@ function ProjectCard({ p }) {
 
 function Projects() {
   return (
-    <section id="projects" className="projects" data-screen-label="04 Projects">
+    <section id="projects" className="projects" data-screen-label={screenLabel('projects')}>
       <div className="container">
-        <SectionHeader slug="projects" title="PROJECTS" meta="04 / 09" />
+        <SectionHeader slug="projects" title="PROJECTS" meta={secNo('projects')} />
         <div className="proj-grid">
           {window.PORTFOLIO_DATA.FEATURED_PROJECTS.map((p) => <ProjectCard key={p.no} p={p} />)}
         </div>
@@ -651,9 +681,9 @@ function CaseDiagram() {
 
 function CaseStudy() {
   return (
-    <section id="case-study" className="case" data-screen-label="05 Case Study">
+    <section id="case-study" className="case" data-screen-label={screenLabel('case-study')}>
       <div className="container">
-        <SectionHeader slug="case-study" title="CASE STUDY" meta="05 / 09" />
+        <SectionHeader slug="case-study" title="CASE STUDY" meta={secNo('case-study')} />
 
         <div className="case-intro reveal">
           <div className="case-cat">Distributed System · Deep Dive</div>
@@ -735,30 +765,29 @@ function HxArrows({ id }) {
     </defs>);
 }
 
-/* 01 · 게이트: 후보 51건이 좌에서 우로 기준 5종의 문을 지나 1건만 통과 */
+/* 게이트: 판정 원장 32건이 좌에서 우로 기준 5종의 문을 지나 1건만 통과 */
 function HxGateDiagram() {
   const CRIT = [
     ['① 표본 100건', '검증 구간 20건 이상'],
-    ['② 이익폭 2배', '왕복 거래비용 대비'],
-    ['③ 샤프 1.0 이상', '연환산 기준'],
-    ['④ 3개 국면 전부', '추세 · 횡보 · 고변동'],
+    ['② 기대값 > 비용 컷', '레그별 실차감 × 2'],
+    ['③ 켈리 > 0 · 샤프 하한', '검증 구간 · 연환산'],
+    ['④ 다국면', '추세 · 횡보 · 고변동'],
     ['⑤ 모집단 대비 초과분', '절대수익으로 판정하지 않음'],
   ];
   const GATE_X = [542, 598, 654, 710, 766];
   return (
-    <svg viewBox="0 46 960 266" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="후보 51건이 통과 기준 5종을 지나 1건만 통과하고 50건이 기각된 구조">
+    <svg viewBox="0 46 960 266" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="판정 원장 32건이 통과 기준 5종을 지나 1건만 통과하고 31건은 미통과한 구조">
       <HxArrows id="hxg" />
 
-      <text x="24" y="64" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">후보 51건</text>
+      <text x="24" y="64" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">판정 원장 32건</text>
       <text x="654" y="64" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">GATE · 통과 기준 5종</text>
       <text x="936" y="64" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">결과</text>
 
-      {/* 한 칸 = 한 건. 17열 × 3행 = 51 */}
-      {Array.from({ length: 51 }, (_, i) =>
-      <rect key={i} x={24 + (i % 17) * 26} y={84 + Math.floor(i / 17) * 26} width="18" height="18" rx="2"
-            fill={i < 31 ? HX_ACS : '#e4e1da'} />
+      {/* 한 칸 = 한 건. 16열 × 2행 = 32 */}
+      {Array.from({ length: 32 }, (_, i) =>
+      <rect key={i} x={24 + (i % 16) * 26} y={97 + Math.floor(i / 16) * 26} width="18" height="18" rx="2" fill={HX_ACS} />
       )}
-      <text x="24" y="180" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>셋업 31개 계열 · 상향식 가설 20건</text>
+      <text x="24" y="180" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>상향식 가설 20건은 게이트 전 필터 · 적대적 검증에서 탈락</text>
 
       <line x1="478" y1="119" x2="526" y2="119" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxgg)" />
 
@@ -775,8 +804,8 @@ function HxGateDiagram() {
       <rect x="880" y="121" width="18" height="18" rx="2" fill={HX_AC} />
       <text x="936" y="152" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_HERO} fill={HX_AC}>1</text>
 
-      <text x="936" y="190" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>기각</text>
-      <text x="936" y="220" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_NUM} fill={HX_MUTE}>50</text>
+      <text x="936" y="190" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>미통과</text>
+      <text x="936" y="220" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_NUM} fill={HX_MUTE}>31</text>
 
       <line x1="24" y1="250" x2="936" y2="250" stroke={HX_RULE} strokeWidth="1" />
       {CRIT.map((c, i) =>
@@ -788,20 +817,21 @@ function HxGateDiagram() {
     </svg>);
 }
 
-/* 02 · 신뢰 경계: 손절 경로가 LLM 띠를 비껴 규칙 띠로 직행 */
+/* 신뢰 경계(discovery 경로): Fable 부재 세션의 대리 손절이 LLM 띠를 비껴 규칙 띠로 직행 */
 function HxTrustDiagram() {
-  const GUARD = ['주문', '사이징', '손절', '강제청산', '일일 손실 한도'];
+  const GUARD = ['선기록 검증', '비중 재캡', '수량 산출', '총노출 · 진입 상한', '저널 선기록'];
   return (
-    <svg viewBox="0 23 960 315" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LLM 계층은 제안까지, 규칙 계층이 집행을 단독으로 맡는 2계층 구조">
+    <svg viewBox="0 23 960 315" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LLM 계층은 제안까지, 규칙 계층이 집행을 단독으로 맡는 2계층 구조. Fable 부재 세션의 대리 손절은 LLM을 거치지 않음">
       <HxArrows id="hxt" />
 
-      <text x="24" y="44" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>손절 · 강제청산</text>
-      <text x="24" y="60" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>LLM 미경유</text>
-      <path d="M72,72 L72,196 L112,196" fill="none" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxta)" />
+      <text x="24" y="44" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>대리 손절</text>
+      <text x="24" y="60" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>Fable 부재 세션</text>
+      <text x="24" y="74" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>선기록 기준</text>
+      <path d="M72,84 L72,196 L112,196" fill="none" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxta)" />
 
       <rect x="120" y="48" width="816" height="92" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
       <text x="136" y="70" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">LLM 계층 · 제안까지</text>
-      {[['DART · 뉴스 274만 건', 136, 230, false], ['Sonnet 정제', 400, 190, false], ['Fable 판단', 622, 190, true]].map((c, i) =>
+      {[['DART · 뉴스 · 수급', 136, 230, false], ['Sonnet 정제', 400, 190, false], ['Fable 판단', 622, 190, true]].map((c, i) =>
       <g key={i}>
         <rect x={c[1]} y="88" width={c[2]} height="34" rx="3" fill={c[3] ? HX_ACS : '#f7f6f3'} stroke={c[3] ? HX_AC : HX_LINE} strokeWidth="1" />
         <text x={c[1] + c[2] / 2} y="110" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>{c[0]}</text>
@@ -812,7 +842,7 @@ function HxTrustDiagram() {
       <text x="822" y="110" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>스키마 위반 → 관망</text>
 
       <line x1="717" y1="140" x2="717" y2="180" stroke={HX_AC} strokeWidth="1.3" markerEnd="url(#hxta)" />
-      <text x="730" y="166" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>제안 (JSON 스키마 강제)</text>
+      <text x="730" y="166" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>제안: 매수 · 매도 · 비중 · 손절 기준</text>
 
       <rect x="120" y="184" width="816" height="96" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
       <text x="136" y="206" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC} letterSpacing="0.1em">규칙 계층 (risk guard) · 집행 단독</text>
@@ -867,7 +897,7 @@ function HxAgentFanDiagram() {
 function HxBottleneckDiagram() {
   const S = [
     { at: '코드', sym: '처리량 · 결함', fix: 'hook 게이트', how: '편집마다 ruff + pytest' },
-    { at: '사람', sym: '세부 판단 승인', fix: 'Ultracode 위임', how: '검증 53 + 독립 감사 7' },
+    { at: '사람', sym: '세부 판단 승인', fix: '에이전트 교차 검증 위임', how: '검증 53 + 독립 감사 7' },
     { at: '토큰', sym: '주간 예산 소진', fix: 'Skill화', how: '반복 기준 패키징' },
     { at: '인지', sym: '세션 분산', fix: '모니터링 2화면', how: '작업판 · 운영판' },
   ];
@@ -925,106 +955,517 @@ function HxAgentTeamDiagram() {
     </svg>);
 }
 
-const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram };
-
-function AIHarness() {
-  const H = window.PORTFOLIO_DATA.HARNESS;
+/* 07 · 커머스 경계: 위는 실제 운영 경로, 아래는 에이전트가 도는 로컬 검증 경로. 두 줄 사이 화살표 0개가 메시지 */
+function HxBiArrows({ id }) {
   return (
-    <section id="ai-harness" className="case harness" data-screen-label="06 AI Engineering">
-      <div className="container">
-        <SectionHeader slug="ai-harness" title="AI ENGINEERING" meta="06 / 09" />
+    <defs>
+      <marker id={id + 'g'} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill={HX_LINE} /></marker>
+      <marker id={id + 'a'} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill={HX_AC} /></marker>
+    </defs>);
+}
 
-        {H.projects.map((p, pi) =>
-        <div key={pi} className={pi > 0 ? 'harness-project sep' : 'harness-project'}>
-          <div className="case-intro reveal">
-            <div className="case-cat">{p.cat}</div>
-            <h3>{p.headline.split('\n').map((l, i) =>
-              <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
-            <p className="case-lead">{renderRichText(p.lead)}</p>
-            <div className="case-meta">
-              {p.meta.map((m, i) =>
-              <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
-              )}
-            </div>
+function HxBox({ x, y, w, h, lines, ac, dash, sub }) {
+  const cy = y + h / 2 + 4.5 - (lines.length - 1) * 8 - (sub ? 6 : 0);
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="3" fill={ac ? HX_ACS : dash ? '#ffffff' : '#f7f6f3'} stroke={ac ? HX_AC : HX_LINE} strokeWidth="1" strokeDasharray={dash ? '5 4' : undefined} />
+      {lines.map((l, i) => <text key={i} x={x + w / 2} y={cy + i * 16} textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>{l}</text>)}
+      {sub && <text x={x + w / 2} y={cy + lines.length * 16 - 2} textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>{sub}</text>}
+    </g>);
+}
+
+const HX_COMMERCE_ARIA = '운영 중인 커머스의 실제 경로(고객, 테마, 고객 계정 확장 앱, 주문 취소 백엔드, Shopify, 결제 대행, 3PL)와 에이전트가 도는 로컬 검증 경로(쓰기 차단 브라우저, 개발 테마, 계약 대조, 로컬 백엔드, Shopify 스텁) 사이를 쓰기 차단, 스텁 인증서, 카나리로 끊은 구조';
+const HX_COMMERCE_MARKS = [
+  ['ⓐ', '쓰기 차단: 결제 경로 · 결제 도메인 · 장바구니 외 쓰기 거부'],
+  ['ⓑ', '계약 양쪽 대조 · 변이 트리로 검사기 확인'],
+  ['ⓒ', '스텁 인증서만 신뢰 · 스텁 기록 없으면 요청 미발신'],
+];
+
+function HxCommerceWide() {
+  const g = 'url(#hxcg)', a = 'url(#hxca)';
+  return (
+    <svg className="hx-wide" viewBox="0 20 960 326" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_COMMERCE_ARIA}>
+      <HxBiArrows id="hxc" />
+
+      {/* 운영 경로 */}
+      <rect x="24" y="30" width="680" height="118" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" />
+      <text x="40" y="48" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">운영 경로 · 실제</text>
+      <HxBox x={40} y={70} w={56} h={60} lines={['고객']} />
+      <HxBox x={126} y={60} w={150} h={30} lines={['스토어프론트 테마']} />
+      <HxBox x={126} y={100} w={150} h={40} lines={['고객 계정 확장 앱']} sub="'주문 취소' 메뉴" />
+      <HxBox x={336} y={103} w={140} h={34} lines={['주문 취소 백엔드']} />
+      <HxBox x={566} y={60} w={120} h={80} lines={['Shopify']} />
+      <line x1="96" y1="90" x2="122" y2="77" stroke={HX_LINE} strokeWidth="1.2" markerEnd={g} />
+      <line x1="96" y1="110" x2="122" y2="118" stroke={HX_LINE} strokeWidth="1.2" markerEnd={g} />
+      <line x1="276" y1="120" x2="332" y2="120" stroke={HX_LINE} strokeWidth="1.2" markerEnd={g} />
+      <text x="305" y="112" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>취소 요청</text>
+      <line x1="476" y1="120" x2="562" y2="120" stroke={HX_LINE} strokeWidth="1.2" markerEnd={g} />
+      <text x="521" y="112" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>주문 조회 · 취소</text>
+
+      {/* 외부: 진실을 쥔 쪽 */}
+      <rect x="716" y="30" width="220" height="118" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" />
+      <text x="732" y="48" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">외부 · 진실을 쥔 쪽</text>
+      <rect x="732" y="58" width="188" height="28" rx="3" fill="#ffffff" stroke={HX_LINE} strokeDasharray="5 4" />
+      <text x="744" y="77" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>결제 대행 (MoR)</text>
+      <text x="910" y="76" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>결제 상태</text>
+      <rect x="732" y="96" width="188" height="28" rx="3" fill="#ffffff" stroke={HX_LINE} strokeDasharray="5 4" />
+      <text x="744" y="115" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>3PL</text>
+      <text x="910" y="114" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>주문 수집</text>
+      <line x1="690" y1="72" x2="728" y2="72" stroke={HX_LINE} strokeWidth="1.2" markerStart={g} markerEnd={g} />
+      <line x1="688" y1="110" x2="728" y2="110" stroke={HX_LINE} strokeWidth="1.2" markerEnd={g} />
+      <text x="732" y="140" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>우리 시스템은 Shopify에 비친 상태만 봄</text>
+
+      {/* 경계: 자동화는 이 선을 넘지 못함 */}
+      <text x="936" y="163" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>자동화는 이 선을 넘지 못함</text>
+      <line x1="24" y1="170" x2="936" y2="170" stroke={HX_AC} strokeWidth="2" />
+      {[201, 306, 626].map((x, i) =>
+      <g key={i}>
+        <circle cx={x} cy="170" r="9" fill="#ffffff" stroke={HX_AC} strokeWidth="1.5" />
+        <text x={x} y="174" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>{'abc'[i]}</text>
+      </g>
+      )}
+      {HX_COMMERCE_MARKS.map((m, i) =>
+      <text key={i} x={[40, 384, 660][i]} y="194" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}><tspan fill={HX_AC}>{m[0]}</tspan> {m[1]}</text>
+      )}
+
+      {/* 검증 경로 · 로컬 (에이전트) */}
+      <rect x="24" y="206" width="912" height="104" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      <text x="40" y="226" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC} letterSpacing="0.1em">검증 경로 · 로컬 (에이전트)</text>
+      <HxBox x={40} y={240} w={96} h={42} lines={['쓰기 차단', '브라우저']} ac />
+      <HxBox x={176} y={240} w={84} h={42} lines={['개발 테마']} dash />
+      <HxBox x={330} y={240} w={128} h={42} lines={['오프라인', '컴포넌트 테스트']} dash />
+      <HxBox x={506} y={240} w={84} h={42} lines={['계약 대조']} ac />
+      <HxBox x={646} y={240} w={96} h={42} lines={['로컬 백엔드']} dash />
+      <HxBox x={798} y={240} w={122} h={42} lines={['Shopify 스텁']} ac />
+      <line x1="136" y1="261" x2="172" y2="261" stroke={HX_AC} strokeWidth="1.3" markerEnd={a} />
+      <line x1="462" y1="261" x2="502" y2="261" stroke={HX_AC} strokeWidth="1.3" markerStart={a} markerEnd={a} />
+      <line x1="594" y1="261" x2="642" y2="261" stroke={HX_AC} strokeWidth="1.3" markerStart={a} markerEnd={a} />
+      <line x1="742" y1="261" x2="794" y2="261" stroke={HX_AC} strokeWidth="1.3" markerEnd={a} />
+      <line x1="859" y1="304" x2="859" y2="286" stroke={HX_AC} strokeWidth="1.3" markerEnd={a} />
+      <text x="850" y="302" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>카나리 먼저</text>
+
+      <text x="936" y="336" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>지시문이 아니라 구조로 끊은 경계</text>
+    </svg>);
+}
+
+/* 좁은 화면: 같은 구조를 세로로 쌓음 (가로판을 축소하면 글자가 읽히지 않음) */
+function HxCommerceNarrow() {
+  const g = 'url(#hxcng)', a = 'url(#hxcna)';
+  const down = (x, y1, y2, ac, bi) => <line x1={x} y1={y1} x2={x} y2={y2} stroke={ac ? HX_AC : HX_LINE} strokeWidth="1.2" markerStart={bi ? (ac ? a : g) : undefined} markerEnd={ac ? a : g} />;
+  return (
+    <svg className="hx-narrow" viewBox="0 0 360 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_COMMERCE_ARIA}>
+      <HxBiArrows id="hxcn" />
+      <rect x="4" y="4" width="352" height="268" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" />
+      <text x="16" y="22" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE} letterSpacing="0.1em">운영 경로 · 실제</text>
+      <HxBox x={130} y={32} w={100} h={28} lines={['고객']} />
+      {down(150, 60, 76)}{down(210, 60, 76)}
+      <HxBox x={16} y={80} w={158} h={30} lines={['스토어프론트 테마']} />
+      <HxBox x={186} y={80} w={158} h={40} lines={['고객 계정 확장 앱']} sub="'주문 취소' 메뉴" />
+      {down(265, 120, 140)}
+      <text x="275" y="134" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>취소 요청</text>
+      <HxBox x={186} y={144} w={158} h={30} lines={['주문 취소 백엔드']} />
+      {down(265, 174, 192)}
+      <text x="275" y="187" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>주문 조회 · 취소</text>
+      <HxBox x={186} y={196} w={158} h={30} lines={['Shopify']} />
+      <line x1="184" y1="211" x2="146" y2="211" stroke={HX_LINE} strokeWidth="1.2" markerStart={g} markerEnd={g} />
+      <rect x="16" y="196" width="126" height="30" rx="3" fill="#ffffff" stroke={HX_LINE} strokeDasharray="5 4" />
+      <text x="79" y="215" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>결제 대행 · 3PL</text>
+      <text x="16" y="246" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>외부가 결제 · 출고의 진실을 쥠.</text>
+      <text x="16" y="261" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>우리 시스템은 Shopify에 비친 상태만 봄</text>
+
+      <text x="356" y="294" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>자동화는 이 선을 넘지 못함</text>
+      <line x1="4" y1="302" x2="356" y2="302" stroke={HX_AC} strokeWidth="2" />
+      {HX_COMMERCE_MARKS.map((m, i) =>
+      <text key={i} x="4" y={322 + i * 16} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}><tspan fill={HX_AC}>{m[0]}</tspan> {m[1]}</text>
+      )}
+
+      <rect x="4" y="368" width="352" height="234" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      <text x="16" y="388" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC} letterSpacing="0.1em">검증 경로 · 로컬 (에이전트)</text>
+      <HxBox x={16} y={398} w={150} h={30} lines={['쓰기 차단 브라우저']} ac />
+      <line x1="166" y1="413" x2="190" y2="413" stroke={HX_AC} strokeWidth="1.3" markerEnd={a} />
+      <HxBox x={194} y={398} w={150} h={30} lines={['개발 테마']} dash />
+      <HxBox x={16} y={446} w={150} h={42} lines={['오프라인', '컴포넌트 테스트']} dash />
+      <line x1="166" y1="467" x2="190" y2="467" stroke={HX_AC} strokeWidth="1.3" markerStart={a} markerEnd={a} />
+      <HxBox x={194} y={452} w={150} h={30} lines={['계약 대조']} ac />
+      {down(269, 484, 500, true, true)}
+      <HxBox x={194} y={504} w={150} h={30} lines={['로컬 백엔드']} dash />
+      {down(269, 534, 552, true)}
+      <HxBox x={194} y={556} w={150} h={30} lines={['Shopify 스텁']} ac />
+      <line x1="150" y1="571" x2="190" y2="571" stroke={HX_AC} strokeWidth="1.3" markerEnd={a} />
+      <text x="140" y="575" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>카나리 먼저</text>
+
+      <text x="356" y="626" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>지시문이 아니라 구조로 끊은 경계</text>
+    </svg>);
+}
+
+/* 07 · 9단계 흐름: 위 띠는 에이전트가 넓히고, 아래 띠는 사람이 좁힘. 8 · 9는 게이트 준비까지라 흐리게 */
+const HX_FLOW9 = [
+  { n: '01', name: ['분석'], ag: ['레포별 구조', '결함 후보'], hu: ['아직', '고치지 않음'] },
+  { n: '02', name: ['역방향', 'SDD'], ag: ['코드에서', '스펙 추출'], hu: ['형식 · 빈틈', '판단'] },
+  { n: '03', name: ['질문', '분류'], ag: ['문서 · 코드로', '재판정'], hu: ['관리 화면', '확인 · 결정'] },
+  { n: '04', name: ['계약 우선', '루프'], ag: ['스텁 · 계약', '변이 트리'], hu: ['스텁만', '실취소 금지'], hot: true },
+  { n: '05', name: ['독립', '시나리오'], ag: ['입력 조사', '판정기'], hu: ['범위 축소', '정책'], hot: true },
+  { n: '06', name: ['설계 검증', '1회'], ag: ['관점별 판정', '다른 모델 반증'], hu: ['추천안 결정', '재검증 안 함'], hot: true },
+  { n: '07', name: ['실험', '구현'], ag: ['단계별 구현', '테스트'], hu: ['브랜치 · 조건', '승인'] },
+  { n: '08', name: ['PR 전', '검증'], ag: ['게이트 준비'], hu: ['실행 시점'], dim: true },
+  { n: '09', name: ['승인', 'PR'], ag: ['브랜치 · PR', '준비'], hu: ['push · merge', '승인'], dim: true },
+];
+const HX_FLOW9_ARIA = '분석부터 승인 PR까지 9단계에서 에이전트가 한 일과 사람이 정한 일을 나눈 흐름. 4 · 5단계는 6 · 7단계와 겹쳐 돌고, 8 · 9단계는 게이트 준비까지';
+
+function HxLines({ x, y, lines, size, fill, gap = 14 }) {
+  return lines.map((l, i) => <text key={i} x={x} y={y + i * gap} textAnchor="middle" fontFamily={HXM} fontSize={size} fill={fill}>{l}</text>);
+}
+
+function HxFlow9Wide() {
+  const X0 = 132, ST = 89.5, W = 78;
+  const cx = (i) => X0 + i * ST + W / 2;
+  return (
+    <svg className="hx-wide" viewBox="0 14 960 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW9_ARIA}>
+      <HxArrows id="hxf9" />
+      <rect x="16" y="100" width="920" height="46" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
+      <text x="24" y="120" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>에이전트</text>
+      <text x="24" y="136" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>넓힘</text>
+      <rect x="16" y="166" width="920" height="46" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      <text x="24" y="186" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람</text>
+      <text x="24" y="202" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>좁힘</text>
+      <path d={`M${cx(4)},40 C${cx(4)},22 ${cx(3)},22 ${cx(3)},38`} fill="none" stroke={HX_AC} strokeWidth="1" markerEnd="url(#hxf9a)" />
+      {HX_FLOW9.map((s, i) => {
+        const x = X0 + i * ST, mute = s.dim ? HX_MUTE : HX_INK;
+        return (
+          <g key={i} opacity={s.dim ? 0.55 : 1}>
+            <rect x={x} y="42" width={W} height="46" rx="3" fill={s.hot ? HX_ACS : '#f7f6f3'} stroke={s.hot ? HX_AC : HX_LINE} strokeWidth="1" strokeDasharray={s.dim ? '4 3' : undefined} />
+            <text x={x + 6} y="54" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>{s.n}</text>
+            <HxLines x={x + W / 2} y={s.name.length > 1 ? 66 : 72} lines={s.name} size={HX_FS_LABEL} fill={mute} gap={15} />
+            <HxLines x={x + W / 2} y={s.ag.length > 1 ? 120 : 127} lines={s.ag} size={HX_FS_MICRO} fill={HX_MUTE} />
+            <HxLines x={x + W / 2} y={s.hu.length > 1 ? 188 : 195} lines={s.hu} size={HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
+            {i < 8 && <line x1={x + W + 1} y1="65" x2={x + ST - 3} y2="65" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf9g)" />}
+          </g>);
+      })}
+
+
+      <text x={(cx(7) + cx(8)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>준비까지 · 팀 반영 전</text>
+      <text x={(cx(3) + cx(4)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>4 · 5는 6 · 7과 겹쳐 돎</text>
+      <text x="936" y="256" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 메인 세션 하나와만 대화</text>
+    </svg>);
+}
+
+function HxFlow9Narrow() {
+  const Y0 = 52, ST = 50;
+  return (
+    <svg className="hx-narrow" viewBox="0 0 360 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW9_ARIA}>
+      <HxArrows id="hxf9n" />
+      <text x="170" y="34" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>에이전트 · 넓힘</text>
+      <text x="296" y="34" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람 · 좁힘</text>
+      <rect x="236" y="42" width="120" height={9 * ST + 4} rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      {HX_FLOW9.map((s, i) => {
+        const y = Y0 + i * ST;
+        return (
+          <g key={i} opacity={s.dim ? 0.55 : 1}>
+            <rect x="4" y={y} width="98" height="42" rx="3" fill={s.hot ? HX_ACS : '#f7f6f3'} stroke={s.hot ? HX_AC : HX_LINE} strokeWidth="1" strokeDasharray={s.dim ? '4 3' : undefined} />
+            <text x="10" y={y + 14} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>{s.n}</text>
+            <HxLines x={60} y={s.name.length > 1 ? y + 18 : y + 26} lines={s.name} size={12} fill={s.dim ? HX_MUTE : HX_INK} gap={15} />
+            <HxLines x={170} y={s.ag.length > 1 ? y + 17 : y + 25} lines={s.ag} size={HX_FS_MICRO} fill={HX_MUTE} />
+            <HxLines x={296} y={s.hu.length > 1 ? y + 17 : y + 25} lines={s.hu} size={HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
+            {i < 8 && <line x1="53" y1={y + 43} x2="53" y2={y + ST - 2} stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf9ng)" />}
+          </g>);
+      })}
+      <text x="4" y="518" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>4 · 5는 6 · 7과 겹쳐 돎 · 8 · 9는 준비까지</text>
+      <text x="356" y="536" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 메인 세션 하나와만 대화</text>
+    </svg>);
+}
+
+function HxFlow9Diagram() {
+  return <React.Fragment><HxFlow9Wide /><HxFlow9Narrow /></React.Fragment>;
+}
+
+function HxCommerceDiagram() {
+  return <React.Fragment><HxCommerceWide /><HxCommerceNarrow /></React.Fragment>;
+}
+
+const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram, commerce: HxCommerceDiagram, flow9: HxFlow9Diagram };
+
+/* 06 AI HARNESS · 07 AI PROJECTS 공용 딥다이브 본문: projects[] + note */
+function HarnessDeepDive({ data: H }) {
+  return (
+    <React.Fragment>
+      {H.intro && <p className="case-lead hx-page-lead reveal">{renderRichText(H.intro)}</p>}
+      {H.projects.map((p, pi) =>
+      <div key={pi} className={pi > 0 ? 'harness-project sep' : 'harness-project'}>
+        <div className="case-intro reveal">
+          <div className="case-cat">{p.cat}</div>
+          <h3>{p.headline.split('\n').map((l, i) =>
+            <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+          <p className="case-lead">{renderRichText(p.lead)}</p>
+          <div className="case-meta">
+            {p.meta.map((m, i) =>
+            <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
+            )}
           </div>
+        </div>
 
-          {p.blocks.map((b, bi) =>
-          <React.Fragment key={bi}>
-            <div className="case-section-label"><span>{b.label}</span></div>
-            {b.diagram && HARNESS_FIGS[b.diagram] &&
-            <React.Fragment>
-              <div className="hx-fig reveal">{React.createElement(HARNESS_FIGS[b.diagram])}</div>
-              {b.fig && <div className="case-fig">{renderRichText(b.fig)}</div>}
-            </React.Fragment>
-            }
-            {b.type === 'beats' &&
-            <div className="case-trace">
-              {b.items.map((x, i) =>
-              <div className="case-beat reveal" key={i}>
-                <div className="bn">{x.n}</div>
-                <div className="bbody">
-                  <h4>{x.t}</h4>
-                  {x.body.map((t, j) => <p key={j}>{renderRichText(t)}</p>)}
-                </div>
-              </div>
-              )}
-            </div>
-            }
-            {b.type === 'axes' &&
-            <div className="harness-axes">
-              {b.items.map((a, i) =>
-              <div className="harness-axis reveal" key={i}>
-                <div className="hx-head">
-                  <span className="hx-name">{a.name}</span>
-                  <span className="hx-no">{a.no}</span>
-                </div>
-                <h4>{a.title}</h4>
-                <div className="hx-label">구성</div>
-                <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-                {a.result &&
-                <React.Fragment>
-                  <div className="hx-label">여기서 나온 것</div>
-                  <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-                </React.Fragment>
-                }
-                {a.edge &&
-                <React.Fragment>
-                  <div className="hx-label">경계</div>
-                  <p className="hx-edge">{renderRichText(a.edge)}</p>
-                </React.Fragment>
-                }
-                <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
-              </div>
-              )}
-            </div>
-            }
+        {p.blocks.map((b, bi) =>
+        <React.Fragment key={bi}>
+          <div className="case-section-label"><span>{b.label}</span></div>
+          {b.diagram && HARNESS_FIGS[b.diagram] &&
+          <React.Fragment>
+            <div className="hx-fig reveal">{React.createElement(HARNESS_FIGS[b.diagram])}</div>
+            {b.fig && <div className="case-fig">{renderRichText(b.fig)}</div>}
           </React.Fragment>
+          }
+          {b.type === 'beats' &&
+          <div className="case-trace">
+            {b.items.map((x, i) =>
+            <div className="case-beat reveal" key={i}>
+              <div className="bn">{x.n}</div>
+              <div className="bbody">
+                <h4>{x.t}</h4>
+                {x.body.map((t, j) => <p key={j}>{renderRichText(t)}</p>)}
+              </div>
+            </div>
+            )}
+          </div>
+          }
+          {b.type === 'axes' &&
+          <div className={`harness-axes n${b.items.length}`}>
+            {b.items.map((a, i) =>
+            <div className="harness-axis reveal" key={i}>
+              <div className="hx-head">
+                <span className="hx-name">{a.name}</span>
+                <span className="hx-no">{a.no}</span>
+              </div>
+              <h4>{a.title}</h4>
+              <div className="hx-label">구성</div>
+              <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+              {a.result &&
+              <React.Fragment>
+                <div className="hx-label">여기서 나온 것</div>
+                <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
+              </React.Fragment>
+              }
+              {a.edge &&
+              <React.Fragment>
+                <div className="hx-label">경계</div>
+                <p className="hx-edge">{renderRichText(a.edge)}</p>
+              </React.Fragment>
+              }
+              <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
+            </div>
+            )}
+          </div>
+          }
+        </React.Fragment>
+        )}
+      </div>
+      )}
+
+      {H.note && <p className="case-note-inline">{renderRichText(H.note)}</p>}
+    </React.Fragment>);
+}
+
+/* 06 AI HARNESS: 월 마커(왼쪽 레일) + 기술 카드. 적용처는 태그로만.
+   카드를 누르면 그 줄 바로 아래 전폭 행으로 상세가 펼쳐짐(grid dense라 같은 줄 다른 카드는 자리 유지) */
+const TL_WHERE = { '회사': 'co', '자동매매': 'tr', 'KVTO': 'kv' };
+
+function TLDetail({ id, x, caret }) {
+  const D = x.detail;
+  // 적용처는 카드 태그 순서대로
+  const cases = x.where.map((w) => (D.cases || []).find((c) => c.where === w)).filter(Boolean);
+  return (
+    <div id={id} className="tl-detail" role="region" aria-label={x.name + ' 상세'}
+    style={caret != null ? { '--caret-x': caret + 'px' } : undefined}>
+      <div className="tl-d-title" aria-hidden="true">{x.name}</div>
+      <div className="tl-d-cols">
+        {D.why && <div className="tl-d-col"><div className="tl-d-k">도입 이유</div><p>{renderRichText(D.why)}</p></div>}
+        {D.how && <div className="tl-d-col"><div className="tl-d-k">동작 구조</div><p>{renderRichText(D.how)}</p></div>}
+        {cases.length > 0 &&
+        <div className="tl-d-col">
+          <div className="tl-d-k">적용처별</div>
+          <ul className="tl-d-cases">
+            {cases.map((c) =>
+            <li key={c.where}><span className={'tl-tag ' + (TL_WHERE[c.where] || '')}>{c.where}</span><span>{renderRichText(c.text)}</span></li>
+            )}
+          </ul>
+        </div>
+        }
+      </div>
+      {D.note && <p className="tl-d-note"><span className="tl-d-k">비고</span>{renderRichText(D.note)}</p>}
+    </div>);
+}
+
+function AITimeline({ data: T }) {
+  const [open, setOpen] = useState(() => new Set());
+  const [carets, setCarets] = useState({});
+  const cardRefs = useRef({});
+  const keys = [];
+  T.months.forEach((M, mi) => M.items.forEach((x, i) => {if (x.detail) keys.push(mi + '-' + i);}));
+  const allOpen = keys.length > 0 && keys.every((k) => open.has(k));
+  const toggle = (k) => setOpen((s) => {
+    const n = new Set(s);
+    if (n.has(k)) n.delete(k);else n.add(k);
+    return n;
+  });
+
+  // 상세 위 꼭지(caret)를 펼친 카드 가운데에 맞춤. 열 수가 폭마다 달라 렌더 후 측정
+  useLayoutEffect(() => {
+    const measure = () => {
+      const next = {};
+      open.forEach((k) => {
+        const el = cardRefs.current[k];
+        if (el) next[k] = Math.round(el.offsetLeft + el.offsetWidth / 2);
+      });
+      setCarets(next);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [open]);
+
+  return (
+    <React.Fragment>
+      {T.head &&
+      <div className="case-intro tl-intro reveal">
+        <div className="case-cat">{T.head.cat}</div>
+        <h3>{T.head.headline.split('\n').map((l, i) =>
+          <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+        <p className="case-lead">{renderRichText(T.head.lead)}</p>
+        {T.head.meta &&
+        <div className="case-meta">
+          {T.head.meta.map((m, i) =>
+          <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
           )}
         </div>
+        }
+      </div>
+      }
+      {T.layers &&
+      <div className="tl-layers reveal">
+        {T.layers.map((L) =>
+        <div key={L.k} className="tl-layer-def"><span className="tl-layer">{L.k}</span><span>{L.def}</span></div>
         )}
+        <div className="tl-where-key">
+          {Object.keys(TL_WHERE).map((w) => <span key={w} className={'tl-tag ' + TL_WHERE[w]}>{w}</span>)}
+          <span>적용처</span>
+        </div>
+      </div>
+      }
+      {keys.length > 0 &&
+      <div className="tl-tools">
+        <span>{T.hint}</span>
+        <button type="button" className="tl-all" aria-pressed={allOpen}
+        onClick={() => setOpen(allOpen ? new Set() : new Set(keys))}>{allOpen ? '상세 모두 접기' : '상세 모두 펼치기'}</button>
+      </div>
+      }
+      <ol className="tl">
+        {T.months.map((M, mi) =>
+        <li key={M.m} className="tl-month">
+          <div className="tl-mark"><span className="tl-dot" /><span className="tl-m">{M.m}</span><span className="tl-cnt">{pad2(M.items.length)}</span></div>
+          <div className="tl-cards">
+            {M.items.map((x, i) => {
+              const k = mi + '-' + i;
+              const id = 'tl-d-' + k;
+              const isOpen = !!x.detail && open.has(k);
+              return (
+                <React.Fragment key={i}>
+                  {/* 펼침 상태는 data-open으로. className을 바꾸면 useReveal이 붙인 .in이 지워져 카드가 사라짐 */}
+                  <article ref={(el) => {cardRefs.current[k] = el;}} data-open={isOpen ? '' : undefined}
+                  className={'tl-card reveal' + (x.detail ? ' has-detail' : '')}>
+                    <div className="tl-head">
+                      <h4>{x.detail ?
+                        <button type="button" className="tl-toggle" aria-expanded={isOpen} aria-controls={id} onClick={() => toggle(k)}>{x.name}</button> :
+                        x.name}</h4>
+                      <span className="tl-layer">{x.layer}</span>
+                    </div>
+                    <p className="tl-what">{renderRichText(x.what)}</p>
+                    {x.how && <p className="tl-how"><span className="k">적용</span>{renderRichText(x.how)}</p>}
+                    <div className="tl-where">
+                      {x.where.map((w) => <span key={w} className={'tl-tag ' + (TL_WHERE[w] || '')}>{w}</span>)}
+                      {x.detail && <span className="tl-more" aria-hidden="true">{isOpen ? '접기 −' : '상세 +'}</span>}
+                    </div>
+                  </article>
+                  {isOpen && <TLDetail id={id} x={x} caret={carets[k]} />}
+                </React.Fragment>);
+            })}
+          </div>
+        </li>
+        )}
+      </ol>
+      {T.principles &&
+      <div className="tl-principles reveal">
+        <div className="label">원칙</div>
+        <ol>{T.principles.map((p, i) => <li key={i}>{renderRichText(p)}</li>)}</ol>
+      </div>
+      }
+      {T.note && <p className="case-note-inline">{renderRichText(T.note)}</p>}
+    </React.Fragment>);
+}
 
-        {H.note && <p className="case-note-inline">{renderRichText(H.note)}</p>}
+function AIHarness() {
+  return (
+    <section id="ai-harness" className="case harness" data-screen-label={screenLabel('ai-harness')}>
+      <div className="container">
+        <SectionHeader slug="ai-harness" title="AI HARNESS" meta={secNo('ai-harness')} />
+        <AITimeline data={window.PORTFOLIO_DATA.AI_TIMELINE} />
+      </div>
+    </section>);
+}
+
+function AIProjects() {
+  return (
+    <section id="ai-projects" className="case harness" data-screen-label={screenLabel('ai-projects')}>
+      <div className="container">
+        <SectionHeader slug="ai-projects" title="AI PROJECTS" meta={secNo('ai-projects')} />
+        <HarnessDeepDive data={window.PORTFOLIO_DATA.AI_PROJECTS} />
       </div>
     </section>);
 }
 
 // ============ SKILLS ============
-function Skills() {
-  const { SKILLS, AI_SKILL } = window.PORTFOLIO_DATA;
+function SkillDots({ lv }) {
+  const L = window.PORTFOLIO_DATA.SKILL_LEVELS.find((x) => x.lv === lv);
   return (
-    <section id="skills" className="skills" data-screen-label="07 Skills">
+    <span className="sk-dots" role="img" aria-label={`${lv} / 3 · ${L.name}`} title={`${L.name} · ${L.def}`}>
+      {[1, 2, 3].map((i) => <i key={i} className={i <= lv ? 'on' : ''} />)}
+    </span>);
+}
+
+function SkillRows({ items }) {
+  const LV = window.PORTFOLIO_DATA.SKILL_LEVELS;
+  return (
+    <ul className="sk-list">
+      {items.map((s) =>
+      <li key={s.n} className="sk-row">
+          <span className="sk-name">{s.n}</span>
+          <SkillDots lv={s.lv} />
+          <span className="sk-why"><b>{LV.find((x) => x.lv === s.lv).name}</b> · {s.why}</span>
+        </li>
+      )}
+    </ul>);
+}
+
+function Skills() {
+  const { SKILLS, AI_SKILL, SKILL_LEVELS, SKILLS_DRAFT } = window.PORTFOLIO_DATA;
+  return (
+    <section id="skills" className="skills" data-screen-label={screenLabel('skills')}>
       <div className="container">
-        <SectionHeader slug="skills" title="SKILLS" meta="08 categories" />
+        <SectionHeader slug="skills" title="SKILLS" meta={`${pad2(SKILLS.length)} categories`} />
+        <div className="sk-legend reveal">
+          {SKILL_LEVELS.map((L) =>
+          <div key={L.lv} className="sk-legend-item">
+              <SkillDots lv={L.lv} />
+              <b>{L.name}</b>
+              <span>{L.def}</span>
+            </div>
+          )}
+          {SKILLS_DRAFT && <span className="sk-draft">DRAFT · 배정 확인 중</span>}
+        </div>
         <div className="skills-grid">
-          {SKILLS.map((g, i) =>
+          {SKILLS.map((g) =>
           <div key={g.cat} className="skill-group reveal">
               <div className="gh">
                 <h4>{g.cat}</h4>
-                <span className="cnt">{String(g.tags.length).padStart(2, '0')}</span>
+                <span className="cnt">{pad2(g.items.length)}</span>
               </div>
-              <div className="tags">
-                {g.tags.map((t) => <span key={t} className="tag">{t}</span>)}
-              </div>
+              <SkillRows items={g.items} />
             </div>
           )}
           <div className="skill-group ai reveal">
@@ -1033,14 +1474,12 @@ function Skills() {
                 <h4>{AI_SKILL.cat}</h4>
                 <div className="star-row">AUGMENTED WORKFLOW · 사후 검증 중심</div>
               </div>
-              <span className="cnt">{String(AI_SKILL.tags.length).padStart(2, '0')}</span>
+              <span className="cnt">{pad2(AI_SKILL.items.length)}</span>
             </div>
             <div className="ai-h">
               Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 작업 규칙과 검증을 코드로 만들어 두고, 결과물이 매번 달라지지 않게 합니다.
             </div>
-            <div className="tags">
-              {AI_SKILL.tags.map((t) => <span key={t} className="tag">{t}</span>)}
-            </div>
+            <SkillRows items={AI_SKILL.items} />
           </div>
         </div>
       </div>
@@ -1051,9 +1490,9 @@ function Skills() {
 // ============ EDUCATION ============
 function Education() {
   return (
-    <section id="education" className="education" data-screen-label="08 Education">
+    <section id="education" className="education" data-screen-label={screenLabel('education')}>
       <div className="container">
-        <SectionHeader slug="education" title="EDUCATION" meta="08 / 09" />
+        <SectionHeader slug="education" title="EDUCATION" meta={secNo('education')} />
         <div className="edu-grid">
           <div className="edu-school reveal">
             <div className="period">2026.03 ~ <b>재학 중</b></div>
@@ -1091,9 +1530,9 @@ function Contact() {
     window.location.href = `mailto:${email}`;
   };
   return (
-    <section id="contact" className="contact" data-screen-label="09 Contact">
+    <section id="contact" className="contact" data-screen-label={screenLabel('contact')}>
       <div className="container">
-        <SectionHeader slug="contact" title="CONTACT" meta="09 / 09" />
+        <SectionHeader slug="contact" title="CONTACT" meta={secNo('contact')} />
         <div className="contact-prompt">Let's build something that holds up.</div>
 
         <a href="mailto:richdream703@gmail.com" className="contact-email-wrap" onClick={onCopy}>
@@ -1109,7 +1548,7 @@ function Contact() {
         <div className="contact-meta">
           <div><span>BASED IN</span><b>Seoul, KR</b></div>
           <div><span>AVAILABILITY</span><b>Open to opportunities</b></div>
-          <div><span>FOCUS</span><b>Backend · MSA · AI Harness</b></div>
+          <div><span>FOCUS</span><b>Backend · AI Harness · AX / FDE</b></div>
           <div><span>RESPONSE</span><b>~ 24h</b></div>
         </div>
       </div>
@@ -1145,7 +1584,7 @@ function Pager({ page, total, onGo }) {
 }
 
 // ============ APP ============
-const SECTIONS = [Hero, About, Experience, Projects, CaseStudy, AIHarness, Skills, Education, Contact];
+const SECTIONS = [Hero, About, Experience, Projects, CaseStudy, AIHarness, AIProjects, Skills, Education, Contact];
 const PAGE_IDS = window.PORTFOLIO_DATA.NAV.map((n) => n.id);
 
 function pageFromHash() {
@@ -1260,7 +1699,7 @@ function App() {
           {page === total - 1 &&
           <footer className="footer">
             <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
-            <div>v.3.3.0 · last updated 2026.07.07</div>
+            <div>v.3.4.0 · last updated 2026.10.18</div>
           </footer>
           }
         </div>
