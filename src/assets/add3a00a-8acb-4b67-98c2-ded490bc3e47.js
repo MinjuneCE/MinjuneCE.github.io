@@ -324,7 +324,7 @@ IPCX</h3>
           </div>
           <div className="exp-company-desc">
             <p>글로벌 D2C 화장품 브랜드의 <strong>Shopify 스토어 개발 · 운영</strong>을 맡고 있습니다. 서드파티 앱 대신 자체 모듈(주문 취소 · 모니터링)을 개발해 AWS 환경에 배포하고 스토어와 연동하는 일, 해외 결제 대행(MoR) · 물류사(3PL)와의 주문 · 결제 · 출고 상태 연동을 담당합니다.</p>
-            <p>입사 첫 주에는 코드부터 고치지 않고 <strong>에이전트 하네스부터 구성</strong>했습니다. 기존 시스템을 분석하고, 실주문이 나갈 수 없는 로컬 검증 환경을 세운 뒤 재설계안을 실험 브랜치에서 검증했습니다. 구성과 원칙은 06 AI HARNESS에 정리했습니다.</p>
+            <p>팀이 운영 중인 시스템이라 코드부터 고치지 않고 <strong>에이전트 하네스부터 구성</strong>했습니다. 기존 시스템을 분석하고 실주문이 나갈 수 없는 로컬 검증 환경을 세웠습니다. 재설계안은 실험 브랜치에서 검증한 뒤 팀 개발 브랜치에 반영했고, 지금은 운영 배포를 앞둔 준비 단계입니다. 구성과 원칙은 06 AI HARNESS에 정리했습니다.</p>
           </div>
         </div>
 
@@ -1098,38 +1098,41 @@ function HxCommerceNarrow() {
     </svg>);
 }
 
-/* 07 · 9단계 흐름: 위 띠는 에이전트가 넓히고, 아래 띠는 사람이 좁힘. 8 · 9는 게이트 준비까지라 흐리게 */
-const HX_FLOW9 = [
+/* 07 · 11단계 흐름: 위 띠는 에이전트가 넓히고, 아래 띠는 사람이 좁힘.
+   7 · 10은 결함 고리(시험이 찾고 구현이 고치고 시험이 다시 확인)라 강조, 11은 운영 배포 전 준비까지라 흐리게 */
+const HX_FLOW11 = [
   { n: '01', name: ['분석'], ag: ['레포별 구조', '결함 후보'], hu: ['아직', '고치지 않음'] },
   { n: '02', name: ['역방향', 'SDD'], ag: ['코드에서', '스펙 추출'], hu: ['형식 · 빈틈', '판단'] },
   { n: '03', name: ['질문', '분류'], ag: ['문서 · 코드로', '재판정'], hu: ['관리 화면', '확인 · 결정'] },
-  { n: '04', name: ['계약 우선', '루프'], ag: ['스텁 · 계약', '변이 트리'], hu: ['스텁만', '실취소 금지'], hot: true },
-  { n: '05', name: ['독립', '시나리오'], ag: ['입력 조사', '판정기'], hu: ['범위 축소', '정책'], hot: true },
-  { n: '06', name: ['설계 검증', '1회'], ag: ['관점별 판정', '다른 모델 반증'], hu: ['추천안 결정', '재검증 안 함'], hot: true },
-  { n: '07', name: ['실험', '구현'], ag: ['단계별 구현', '테스트'], hu: ['브랜치 · 조건', '승인'] },
-  { n: '08', name: ['PR 전', '검증'], ag: ['게이트 준비'], hu: ['실행 시점'], dim: true },
-  { n: '09', name: ['승인', 'PR'], ag: ['브랜치 · PR', '준비'], hu: ['push · merge', '승인'], dim: true },
+  { n: '04', name: ['계약 우선', '루프'], ag: ['스텁 · 계약', '변이 트리'], hu: ['스텁만', '실취소 금지'] },
+  { n: '05', name: ['독립', '시나리오'], ag: ['시나리오', '판정기 · 요청'], hu: ['범위 · 정책', '독립성 규칙'] },
+  { n: '06', name: ['설계 검증', '판마다 1회'], ag: ['관점별 판정', '다른 모델 반증'], hu: ['추천안 결정', '재검증 안 함'] },
+  { n: '07', name: ['구현'], ag: ['단계별 구현', '결함 수정'], hu: ['브랜치 · 컨벤션', '구현 중 결정'], hot: true },
+  { n: '08', name: ['PR 전', '검증'], ag: ['채점 · 반증', 'diff 밖 신호'], hu: ['수정 범위', '언제 돌릴지'] },
+  { n: '09', name: ['승인 PR', 'dev 반영'], ag: ['PR 준비', '머지 전 재확인'], hu: ['push · merge', '승인'] },
+  { n: '10', name: ['실제 환경', '시험'], ag: ['증거 · 판정', '결함 인계'], hu: ['쓰기 범위', '화면 조작'], hot: true },
+  { n: '11', name: ['운영', '준비'], ag: ['개발 서버 배포', '운영 안내서'], hu: ['운영 손 설정', '배포 방식'], dim: true },
 ];
-const HX_FLOW9_ARIA = '분석부터 승인 PR까지 9단계에서 에이전트가 한 일과 사람이 정한 일을 나눈 흐름. 4 · 5단계는 6 · 7단계와 겹쳐 돌고, 8 · 9단계는 게이트 준비까지';
+const HX_FLOW11_ARIA = '분석부터 운영 준비까지 11단계에서 에이전트가 한 일과 사람이 정한 일을 나눈 흐름. 7 · 10단계는 결함을 찾고 고치고 다시 시험하며 여러 번 돌고, 11단계는 운영 배포 전 준비까지';
 
 function HxLines({ x, y, lines, size, fill, gap = 14 }) {
   return lines.map((l, i) => <text key={i} x={x} y={y + i * gap} textAnchor="middle" fontFamily={HXM} fontSize={size} fill={fill}>{l}</text>);
 }
 
-function HxFlow9Wide() {
-  const X0 = 132, ST = 89.5, W = 78;
+function HxFlow11Wide() {
+  const VW = 1040, X0 = 100, ST = 84, W = 74, N = HX_FLOW11.length;
   const cx = (i) => X0 + i * ST + W / 2;
   return (
-    <svg className="hx-wide" viewBox="0 14 960 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW9_ARIA}>
-      <HxArrows id="hxf9" />
-      <rect x="16" y="100" width="920" height="46" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
+    <svg className="hx-wide" viewBox={`0 14 ${VW} 250`} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW11_ARIA}>
+      <HxArrows id="hxf11" />
+      <rect x="16" y="100" width={VW - 40} height="46" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
       <text x="24" y="120" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>에이전트</text>
       <text x="24" y="136" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>넓힘</text>
-      <rect x="16" y="166" width="920" height="46" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      <rect x="16" y="166" width={VW - 40} height="46" rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
       <text x="24" y="186" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람</text>
       <text x="24" y="202" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>좁힘</text>
-      <path d={`M${cx(4)},40 C${cx(4)},22 ${cx(3)},22 ${cx(3)},38`} fill="none" stroke={HX_AC} strokeWidth="1" markerEnd="url(#hxf9a)" />
-      {HX_FLOW9.map((s, i) => {
+      <path d={`M${cx(9)},40 C${cx(9)},18 ${cx(6)},18 ${cx(6)},38`} fill="none" stroke={HX_AC} strokeWidth="1" markerEnd="url(#hxf11a)" />
+      {HX_FLOW11.map((s, i) => {
         const x = X0 + i * ST, mute = s.dim ? HX_MUTE : HX_INK;
         return (
           <g key={i} opacity={s.dim ? 0.55 : 1}>
@@ -1138,26 +1141,24 @@ function HxFlow9Wide() {
             <HxLines x={x + W / 2} y={s.name.length > 1 ? 66 : 72} lines={s.name} size={HX_FS_LABEL} fill={mute} gap={15} />
             <HxLines x={x + W / 2} y={s.ag.length > 1 ? 120 : 127} lines={s.ag} size={HX_FS_MICRO} fill={HX_MUTE} />
             <HxLines x={x + W / 2} y={s.hu.length > 1 ? 188 : 195} lines={s.hu} size={HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
-            {i < 8 && <line x1={x + W + 1} y1="65" x2={x + ST - 3} y2="65" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf9g)" />}
+            {i < N - 1 && <line x1={x + W + 1} y1="65" x2={x + ST - 3} y2="65" stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf11g)" />}
           </g>);
       })}
-
-
-      <text x={(cx(7) + cx(8)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>준비까지 · 팀 반영 전</text>
-      <text x={(cx(3) + cx(4)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>4 · 5는 6 · 7과 겹쳐 돎</text>
-      <text x="936" y="256" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 메인 세션 하나와만 대화</text>
+      <text x={(cx(6) + cx(9)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>7 · 10은 결함 고리로 여러 번 돎</text>
+      <text x={cx(10)} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>운영 배포 전</text>
+      <text x={VW - 24} y="256" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작</text>
     </svg>);
 }
 
-function HxFlow9Narrow() {
-  const Y0 = 52, ST = 50;
+function HxFlow11Narrow() {
+  const Y0 = 52, ST = 50, N = HX_FLOW11.length, YE = Y0 + N * ST;
   return (
-    <svg className="hx-narrow" viewBox="0 0 360 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW9_ARIA}>
-      <HxArrows id="hxf9n" />
+    <svg className="hx-narrow" viewBox={`0 0 360 ${YE + 40}`} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW11_ARIA}>
+      <HxArrows id="hxf11n" />
       <text x="170" y="34" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>에이전트 · 넓힘</text>
       <text x="296" y="34" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람 · 좁힘</text>
-      <rect x="236" y="42" width="120" height={9 * ST + 4} rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
-      {HX_FLOW9.map((s, i) => {
+      <rect x="236" y="42" width="120" height={N * ST + 4} rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
+      {HX_FLOW11.map((s, i) => {
         const y = Y0 + i * ST;
         return (
           <g key={i} opacity={s.dim ? 0.55 : 1}>
@@ -1166,23 +1167,23 @@ function HxFlow9Narrow() {
             <HxLines x={60} y={s.name.length > 1 ? y + 18 : y + 26} lines={s.name} size={12} fill={s.dim ? HX_MUTE : HX_INK} gap={15} />
             <HxLines x={170} y={s.ag.length > 1 ? y + 17 : y + 25} lines={s.ag} size={HX_FS_MICRO} fill={HX_MUTE} />
             <HxLines x={296} y={s.hu.length > 1 ? y + 17 : y + 25} lines={s.hu} size={HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
-            {i < 8 && <line x1="53" y1={y + 43} x2="53" y2={y + ST - 2} stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf9ng)" />}
+            {i < N - 1 && <line x1="53" y1={y + 43} x2="53" y2={y + ST - 2} stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf11ng)" />}
           </g>);
       })}
-      <text x="4" y="518" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>4 · 5는 6 · 7과 겹쳐 돎 · 8 · 9는 준비까지</text>
-      <text x="356" y="536" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 메인 세션 하나와만 대화</text>
+      <text x="4" y={YE + 16} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>7 · 10은 결함 고리로 여러 번 돎 · 11은 운영 배포 전</text>
+      <text x="356" y={YE + 34} textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작</text>
     </svg>);
 }
 
-function HxFlow9Diagram() {
-  return <React.Fragment><HxFlow9Wide /><HxFlow9Narrow /></React.Fragment>;
+function HxFlow11Diagram() {
+  return <React.Fragment><HxFlow11Wide /><HxFlow11Narrow /></React.Fragment>;
 }
 
 function HxCommerceDiagram() {
   return <React.Fragment><HxCommerceWide /><HxCommerceNarrow /></React.Fragment>;
 }
 
-const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram, commerce: HxCommerceDiagram, flow9: HxFlow9Diagram };
+const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram, commerce: HxCommerceDiagram, flow11: HxFlow11Diagram };
 
 /* 06 AI HARNESS · 07 AI PROJECTS 공용 딥다이브 본문: projects[] + note */
 function HarnessDeepDive({ data: H }) {
@@ -1266,8 +1267,16 @@ function HarnessDeepDive({ data: H }) {
    카드를 누르면 그 줄 바로 아래 전폭 행으로 상세가 펼쳐짐(grid dense라 같은 줄 다른 카드는 자리 유지) */
 const TL_WHERE = { '회사': 'co', '자동매매': 'tr', 'KVTO': 'kv' };
 
-function TLDetail({ id, x, caret }) {
+// harness-james 공개판 링크: 레포 루트 / 카드별 코드 경로(데이터 code 필드). 모양은 기존 .proj-more 링크
+const repoHref = (repo, path) => !path ? repo.url :
+`${repo.url}/${path.endsWith('/') ? 'tree' : 'blob'}/${repo.ref}/${path.replace(/\/$/, '')}`;
+function ExtLink({ href, children }) {
+  return <a href={href} target="_blank" rel="noopener noreferrer">{children} <span className="arr" aria-hidden="true">↗</span></a>;
+}
+
+function TLDetail({ id, x, caret, repo }) {
   const D = x.detail;
+  const code = x.code ? [].concat(x.code) : [];
   // 적용처는 카드 태그 순서대로
   const cases = x.where.map((w) => (D.cases || []).find((c) => c.where === w)).filter(Boolean);
   return (
@@ -1289,6 +1298,13 @@ function TLDetail({ id, x, caret }) {
         }
       </div>
       {D.note && <p className="tl-d-note"><span className="tl-d-k">비고</span>{renderRichText(D.note)}</p>}
+      {repo && code.length > 0 &&
+      <p className="tl-d-note tl-d-code"><span className="tl-d-k">코드</span>
+        <span className="proj-more">
+          {code.map((p) => <ExtLink key={p} href={repoHref(repo, p)}>{p}</ExtLink>)}
+        </span>
+      </p>
+      }
     </div>);
 }
 
@@ -1333,6 +1349,12 @@ function AITimeline({ data: T }) {
           {T.head.meta.map((m, i) =>
           <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
           )}
+        </div>
+        }
+        {T.head.repo &&
+        <div className="tl-repo">
+          <span className="proj-more"><ExtLink href={repoHref(T.head.repo)}>{T.head.repo.name}</ExtLink></span>
+          <span>{renderRichText(T.head.repo.desc)}</span>
         </div>
         }
       </div>
@@ -1382,7 +1404,7 @@ function AITimeline({ data: T }) {
                       {x.detail && <span className="tl-more" aria-hidden="true">{isOpen ? '접기 −' : '상세 +'}</span>}
                     </div>
                   </article>
-                  {isOpen && <TLDetail id={id} x={x} caret={carets[k]} />}
+                  {isOpen && <TLDetail id={id} x={x} caret={carets[k]} repo={T.head && T.head.repo} />}
                 </React.Fragment>);
             })}
           </div>
