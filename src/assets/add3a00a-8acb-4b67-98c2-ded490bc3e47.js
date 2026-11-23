@@ -265,7 +265,7 @@ function About() {
             <div className="about-prose reveal d1">
               <p>3년간 5개 이상의 공공 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>처리 계층 8서버 분산</strong>(중앙영구기록관리시스템), <strong>10년 · 약 1억 건 전수 분석</strong>(전자기록 기계검수), <strong>12개 MSA 배포 환경</strong>(대구광역시교육청 AI 평가 플랫폼)을 거치며, 안정성과 정합성이 중요한 시스템을 eGovFrame부터 Spring Boot 기반 MSA·K-PaaS까지 폭넓게 다뤄왔습니다.</p>
               <p>단순히 동작하는 코드보다 <span className="kw">변경에 강한 구조</span>를 만드는 데 관심이 많습니다. 공공 프로젝트는 전자정부프레임워크 표준(Spring MVC 계층형)을 따라야 하는 만큼, 그 제약 안에서 도메인 로직이 컨트롤러와 SQL로 흩어지지 않도록 <strong>서비스 계층의 책임을 나누는 데</strong> 집중했습니다.</p>
-              <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD</strong>를 직접 적용합니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 명확한 경계와 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
+              <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD · SDD</strong>를 직접 적용합니다. SDD는 <strong>Spec Kit을 커스터마이징</strong>해 현 업무에서도 제 작업 방식으로 씁니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 스펙과 명확한 경계, 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
               {!aside && nowP}
             </div>
             {aside ?
@@ -549,6 +549,11 @@ function Projects() {
     <section id="projects" className="projects" data-screen-label={screenLabel('projects')}>
       <div className="container">
         <SectionHeader slug="projects" title="PROJECTS" meta={secNo('projects')} />
+        <div className="case-intro fx-proj-intro reveal">
+          <div className="case-cat">Featured Projects · 공공 3 · 개인 2</div>
+          <h3>대표 프로젝트 5건</h3>
+          <p className="case-lead">처리 계층 8서버 분산, 12개 MSA 배포 환경, 약 1억 건 전수 분석. 개인 프로젝트는 AI 가상 피팅 플랫폼과 LLM 자동매매.</p>
+        </div>
         <ProjIndex items={window.PORTFOLIO_DATA.FEATURED_PROJECTS} />
         <div className="proj-grid">
           {window.PORTFOLIO_DATA.FEATURED_PROJECTS.map((p) => <ProjectCard key={p.no} p={p} />)}
@@ -815,10 +820,10 @@ function CaseStudy() {
         <SectionHeader slug="case-study" title="CASE STUDY" meta={secNo('case-study')} />
 
         <div className="case-intro reveal">
-          <div className="case-cat">Distributed System · Deep Dive</div>
+          <div className="case-cat">Distributed System · Deep Dive · 행정안전부 사업 (2024)</div>
           <h3>중앙영구기록관리시스템 다중화</h3>
           <p className="case-lead">
-            행정안전부 사업(2024). 서버 8대와 L4 없는 환경은 주어진 조건. 여기에 인수:품질 비율을 바꿔 쓰려는 요구가 더해져 역할을 고정하는 구조는 쓸 수 없었음. 그래서 중앙 분배자 없이 각 워커가 작업을 직접 집어가는 <strong>경쟁 소비자(self-claiming)</strong> 구조를 택함. 나눈 것은 <strong>처리 계층</strong>이고, 파일을 받는 수신 게이트웨이는 끝까지 1대. 제약이 설계를 바꾸고 한 해결책이 다음 문제를 부른 과정을 순서대로 정리.
+            L4 없는 서버 8대에서 <strong>처리 계층</strong>을 나누려고, 분배자 없이 워커가 작업을 직접 집어가는 <strong>경쟁 소비자</strong> 구조를 고르기까지의 과정.
           </p>
           <div className="case-meta">
             <div><span className="k">Role</span><span className="v">다중화 과제 단독 담당 : 작업 큐 스키마 · claim 쿼리 · 워커 루프 · 실패 모드 정책</span></div>
@@ -1528,7 +1533,13 @@ function P7Projects({ data: H }) {
 
   return (
     <div className="p7" ref={rootRef}>
-      {H.intro && <p className="case-lead p7-intro">{renderRichText(H.intro)}</p>}
+      {H.head &&
+      <div className="case-intro p7-top">
+        <div className="case-cat">{H.head.cat}</div>
+        <h3>{H.head.headline}</h3>
+        <p className="case-lead">{renderRichText(H.head.lead)}</p>
+      </div>
+      }
 
       <div className="p7-switch" ref={switchRef} role="tablist" aria-label="프로젝트" onKeyDown={onTabKey}>
         {H.projects.map((q, i) =>
@@ -1883,8 +1894,26 @@ function AITimeline({ data: T }) {
         <div className="case-cat">{T.head.cat}</div>
         <h3>{T.head.headline.split('\n').map((l, i) =>
           <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+        <p className="case-lead t6-lead">{renderRichText(T.head.lead)}</p>
         <div className="t6-lead-row">
-          <p className="case-lead">{renderRichText(T.head.lead)}</p>
+          <div className="t6-lead-main">
+            {(T.head.meta || T.head.repo) &&
+            <div className="case-meta">
+              {(T.head.meta || []).map((m, i) =>
+              <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
+              )}
+              {T.head.repo &&
+              <div className="t6-repo">
+                <span className="k">Public Repo</span>
+                <span className="v">
+                  <span className="proj-more"><ExtLink href={repoHref(T.head.repo)}>{T.head.repo.name}</ExtLink></span>
+                  <span className="t6-repo-desc">{renderRichText(T.head.repo.desc)}</span>
+                </span>
+              </div>
+              }
+            </div>
+            }
+          </div>
           {T.principles &&
           <div className="tl-principles t6-principles">
             <div className="label">원칙</div>
@@ -1892,22 +1921,6 @@ function AITimeline({ data: T }) {
           </div>
           }
         </div>
-        {(T.head.meta || T.head.repo) &&
-        <div className="case-meta">
-          {(T.head.meta || []).map((m, i) =>
-          <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
-          )}
-          {T.head.repo &&
-          <div className="t6-repo">
-            <span className="k">Public Repo</span>
-            <span className="v">
-              <span className="proj-more"><ExtLink href={repoHref(T.head.repo)}>{T.head.repo.name}</ExtLink></span>
-              <span className="t6-repo-desc">{renderRichText(T.head.repo.desc)}</span>
-            </span>
-          </div>
-          }
-        </div>
-        }
       </div>
       }
       {/* 먼저 볼 N장: 데이터의 featured. 카드에는 달 · 분류 · 이름 · what · 적용처만, 누르면 띠 안에서 상세가 펴짐 */}
