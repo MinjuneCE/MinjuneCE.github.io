@@ -2211,6 +2211,7 @@ function Contact() {
           <div><span>FOCUS</span><b>Backend · AI Harness · AX / FDE</b></div>
           <div><span>RESPONSE</span><b>~ 24h</b></div>
         </div>
+        <p className="fx-colophon"><span>COLOPHON</span>이 사이트는 Claude Code 에이전트와 함께 만듦. 문장은 근거 등급을 매긴 사실 원장에서만 가져오고, 금지 표현 검사와 화면 확인을 거친 뒤 본인이 승인해 배포함.</p>
       </div>
     </section>);
 
@@ -2359,7 +2360,7 @@ function App() {
           {page === total - 1 &&
           <footer className="footer">
             <div>© 2026 Kim Minjune · Built with React, Vanilla CSS, and a lot of espresso.</div>
-            <div>v.3.4.0 · last updated 2026.10.18</div>
+            <div>v.3.4.0 · last updated 2026.11.23</div>
           </footer>
           }
         </div>
