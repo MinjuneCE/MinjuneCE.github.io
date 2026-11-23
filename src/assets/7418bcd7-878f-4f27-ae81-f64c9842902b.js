@@ -870,7 +870,7 @@ const AI_PROJECTS = {
   // 07 맨 위: 구분 · 핵심 제목 · 요약 한 줄 (현장별 위험은 각 프로젝트 lead에 있음)
   head: {
     cat: '3 Projects · 회사 1 · 개인 2',
-    headline: '프로젝트별 AI Native 적용',
+    headline: 'AI Native 환경에서의 프로젝트 수행 사례',
     lead: '현장마다 무엇이 위험했고, 에이전트에게 어디까지 맡기고 무엇을 사람의 판정과 승인으로 남겼는지 정리.',
   },
   projects: [
