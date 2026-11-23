@@ -245,7 +245,7 @@ const AI_TIMELINE = {
   head: {
     cat: 'Agent Harness · 2026.02 ~ 2026.11',
     headline: 'Structure,\nNot Instructions.',
-    lead: '에이전트에게 일을 맡기는 작업 환경을 Claude Code 위에 직접 구성해 온 10개월. 만들 것은 **스펙과 결정 기록으로 먼저 고정**하고, 되돌릴 수 없는 동작은 **훅과 가드로 막고**, 산출물은 **만든 쪽이 아닌 독립 주체가 판정**함. 사람은 승인 지점에 서고 운영은 직접 확인함. 2026.02 KVTO의 에이전트 팀에서 시작해 LLM 자동매매의 검증 분리 · 세션 인계, 2026.10 회사 업무의 실행 전 판정 · 쓰기 가드 · 역할 세션 팀을 거쳐, 2026.11 리서치 팀 격리 · 사전 등록 자동 정지와 회사 업무의 운영 오픈 뒤 사람 손 운영 확인 · 프로젝트별 게시판 · Spec Kit 커스터마이징까지 기술 44개.',
+    lead: '**스펙으로 먼저 고정**하고, **훅과 가드로 막고**, 만든 쪽이 아닌 **독립 주체가 판정**하게 함. Claude Code 위에 10개월간 직접 구성한 기술 44개.',
     meta: [
       { k: 'Period', v: '2026.02 ~ 2026.11' },
       { k: 'Scale', v: '기술 44 · 분류 6' },
@@ -765,7 +765,7 @@ const AI_TIMELINE = {
           ],
         } },
       { name: 'Spec Kit 커스터마이징: 단계 계약 · 번호 추적', layer: '만들기',
-        code: ['plugins/harness-james/skills/spec-kit/', 'plugins/harness-james/skills/decision-log/'],
+        code: ['plugins/harness-james/skills/spec-kit/', 'plugins/harness-james/skills/decision-log/', 'examples/sdd-sample/'],
         what: 'Spec Kit을 그대로 쓰지 않고, 결정 기록 자리와 문서 단계별 계약 · 번호 추적 검사를 더해 씀',
         how: '원본 양식은 고정 판 그대로 두고, 결정 장부 · spec → clarify → plan → tasks 단계 계약 · 원자료 번호 추적 검사기를 스킬로 얹음',
         where: ['회사'],
@@ -867,7 +867,12 @@ const AI_TIMELINE = {
 };
 
 const AI_PROJECTS = {
-  intro: '성격이 다른 세 현장에 에이전트 하네스를 붙인 기록. 운영 중인 커머스는 미리보기에서도 실주문이 가능한 구조, LLM 자동매매는 LLM이 매매를 제안하고 소액 실전 주문까지 나가는 구조, KVTO는 기획부터 QA까지 1인이 맡은, AI 생성 호출마다 과금되는 서비스. 현장마다 무엇이 위험했고, 에이전트에게 어디까지 맡기고 무엇을 사람의 판정과 승인으로 남겼는지 정리.',
+  // 07 맨 위: 구분 · 핵심 제목 · 요약 한 줄 (현장별 위험은 각 프로젝트 lead에 있음)
+  head: {
+    cat: '3 Projects · 회사 1 · 개인 2',
+    headline: '프로젝트별 AI Native 적용',
+    lead: '현장마다 무엇이 위험했고, 에이전트에게 어디까지 맡기고 무엇을 사람의 판정과 승인으로 남겼는지 정리.',
+  },
   projects: [
     {
       cat: 'Company · 2026.10 ~ 진행 중',
