@@ -105,6 +105,31 @@ function Nav({ page, total }) {
 }
 
 // ============ HERO ============
+// 목차 훅: 05는 기존 문구, 06 · 07은 2026-11-23 리드 확정 문구
+const HERO_HOOKS = {
+  'case-study': '중앙영구 8서버 · 추가 인프라 0대',
+  'ai-harness': 'Spec Kit 커스터마이징 · 공개 플러그인',
+  'ai-projects': '운영 오픈까지 간 에이전트 하네스',
+};
+
+// pf-front 배치 스위치: false로 바꾸면 2026-11-23 이전 배치로 돌아감
+const FX_LAYOUT = {
+  aboutNowAside: true, // About 넷째 문단(현재 일)을 오른쪽 열 맨 위로
+  skillsAiFirst: true, // Skills에서 AI Engineering 묶음을 맨 위로
+};
+
+// 섹션은 .page-scroll 안에서 스크롤되고 해시는 페이지 전환에 쓰이므로, 페이지 안 이동은 버튼 + scrollTo로 처리
+function fxJump(el, offset = 12) {
+  const sc = el && el.closest('.page-scroll');
+  if (!sc) return;
+  // 아직 나타나지 않은 .reveal은 24px 내려가 있어 화면 좌표가 어긋남. 배치 좌표(offsetTop)를 더해 구함
+  let top = -offset;
+  for (let n = el; n && n !== sc && sc.contains(n); n = n.offsetParent) top += n.offsetTop;
+  const calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  sc.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' });
+  el.focus({ preventScroll: true });
+}
+
 function Hero() {
   return (
     <section id="hero" className="hero" data-screen-label={screenLabel('hero')}>
@@ -112,15 +137,15 @@ function Hero() {
         <div className="hero-top">
           <div>Kim Minjune ®</div>
           <div>Backend Engineer → AX · FDE, Seoul, Republic of Korea</div>
-          <div>Portfolio · 2026.10</div>
+          <div>Portfolio · 2026.11</div>
         </div>
 
         <div className="hero-main">
           <div className="hero-num">
             {window.PORTFOLIO_DATA.NAV.map((n, i) =>
-            <a key={n.id} href={`#${n.id}`} className={i === 0 ? 'cur' : ''}>
+            <a key={n.id} href={`#${n.id}`} className={(i === 0 ? 'cur' : '') + (HERO_HOOKS[n.id] ? ' fx-hooked' : '')}>
               {i === 0 ? <b>{String(i + 1).padStart(2, '0')}</b> : String(i + 1).padStart(2, '0')} · {n.label}
-              {n.id === 'case-study' && <span className="hook">중앙영구 8서버 · 추가 인프라 0대</span>}
+              {HERO_HOOKS[n.id] && <span className="hook">{HERO_HOOKS[n.id]}</span>}
             </a>
             )}
           </div>
@@ -139,15 +164,19 @@ function Hero() {
           </div>
           <div className="hero-slogan">
             설계부터 운영까지 끝까지 책임지던 방식 그대로, AI를 현장의 업무에 붙이는 일을 준비합니다.
-            <a href="#case-study" className="case-hint">CASE STUDY 05 → 중앙영구기록관리 8서버 자율 분산 딥다이브</a>
+            <div className="fx-hints">
+              <a href="#ai-projects" className="case-hint">AI PROJECTS 07 → {HERO_HOOKS['ai-projects']}</a>
+              <a href="#case-study" className="case-hint">CASE STUDY 05 → 중앙영구기록관리 8서버 자율 분산 딥다이브</a>
+            </div>
           </div>
           <div className="hero-status"><span className="dot" /> Available</div>
         </div>
 
         <div className="hero-bottom">
-          <div className="hero-ctas">
-            <a href="#projects" className="btn primary">프로젝트 보기 <span className="arr">→</span></a>
-            <a href="mailto:richdream703@gmail.com" className="btn ghost">연락하기</a>
+          <div className="hero-ctas fx-ctas">
+            <a href="#ai-projects" className="btn primary">AI 적용 사례 보기 <span className="arr">→</span></a>
+            <a href="#projects" className="btn ghost">프로젝트 보기</a>
+            <a href="mailto:richdream703@gmail.com" className="fx-cta-text">연락하기</a>
           </div>
           <div className="hero-counters">
             <div><Counter to={3} suffix="+" />Years Exp</div>
@@ -220,6 +249,9 @@ function Terminal() {
 }
 
 function About() {
+  const aside = FX_LAYOUT.aboutNowAside;
+  // 넷째 문단(현재 일). 문장은 그대로, 놓는 자리만 스위치로 바꿈
+  const nowP = <p>2026년 10월부터는 글로벌 D2C 커머스(Shopify)의 <strong>풀스택 개발자</strong>로 스토어와 결제 · 물류 연동 모듈을 맡고 있고, 에이전트 하네스와 스펙 주도 개발(SDD)로 만든 첫 기능을 운영에 열었습니다. 공공 백엔드에서 쌓은 설계 · 운영 감각과 에이전트 하네스 경험을 묶어, 현업 가까이에서 문제를 풀고 AI로 일하는 방식을 바꾸는 <span className="kw">AX · FDE</span>를 준비합니다.</p>;
   return (
     <section id="about" className="about" data-screen-label={screenLabel('about')}>
       <div className="container">
@@ -234,11 +266,22 @@ function About() {
               <p>3년간 5개 이상의 공공 도메인에서 백엔드 시스템을 설계하고 운영해왔습니다. <strong>처리 계층 8서버 분산</strong>(중앙영구기록관리시스템), <strong>10년 · 약 1억 건 전수 분석</strong>(전자기록 기계검수), <strong>12개 MSA 배포 환경</strong>(대구광역시교육청 AI 평가 플랫폼)을 거치며, 안정성과 정합성이 중요한 시스템을 eGovFrame부터 Spring Boot 기반 MSA·K-PaaS까지 폭넓게 다뤄왔습니다.</p>
               <p>단순히 동작하는 코드보다 <span className="kw">변경에 강한 구조</span>를 만드는 데 관심이 많습니다. 공공 프로젝트는 전자정부프레임워크 표준(Spring MVC 계층형)을 따라야 하는 만큼, 그 제약 안에서 도메인 로직이 컨트롤러와 SQL로 흩어지지 않도록 <strong>서비스 계층의 책임을 나누는 데</strong> 집중했습니다.</p>
               <p>제약이 다른 개인 프로젝트에서는 <strong>DDD · 헥사고날 · TDD</strong>를 직접 적용합니다. <span className="kw">Claude Code 기반 에이전틱 워크플로우</span>로 개발할 때, 명확한 경계와 테스트가 곧 AI에 넘기는 명세이자 검증 장치이기 때문입니다.</p>
-              <p>2026년 10월부터는 글로벌 D2C 커머스(Shopify)의 <strong>풀스택 개발자</strong>로 스토어와 결제 · 물류 연동 모듈을 맡고 있습니다. 공공 백엔드에서 쌓은 설계 · 운영 감각과 에이전트 하네스 경험을 묶어, 현업 가까이에서 문제를 풀고 AI로 일하는 방식을 바꾸는 <span className="kw">AX · FDE</span>를 준비합니다.</p>
+              {!aside && nowP}
             </div>
+            {aside ?
+            <div className="fx-about-side">
+              <div className="about-prose fx-now reveal d1">
+                <div className="fx-now-label"><b>2026.10 ~</b><span className="promo">재직 중</span></div>
+                {nowP}
+              </div>
+              <div className="about-terminal reveal d2">
+                <Terminal />
+              </div>
+            </div> :
             <div className="about-terminal reveal d2">
               <Terminal />
             </div>
+            }
           </div>
 
           <div className="about-stats">
@@ -324,7 +367,9 @@ IPCX</h3>
           </div>
           <div className="exp-company-desc">
             <p>글로벌 D2C 화장품 브랜드의 <strong>Shopify 스토어 개발 · 운영</strong>을 맡고 있습니다. 서드파티 앱 대신 자체 모듈(주문 취소 · 모니터링)을 개발해 AWS 환경에 배포하고 스토어와 연동하는 일, 해외 결제 대행(MoR) · 물류사(3PL)와의 주문 · 결제 · 출고 상태 연동을 담당합니다.</p>
-            <p>팀이 운영 중인 시스템이라 코드부터 고치지 않고 <strong>에이전트 하네스부터 구성</strong>했습니다. 기존 시스템을 분석하고 실주문이 나갈 수 없는 로컬 검증 환경을 세웠습니다. 재설계안은 실험 브랜치에서 검증한 뒤 팀 개발 브랜치에 반영했고, 지금은 운영 배포를 앞둔 준비 단계입니다. 구성과 원칙은 06 AI HARNESS에 정리했습니다.</p>
+            <p>팀이 운영 중인 시스템이라 코드부터 고치지 않고 <strong>에이전트 하네스부터 구성</strong>했습니다. 제 작업 방식은 <strong>Spec Kit을 커스터마이징한 스펙 주도 개발(SDD)</strong>입니다.</p>
+            <p>기존 시스템은 코드에서 스펙을 거꾸로 뽑아 파악했고, 실주문이 나갈 수 없는 로컬 검증 환경을 세웠습니다. 주문 취소 재설계안은 실험 브랜치에서 검증해 팀 개발 브랜치에 반영한 뒤 <strong>운영에 열었고</strong>, 지금은 모니터링 단계입니다. 운영 확인과 시험은 제가 직접 하고 에이전트는 대조를 맡습니다.</p>
+            <p>이어서 두 번째 기능을 같은 방식으로 운영에 냈고, 다음 기능은 <strong>요청한 쪽과 요구사항을 정리하는 것부터</strong> SDD 설계까지 진행하고 있습니다. 구성과 원칙은 <a href="#ai-harness" className="fx-xref">06 AI HARNESS</a>, 과정은 <a href="#ai-projects" className="fx-xref">07 AI PROJECTS</a>에 정리했습니다.</p>
           </div>
         </div>
 
@@ -341,6 +386,7 @@ Akiaka</h3>
           <div className="exp-company-desc">
             <p>교육·행정·에너지·연구·국토 등 <strong>5개 이상 공공 도메인의 업무시스템</strong>(영구기록물·평가 플랫폼)을 맡아왔습니다. 사업에 따라 신규 구축을 하기도 했고, 기능개선이나 장기 유지보수를 맡기도 했습니다.</p>
             <p>원래 난이도 때문에 PL이 맡기로 돼 있던 <strong>중앙영구기록관리시스템 다중화 과제를 넘겨받아, 분산 처리를 직접 공부해 혼자 설계하고 구현</strong>했습니다. 부서 연차사업 제안서 작성에도 참여했고, 리더로 승격했습니다.</p>
+            <p>요구사항을 설계로 구체화하는 일도 맡았습니다. 전자기록 기계검수 분석 사업에서는 <strong>RFP의 데이터 분석 요구를 전수 분석 설계로 구체화</strong>하고, 자동 검수를 어디까지 믿을지 기준을 제시했습니다.</p>
           </div>
         </div>
 
@@ -392,7 +438,7 @@ function renderRichText(text) {
 
 function ProjectCard({ p }) {
   return (
-    <div className="proj-card reveal">
+    <div className="proj-card reveal" id={`fx-proj-${p.no}`} tabIndex={-1}>
       <div className="cat">
         <span>{p.cat}</span>
         <span className="pno">PROJECT · {p.no}</span>
@@ -452,7 +498,7 @@ function ProjectCard({ p }) {
       </div>
       }
 
-      <div className="proj-block">
+      <div className="proj-block fx-result">
         <div className="blabel">Result</div>
         {p.resultList.length > 1 ?
         <ul>
@@ -478,11 +524,32 @@ function ProjectCard({ p }) {
 
 }
 
+// 카드 바로가기: 번호 · 사업명 · 헤드라인 둘째 줄 · 분류 첫 마디(전부 카드에 이미 있는 글자)
+function ProjIndex({ items }) {
+  return (
+    <ol className="fx-idx" aria-label="프로젝트 바로가기">
+      {items.map((p) => {
+        const [biz, claim] = p.headline.split('\n');
+        return (
+          <li key={p.no}>
+            <button type="button" onClick={() => fxJump(document.getElementById(`fx-proj-${p.no}`))}>
+              <span className="n">{p.no}</span>
+              <span className="biz">{biz}</span>
+              <span className="claim">{claim}</span>
+              <span className="cat">{p.cat.split(' · ')[0]}</span>
+              <span className="go" aria-hidden="true">↓</span>
+            </button>
+          </li>);
+      })}
+    </ol>);
+}
+
 function Projects() {
   return (
     <section id="projects" className="projects" data-screen-label={screenLabel('projects')}>
       <div className="container">
         <SectionHeader slug="projects" title="PROJECTS" meta={secNo('projects')} />
+        <ProjIndex items={window.PORTFOLIO_DATA.FEATURED_PROJECTS} />
         <div className="proj-grid">
           {window.PORTFOLIO_DATA.FEATURED_PROJECTS.map((p) => <ProjectCard key={p.no} p={p} />)}
         </div>
@@ -679,6 +746,68 @@ function CaseDiagram() {
     </svg>);
 }
 
+// 소제목 4개: 본문 라벨과 붙박이 목차가 같은 글자를 씀
+const CASE_SECTIONS = [
+  { id: 'fx-cs-01', n: '01', t: '문제 해결 과정' },
+  { id: 'fx-cs-02', n: '02', t: '아키텍처' },
+  { id: 'fx-cs-03', n: '03', t: '핵심 구현' },
+  { id: 'fx-cs-04', n: '04', t: '설계 노트 · 실패 모드' },
+];
+
+function CaseLabel({ i }) {
+  const s = CASE_SECTIONS[i];
+  return <div className="case-section-label" id={s.id} tabIndex={-1}><span>{s.n}. {s.t}</span></div>;
+}
+
+// 붙박이 목차: 지금 읽는 소제목을 aria-current로 표시하고, 누르면 그 소제목까지 스크롤
+function CaseToc() {
+  const [cur, setCur] = useState(-1);
+  const ref = useRef(null);
+  useEffect(() => {
+    const bar = ref.current;
+    const sc = bar && bar.closest('.page-scroll');
+    if (!sc) return;
+    let raf = null;
+    const update = () => {
+      raf = null;
+      // 기준선 = 목차가 붙는 자리(스크롤 영역 맨 위) 바로 아래. 목차가 아직 본문 안에 있을 때는 현재 표시 없음
+      const line = sc.getBoundingClientRect().top + bar.offsetHeight + 32;
+      let k = -1;
+      CASE_SECTIONS.forEach((s, i) => {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top <= line) k = i;
+      });
+      // 마지막 소제목은 화면 맨 위까지 못 올라올 수 있어 바닥에 닿으면 마지막으로 봄
+      if (k >= 0 && sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 4) k = CASE_SECTIONS.length - 1;
+      setCur(k);
+    };
+    const on = () => {if (raf === null) raf = requestAnimationFrame(update);};
+    update();
+    sc.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => {
+      sc.removeEventListener('scroll', on);
+      window.removeEventListener('resize', on);
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, []);
+  // 좁은 화면에서는 목차가 가로로 넘치므로 현재 항목을 줄 안으로 끌어옴
+  useEffect(() => {
+    const bar = ref.current;
+    const b = bar && bar.querySelector('[aria-current="true"]');
+    if (b) bar.scrollLeft = Math.max(0, b.offsetLeft - 16);
+  }, [cur]);
+  return (
+    <nav className="fx-toc" ref={ref} aria-label="케이스 스터디 목차">
+      {CASE_SECTIONS.map((s, i) =>
+      <button key={s.id} type="button" aria-current={cur === i ? 'true' : undefined}
+        onClick={() => fxJump(document.getElementById(s.id), ref.current.offsetHeight + 18)}>
+        <b>{s.n}</b>{s.t}
+      </button>
+      )}
+    </nav>);
+}
+
 function CaseStudy() {
   return (
     <section id="case-study" className="case" data-screen-label={screenLabel('case-study')}>
@@ -699,7 +828,9 @@ function CaseStudy() {
           </div>
         </div>
 
-        <div className="case-section-label"><span>01. 문제 해결 과정</span></div>
+        <CaseToc />
+
+        <CaseLabel i={0} />
         <div className="case-trace">
           {CASE_TRACE.map((b, i) =>
           <div className="case-beat reveal" key={i}>
@@ -712,11 +843,11 @@ function CaseStudy() {
           )}
         </div>
 
-        <div className="case-section-label"><span>02. 아키텍처</span></div>
+        <CaseLabel i={1} />
         <div className="case-diagram reveal"><CaseDiagram /></div>
         <div className="case-fig">수신 게이트웨이 1대(처리 겸)가 메타데이터를 큐에 적재 → 8개 워커가 <code>SKIP LOCKED</code>로 직접 선점. 분배자(dispatcher) 없음.</div>
 
-        <div className="case-section-label"><span>03. 핵심 구현</span></div>
+        <CaseLabel i={2} />
         <div className="case-code reveal">
           <div className="cbar">JobQueueMapper.xml · Oracle · MyBatis · 설명용으로 다시 쓴 코드</div>
           <pre>{CASE_SQL}</pre>
@@ -727,7 +858,7 @@ function CaseStudy() {
         </div>
         <p className="case-note-inline">* 위 두 스니펫은 실제 납품 소스가 아니라 핵심 흐름(선점 → 상태 전이 → 커밋)을 보이려고 다시 쓴 코드. 상태는 코드값으로 운영되며 named 파라미터로 주입함. 한 번에 몇 건을 집을지 제한하는 구문은 흐름을 가리지 않도록 뺐음.</p>
 
-        <div className="case-section-label"><span>04. 설계 노트 · 실패 모드</span></div>
+        <CaseLabel i={3} />
         <div className="case-qa-grid">
           {CASE_QA.map((q, i) =>
           <div className="case-qa reveal" key={i}>
@@ -1099,7 +1230,7 @@ function HxCommerceNarrow() {
 }
 
 /* 07 · 11단계 흐름: 위 띠는 에이전트가 넓히고, 아래 띠는 사람이 좁힘.
-   7 · 10은 결함 고리(시험이 찾고 구현이 고치고 시험이 다시 확인)라 강조, 11은 운영 배포 전 준비까지라 흐리게 */
+   7 · 10은 결함 고리(시험이 찾고 구현이 고치고 시험이 다시 확인)라 강조, 11은 사람 손으로 한 운영 오픈 */
 const HX_FLOW11 = [
   { n: '01', name: ['분석'], ag: ['레포별 구조', '결함 후보'], hu: ['아직', '고치지 않음'] },
   { n: '02', name: ['역방향', 'SDD'], ag: ['코드에서', '스펙 추출'], hu: ['형식 · 빈틈', '판단'] },
@@ -1111,19 +1242,20 @@ const HX_FLOW11 = [
   { n: '08', name: ['PR 전', '검증'], ag: ['채점 · 반증', 'diff 밖 신호'], hu: ['수정 범위', '언제 돌릴지'] },
   { n: '09', name: ['승인 PR', 'dev 반영'], ag: ['PR 준비', '머지 전 재확인'], hu: ['push · merge', '승인'] },
   { n: '10', name: ['실제 환경', '시험'], ag: ['증거 · 판정', '결함 인계'], hu: ['쓰기 범위', '화면 조작'], hot: true },
-  { n: '11', name: ['운영', '준비'], ag: ['개발 서버 배포', '운영 안내서'], hu: ['운영 손 설정', '배포 방식'], dim: true },
+  { n: '11', name: ['운영', '오픈'], ag: ['명령 · 기대값', '결과 대조'], hu: ['확인 · 시험', '배포 · 머지'] },
 ];
-const HX_FLOW11_ARIA = '분석부터 운영 준비까지 11단계에서 에이전트가 한 일과 사람이 정한 일을 나눈 흐름. 7 · 10단계는 결함을 찾고 고치고 다시 시험하며 여러 번 돌고, 11단계는 운영 배포 전 준비까지';
+const HX_FLOW11_ARIA = '분석부터 운영 오픈까지 11단계에서 에이전트가 한 일과 사람이 정한 일을 나눈 흐름. 7 · 10단계는 결함을 찾고 고치고 다시 시험하며 여러 번 돌고, 11단계 운영 오픈의 확인 · 시험 · 배포는 사람 손';
 
 function HxLines({ x, y, lines, size, fill, gap = 14 }) {
   return lines.map((l, i) => <text key={i} x={x} y={y + i * gap} textAnchor="middle" fontFamily={HXM} fontSize={size} fill={fill}>{l}</text>);
 }
 
-function HxFlow11Wide() {
+/* act: 강조할 단계(없으면 null). 단계를 가리키거나 누르면 그 열만 남기고 나머지를 흐리게 함 */
+function HxFlow11Wide({ act = null, onHover, onPick }) {
   const VW = 1040, X0 = 100, ST = 84, W = 74, N = HX_FLOW11.length;
   const cx = (i) => X0 + i * ST + W / 2;
   return (
-    <svg className="hx-wide" viewBox={`0 14 ${VW} 250`} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW11_ARIA}>
+    <svg className="hx-wide" viewBox={`0 14 ${VW} 250`} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW11_ARIA} onMouseLeave={() => onHover && onHover(null)}>
       <HxArrows id="hxf11" />
       <rect x="16" y="100" width={VW - 40} height="46" rx="6" fill="#ffffff" stroke={HX_RULE} strokeWidth="1" strokeDasharray="5 4" />
       <text x="24" y="120" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_INK}>에이전트</text>
@@ -1134,8 +1266,11 @@ function HxFlow11Wide() {
       <path d={`M${cx(9)},40 C${cx(9)},18 ${cx(6)},18 ${cx(6)},38`} fill="none" stroke={HX_AC} strokeWidth="1" markerEnd="url(#hxf11a)" />
       {HX_FLOW11.map((s, i) => {
         const x = X0 + i * ST, mute = s.dim ? HX_MUTE : HX_INK;
+        const on = act === i, off = act !== null && !on;
         return (
-          <g key={i} opacity={s.dim ? 0.55 : 1}>
+          <g key={i} className="p7-step" opacity={off ? 0.34 : s.dim ? 0.55 : 1} onMouseEnter={() => onHover && onHover(i)} onClick={() => onPick && onPick(i)}>
+            {on && <rect x={x - 5} y="36" width={W + 10} height="182" rx="6" fill="none" stroke={HX_AC} strokeWidth="1.5" />}
+            <rect x={x - 5} y="36" width={ST} height="182" fill="transparent" />
             <rect x={x} y="42" width={W} height="46" rx="3" fill={s.hot ? HX_ACS : '#f7f6f3'} stroke={s.hot ? HX_AC : HX_LINE} strokeWidth="1" strokeDasharray={s.dim ? '4 3' : undefined} />
             <text x={x + 6} y="54" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>{s.n}</text>
             <HxLines x={x + W / 2} y={s.name.length > 1 ? 66 : 72} lines={s.name} size={HX_FS_LABEL} fill={mute} gap={15} />
@@ -1145,12 +1280,12 @@ function HxFlow11Wide() {
           </g>);
       })}
       <text x={(cx(6) + cx(9)) / 2} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>7 · 10은 결함 고리로 여러 번 돎</text>
-      <text x={cx(10)} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>운영 배포 전</text>
-      <text x={VW - 24} y="256" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작</text>
+      <text x={cx(10)} y="230" textAnchor="middle" fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>운영은 사람 손</text>
+      <text x={VW - 24} y="256" textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작 · 운영 확인</text>
     </svg>);
 }
 
-function HxFlow11Narrow() {
+function HxFlow11Narrow({ act = null, onPick }) {
   const Y0 = 52, ST = 50, N = HX_FLOW11.length, YE = Y0 + N * ST;
   return (
     <svg className="hx-narrow" viewBox={`0 0 360 ${YE + 40}`} xmlns="http://www.w3.org/2000/svg" role="img" aria-label={HX_FLOW11_ARIA}>
@@ -1160,23 +1295,56 @@ function HxFlow11Narrow() {
       <rect x="236" y="42" width="120" height={N * ST + 4} rx="6" fill={HX_ACS} fillOpacity="0.4" stroke={HX_AC} strokeWidth="1" />
       {HX_FLOW11.map((s, i) => {
         const y = Y0 + i * ST;
+        const on = act === i, off = act !== null && !on;
         return (
-          <g key={i} opacity={s.dim ? 0.55 : 1}>
+          <g key={i} className="p7-step" opacity={off ? 0.34 : s.dim ? 0.55 : 1} onClick={() => onPick && onPick(i)}>
+            {on && <rect x="1" y={y - 4} width="358" height={ST} rx="6" fill="none" stroke={HX_AC} strokeWidth="1.5" />}
+            <rect x="0" y={y - 4} width="360" height={ST} fill="transparent" />
             <rect x="4" y={y} width="98" height="42" rx="3" fill={s.hot ? HX_ACS : '#f7f6f3'} stroke={s.hot ? HX_AC : HX_LINE} strokeWidth="1" strokeDasharray={s.dim ? '4 3' : undefined} />
             <text x="10" y={y + 14} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_AC}>{s.n}</text>
             <HxLines x={60} y={s.name.length > 1 ? y + 18 : y + 26} lines={s.name} size={12} fill={s.dim ? HX_MUTE : HX_INK} gap={15} />
-            <HxLines x={170} y={s.ag.length > 1 ? y + 17 : y + 25} lines={s.ag} size={HX_FS_MICRO} fill={HX_MUTE} />
-            <HxLines x={296} y={s.hu.length > 1 ? y + 17 : y + 25} lines={s.hu} size={HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
+            <HxLines x={170} y={s.ag.length > 1 ? y + 17 : y + 25} lines={s.ag} size={on ? 12 : HX_FS_MICRO} fill={on ? HX_INK : HX_MUTE} />
+            <HxLines x={296} y={s.hu.length > 1 ? y + 17 : y + 25} lines={s.hu} size={on ? 12 : HX_FS_MICRO} fill={s.dim ? HX_MUTE : HX_INK} />
             {i < N - 1 && <line x1="53" y1={y + 43} x2="53" y2={y + ST - 2} stroke={HX_LINE} strokeWidth="1.2" markerEnd="url(#hxf11ng)" />}
           </g>);
       })}
-      <text x="4" y={YE + 16} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>7 · 10은 결함 고리로 여러 번 돎 · 11은 운영 배포 전</text>
-      <text x="356" y={YE + 34} textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작</text>
+      <text x="4" y={YE + 16} fontFamily={HXM} fontSize={HX_FS_MICRO} fill={HX_MUTE}>7 · 10은 결함 고리로 여러 번 돎 · 11은 사람 손</text>
+      <text x="356" y={YE + 34} textAnchor="end" fontFamily={HXM} fontSize={HX_FS_LABEL} fill={HX_AC}>사람은 결정 · 승인 · 화면 조작 · 운영 확인</text>
     </svg>);
 }
 
+/* 그림 아래 조작 줄: 단계 번호 버튼 + 고른 단계의 값(HX_FLOW11 그대로)을 크게 읽어 줌.
+   가리키면 잠깐, 누르면 고정. 그림 속 글자와 ARIA 문구는 그대로 */
 function HxFlow11Diagram() {
-  return <React.Fragment><HxFlow11Wide /><HxFlow11Narrow /></React.Fragment>;
+  const [sel, setSel] = useState(null);
+  const [hov, setHov] = useState(null);
+  const act = hov !== null ? hov : sel;
+  const pickStep = (i) => setSel((v) => (v === i ? null : i));
+  const s = act !== null ? HX_FLOW11[act] : null;
+  const lines = (a) => a.map((l, j) => <span key={j}>{l}</span>);
+  return (
+    <React.Fragment>
+      <HxFlow11Wide act={act} onHover={setHov} onPick={pickStep} />
+      <HxFlow11Narrow act={act} onPick={pickStep} />
+      <div className="p7-flow">
+        <div className="p7-flow-ticks" role="group" aria-label="강조할 단계 고르기" onMouseLeave={() => setHov(null)}>
+          <span className="lb" aria-hidden="true">단계</span>
+          {HX_FLOW11.map((x, i) =>
+          <button key={i} type="button" className={act === i ? 'on' : ''} aria-pressed={sel === i} aria-label={`${x.n} ${x.name.join(' ')}`}
+            onMouseEnter={() => setHov(i)} onClick={() => pickStep(i)}>{x.n}</button>
+          )}
+        </div>
+        <div className={'p7-flow-read' + (s ? ' on' : '')} aria-live="polite">
+          {s &&
+          <React.Fragment>
+            <div className="st"><span className="k">{s.n}</span><span className="v">{lines(s.name)}</span></div>
+            <div className="ag"><span className="k">에이전트</span><span className="v">{lines(s.ag)}</span></div>
+            <div className="hu"><span className="k">사람</span><span className="v">{lines(s.hu)}</span></div>
+          </React.Fragment>
+          }
+        </div>
+      </div>
+    </React.Fragment>);
 }
 
 function HxCommerceDiagram() {
@@ -1185,82 +1353,341 @@ function HxCommerceDiagram() {
 
 const HARNESS_FIGS = { trust: HxTrustDiagram, gate: HxGateDiagram, bottleneck: HxBottleneckDiagram, agentfan: HxAgentFanDiagram, agentteam: HxAgentTeamDiagram, commerce: HxCommerceDiagram, flow11: HxFlow11Diagram };
 
-/* 06 AI HARNESS · 07 AI PROJECTS 공용 딥다이브 본문: projects[] + note */
-function HarnessDeepDive({ data: H }) {
+/* ============ 07 AI PROJECTS 본문 (2026-11-23 pf-07) ============
+   읽는 길: 프로젝트 탭(한 번에 하나만 렌더) → 머리(Stage · Role 띠, 블록 목차, lead | 나머지 meta) → 블록(beat 접기 · 펼치기).
+   내려가면 위에 붙는 바가 프로젝트 3 + 현재 프로젝트의 블록을 보여 주고, 스크롤 위치로 현재 블록을 표시.
+   문장 · 값은 데이터 그대로이고 여기서 만드는 글자는 조작 라벨뿐.
+   .reveal은 쓰지 않음: App의 useReveal은 페이지가 바뀔 때만 훑어서, 탭 전환으로 새로 그린 내용이 안 보이게 됨 */
+
+// 블록 라벨 'NN. 주제: 부제'를 표시용으로 나눔 (글자는 그대로)
+function p7Label(label) {
+  const m = /^(\d+)\.\s*([^:]+):\s*(.+)$/.exec(label);
+  return m ? { n: m[1], topic: m[2].trim(), sub: m[3] } : { n: '', topic: label, sub: '' };
+}
+// 접힌 beat에 보일 것: 본문의 굵은 글씨(**…**)만 뽑음. 하나도 없으면 본문 첫 문장을 원문 그대로
+function p7Keys(body) {
+  const out = [];
+  body.forEach((t) => {
+    const re = /\*\*([^*]+)\*\*/g;
+    let m;
+    while ((m = re.exec(t)) !== null) {
+      const k = m[1].replace(/\.$/, '');
+      if (!out.includes(k)) out.push(k);
+    }
+  });
+  return out;
+}
+function p7First(body) {
+  const t = body[0] || '';
+  const i = t.search(/\.(\s|$)/);
+  return i < 0 ? t : t.slice(0, i + 1);
+}
+function p7Meta(p, k) {
+  const m = p.meta.find((x) => x.k === k);
+  return m ? m.v : '';
+}
+function p7Scroller(el) {
+  return el ? el.closest('.page-scroll') : null;
+}
+function p7Reduced() {
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function P7Beat({ x, id, open, onToggle }) {
+  const keys = open ? [] : p7Keys(x.body);
   return (
-    <React.Fragment>
-      {H.intro && <p className="case-lead hx-page-lead reveal">{renderRichText(H.intro)}</p>}
-      {H.projects.map((p, pi) =>
-      <div key={pi} className={pi > 0 ? 'harness-project sep' : 'harness-project'}>
-        <div className="case-intro reveal">
-          <div className="case-cat">{p.cat}</div>
-          <h3>{p.headline.split('\n').map((l, i) =>
-            <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
-          <p className="case-lead">{renderRichText(p.lead)}</p>
-          <div className="case-meta">
-            {p.meta.map((m, i) =>
-            <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
+    <div className={'p7-beat' + (open ? ' open' : '')}>
+      <div className="p7-bn">{x.n}</div>
+      <h5 className="p7-btl">
+        <button type="button" aria-expanded={open} aria-controls={id} onClick={onToggle}>
+          <span className="t">{x.t}</span>
+          <span className="ic" aria-hidden="true">{open ? '−' : '+'}</span>
+        </button>
+      </h5>
+      <div className="p7-bx">
+        {!open && keys.length > 0 &&
+        <div className="p7-keys" aria-hidden="true">{keys.map((k, j) => <span key={j}>{k}</span>)}</div>
+        }
+        {!open && keys.length === 0 &&
+        <p className="p7-first" aria-hidden="true">{p7First(x.body)}</p>
+        }
+        <div className="p7-bbody" id={id} hidden={!open}>
+          {x.body.map((t, j) => <p key={j}>{renderRichText(t)}</p>)}
+        </div>
+      </div>
+    </div>);
+}
+
+let P7_LAST = 0;
+function P7Projects({ data: H }) {
+  const N = H.projects.length;
+  // 다른 화면에서 특정 프로젝트로 보내고 싶으면 해시를 바꾸기 전에 window.P7_START = 0 | 1 | 2 를 두면 됨 (한 번 쓰고 지움)
+  const [pi, setPi] = useState(() => {
+    const s = window.P7_START;
+    window.P7_START = undefined;
+    return Number.isInteger(s) && s >= 0 && s < H.projects.length ? s : Math.min(P7_LAST, H.projects.length - 1);
+  });
+  useEffect(() => {P7_LAST = pi;}, [pi]); // 다른 섹션에 다녀와도 보던 프로젝트로 돌아옴
+  // beat 기본 상태: 넓은 화면은 전부 펼침(3단이라 제목 열만 훑을 수 있음), 좁은 화면은 제목만(한 프로젝트가 화면 10장 길이)
+  const [mode, setMode] = useState(() => (window.matchMedia && window.matchMedia('(max-width: 700px)').matches ? 'titles' : 'all'));
+  const [flip, setFlip] = useState({}); // 기본 상태와 반대로 뒤집은 beat
+  const [stuck, setStuck] = useState(false);
+  const [cur, setCur] = useState(-1); // 지금 보고 있는 블록 (-1: 프로젝트 머리)
+  const rootRef = useRef(null), switchRef = useRef(null), barRef = useRef(null), headRef = useRef(null);
+  const toTop = useRef(false), anchor = useRef(null);
+  const p = H.projects[pi];
+
+  // 스크롤 위치 → 붙는 바를 보일지, 현재 블록이 무엇인지
+  useEffect(() => {
+    const root = rootRef.current, sc = p7Scroller(root);
+    if (!sc) return;
+    let raf = null;
+    const measure = () => {
+      raf = null;
+      const top = sc.getBoundingClientRect().top;
+      const sw = switchRef.current;
+      setStuck(!!sw && sw.getBoundingClientRect().bottom - top < 0);
+      const line = top + (barRef.current ? barRef.current.offsetHeight : 0) + 40;
+      const blocks = root.querySelectorAll('[data-p7-block]');
+      let c = -1;
+      blocks.forEach((el, i) => {if (el.getBoundingClientRect().top <= line) c = i;});
+      if (blocks.length && sc.scrollTop > 0 && sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 4) c = blocks.length - 1;
+      setCur(c);
+    };
+    const on = () => {if (raf === null) raf = requestAnimationFrame(measure);};
+    measure();
+    sc.addEventListener('scroll', on, { passive: true });
+    window.addEventListener('resize', on);
+    return () => {
+      sc.removeEventListener('scroll', on);
+      window.removeEventListener('resize', on);
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, [pi, mode, flip]);
+
+  // 프로젝트를 바꾼 뒤: 탭이 화면 위로 지나가 있었으면 탭 자리로 올리고 제목에 포커스
+  useLayoutEffect(() => {
+    if (!toTop.current) return;
+    toTop.current = false;
+    const sc = p7Scroller(rootRef.current), sw = switchRef.current;
+    if (!sc || !sw) return;
+    const top = sw.getBoundingClientRect().top - sc.getBoundingClientRect().top;
+    if (top < 0) {
+      sc.scrollTop = Math.max(0, sc.scrollTop + top - 12);
+      if (headRef.current) headRef.current.focus({ preventScroll: true });
+    }
+  }, [pi]);
+
+  // 보기 방식을 바꾼 뒤: 누른 자리가 화면에서 움직이지 않게 스크롤 보정
+  useLayoutEffect(() => {
+    const a = anchor.current;
+    anchor.current = null;
+    const sc = p7Scroller(rootRef.current);
+    if (a && sc && a.el.isConnected) sc.scrollTop += a.el.getBoundingClientRect().top - a.top;
+  }, [mode, flip]);
+
+  const pick = (i) => {
+    if (i === pi || i < 0 || i >= N) return;
+    toTop.current = true;
+    setPi(i);
+  };
+  // 탭 줄의 좌우 화살표 · Home · End. App의 페이지 넘김(window keydown)으로 번지지 않게 여기서 멈춤
+  const onTabKey = (e) => {
+    const k = e.key;
+    if (k !== 'ArrowLeft' && k !== 'ArrowRight' && k !== 'Home' && k !== 'End') return;
+    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const next = k === 'Home' ? 0 : k === 'End' ? N - 1 : (pi + (k === 'ArrowRight' ? 1 : N - 1)) % N;
+    if (next === pi) return;
+    setPi(next);
+    const tabs = switchRef.current ? switchRef.current.querySelectorAll('[role="tab"]') : [];
+    if (tabs[next]) tabs[next].focus();
+  };
+  const goBlock = (bi) => {
+    const root = rootRef.current, sc = p7Scroller(root);
+    const el = root && root.querySelector('[data-p7-block="' + bi + '"]');
+    if (!sc || !el) return;
+    const bar = barRef.current ? barRef.current.offsetHeight : 0;
+    const y = sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - bar - 16;
+    sc.scrollTo({ top: Math.max(0, y), behavior: p7Reduced() ? 'auto' : 'smooth' });
+  };
+  const isOpen = (key) => (mode === 'all') !== !!flip[key];
+  const toggle = (key) => setFlip((f) => ({ ...f, [key]: !f[key] }));
+  const setView = (m, e) => {
+    if (m === mode && Object.keys(flip).length === 0) return;
+    const el = e.currentTarget.closest('.p7-bh');
+    anchor.current = el ? { el, top: el.getBoundingClientRect().top } : null;
+    setMode(m);
+    setFlip({});
+  };
+
+  const stage = p7Meta(p, 'Stage'), role = p7Meta(p, 'Role');
+  const rest = p.meta.filter((m) => m.k !== 'Stage' && m.k !== 'Role');
+  const name = (q) => q.headline.replace(/\n/g, ' ');
+
+  return (
+    <div className="p7" ref={rootRef}>
+      {H.intro && <p className="case-lead p7-intro">{renderRichText(H.intro)}</p>}
+
+      <div className="p7-switch" ref={switchRef} role="tablist" aria-label="프로젝트" onKeyDown={onTabKey}>
+        {H.projects.map((q, i) =>
+        <button key={i} type="button" role="tab" id={'p7-tab-' + i} className={'p7-tab' + (i === pi ? ' on' : '')}
+          aria-selected={i === pi} aria-controls="p7-panel" tabIndex={i === pi ? 0 : -1} onClick={() => pick(i)}>
+          <span className="p7-tab-k"><b>{pad2(i + 1)}</b>{q.cat.split(' · ')[0]}</span>
+          <span className="p7-tab-n">{name(q)}</span>
+          <span className="p7-tab-s">{p7Meta(q, 'Stage')}</span>
+        </button>
+        )}
+      </div>
+
+      <div className="p7-stick">
+        <div className={'p7-bar' + (stuck ? ' on' : '')} ref={barRef}>
+          <div className="p7-bar-proj" role="group" aria-label="프로젝트 바꾸기">
+            {H.projects.map((q, i) =>
+            <button key={i} type="button" className={i === pi ? 'on' : ''} aria-current={i === pi ? 'true' : undefined} aria-label={name(q)} onClick={() => pick(i)}>
+              <b>{pad2(i + 1)}</b>{q.short || name(q)}
+            </button>
             )}
+          </div>
+          <div className="p7-bar-blocks" role="group" aria-label="블록 이동">
+            {p.blocks.map((b, bi) => {
+              const L = p7Label(b.label);
+              return (
+                <button key={bi} type="button" className={bi === cur ? 'on' : ''} aria-current={bi === cur ? 'location' : undefined} onClick={() => goBlock(bi)}>
+                  <b>{L.n}</b>{L.topic}
+                </button>);
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="p7-panel" id="p7-panel" role="tabpanel" aria-labelledby={'p7-tab-' + pi} key={pi}>
+        <div className="p7-head">
+          <div className="case-cat">{p.cat}</div>
+          <h3 className="p7-h" tabIndex={-1} ref={headRef}>{p.headline.split('\n').map((l, i) =>
+            <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
+
+          <div className="p7-status">
+            {stage &&
+            <div className="p7-st stage">
+              <span className="k">Stage</span>
+              <ol className="p7-steps">{stage.split(' → ').map((s, i) => <li key={i}>{s}</li>)}</ol>
+            </div>
+            }
+            {role &&
+            <div className="p7-st role">
+              <span className="k">Role</span>
+              <span className="v">{role}</span>
+            </div>
+            }
+          </div>
+
+          <nav className="p7-toc" aria-label="블록 목차" style={{ '--p7-n': p.blocks.length }}>
+            {p.blocks.map((b, bi) => {
+              const L = p7Label(b.label);
+              return (
+                <button key={bi} type="button" className="p7-toc-i" onClick={() => goBlock(bi)}>
+                  <span className="n">{L.n}</span>
+                  <span className="t">{L.topic}<i aria-hidden="true">↓</i></span>
+                  {L.sub && <span className="s">{L.sub}</span>}
+                </button>);
+            })}
+          </nav>
+
+          <div className="p7-body">
+            <p className="case-lead p7-lead">{renderRichText(p.lead)}</p>
+            <dl className="p7-facts">
+              {rest.map((m, i) =>
+              <div key={i} className={'f-' + m.k.toLowerCase()}><dt>{m.k}</dt><dd>{m.v}</dd></div>
+              )}
+            </dl>
           </div>
         </div>
 
-        {p.blocks.map((b, bi) =>
-        <React.Fragment key={bi}>
-          <div className="case-section-label"><span>{b.label}</span></div>
-          {b.diagram && HARNESS_FIGS[b.diagram] &&
-          <React.Fragment>
-            <div className="hx-fig reveal">{React.createElement(HARNESS_FIGS[b.diagram])}</div>
-            {b.fig && <div className="case-fig">{renderRichText(b.fig)}</div>}
-          </React.Fragment>
-          }
-          {b.type === 'beats' &&
-          <div className="case-trace">
-            {b.items.map((x, i) =>
-            <div className="case-beat reveal" key={i}>
-              <div className="bn">{x.n}</div>
-              <div className="bbody">
-                <h4>{x.t}</h4>
-                {x.body.map((t, j) => <p key={j}>{renderRichText(t)}</p>)}
+        {p.blocks.map((b, bi) => {
+          const L = p7Label(b.label);
+          return (
+            <div key={bi} className="p7-block" data-p7-block={bi}>
+              <div className="p7-bh">
+                <h4 className="p7-bt">
+                  <span className="n">{L.n}</span>
+                  <span className="t">{L.topic}</span>
+                  {L.sub && <span className="s">{L.sub}</span>}
+                </h4>
+                {b.type === 'beats' &&
+                <div className="p7-view" role="group" aria-label="본문 보기 방식">
+                  <button type="button" aria-pressed={mode === 'all'} onClick={(e) => setView('all', e)}>전체</button>
+                  <button type="button" aria-pressed={mode === 'titles'} onClick={(e) => setView('titles', e)}>제목만</button>
+                </div>
+                }
               </div>
-            </div>
-            )}
-          </div>
-          }
-          {b.type === 'axes' &&
-          <div className={`harness-axes n${b.items.length}`}>
-            {b.items.map((a, i) =>
-            <div className="harness-axis reveal" key={i}>
-              <div className="hx-head">
-                <span className="hx-name">{a.name}</span>
-                <span className="hx-no">{a.no}</span>
-              </div>
-              <h4>{a.title}</h4>
-              <div className="hx-label">구성</div>
-              <ul>{a.build.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-              {a.result &&
-              <React.Fragment>
-                <div className="hx-label">여기서 나온 것</div>
-                <ul>{a.result.map((x, j) => <li key={j}>{renderRichText(x)}</li>)}</ul>
-              </React.Fragment>
-              }
-              {a.edge &&
-              <React.Fragment>
-                <div className="hx-label">경계</div>
-                <p className="hx-edge">{renderRichText(a.edge)}</p>
-              </React.Fragment>
-              }
-              <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
-            </div>
-            )}
-          </div>
-          }
-        </React.Fragment>
-        )}
-      </div>
-      )}
 
-      {H.note && <p className="case-note-inline">{renderRichText(H.note)}</p>}
-    </React.Fragment>);
+              {b.diagram && HARNESS_FIGS[b.diagram] &&
+              <React.Fragment>
+                <div className="hx-fig">{React.createElement(HARNESS_FIGS[b.diagram])}</div>
+                {b.fig && <div className="case-fig">{renderRichText(b.fig)}</div>}
+              </React.Fragment>
+              }
+
+              {b.type === 'beats' &&
+              <div className="p7-beats">
+                {b.items.map((x, i) => {
+                  const key = pi + '-' + bi + '-' + i;
+                  return <P7Beat key={i} x={x} id={'p7-b-' + key} open={isOpen(key)} onToggle={() => toggle(key)} />;
+                })}
+              </div>
+              }
+
+              {b.type === 'axes' &&
+              <div className={`harness-axes n${b.items.length}`}>
+                {b.items.map((a, i) =>
+                <div className="harness-axis" key={i}>
+                  <div className="hx-head">
+                    <span className="hx-name">{a.name}</span>
+                    <span className="hx-no">{a.no}</span>
+                  </div>
+                  <h4>{a.title}</h4>
+                  <div className="hx-label">구성</div>
+                  <ul>{a.build.map((t, j) => <li key={j}>{renderRichText(t)}</li>)}</ul>
+                  {a.result &&
+                  <React.Fragment>
+                    <div className="hx-label">여기서 나온 것</div>
+                    <ul>{a.result.map((t, j) => <li key={j}>{renderRichText(t)}</li>)}</ul>
+                  </React.Fragment>
+                  }
+                  {a.edge &&
+                  <React.Fragment>
+                    <div className="hx-label">경계</div>
+                    <p className="hx-edge">{renderRichText(a.edge)}</p>
+                  </React.Fragment>
+                  }
+                  <div className="hx-stack">{a.tags.map((t, j) => <span className="tag" key={j}>{t}</span>)}</div>
+                </div>
+                )}
+              </div>
+              }
+            </div>);
+        })}
+
+        <nav className="p7-next" aria-label="다른 프로젝트">
+          {pi > 0 &&
+          <button type="button" className="prev" onClick={() => pick(pi - 1)}>
+            <span className="k">← 이전 프로젝트</span>
+            <span className="n">{name(H.projects[pi - 1])}</span>
+          </button>
+          }
+          {pi < N - 1 &&
+          <button type="button" className="next" onClick={() => pick(pi + 1)}>
+            <span className="k">다음 프로젝트 →</span>
+            <span className="n">{name(H.projects[pi + 1])}</span>
+          </button>
+          }
+        </nav>
+      </div>
+
+      {H.note && <p className="case-note-inline p7-note">{renderRichText(H.note)}</p>}
+    </div>);
 }
 
 /* 06 AI HARNESS: 월 마커(왼쪽 레일) + 기술 카드. 적용처는 태그로만.
@@ -1274,7 +1701,23 @@ function ExtLink({ href, children }) {
   return <a href={href} target="_blank" rel="noopener noreferrer">{children} <span className="arr" aria-hidden="true">↗</span></a>;
 }
 
-function TLDetail({ id, x, caret, repo }) {
+// 상세 문단에 ①②③…이 있으면 번호마다 줄을 나눠 보여 줌(글자는 그대로)
+const T6_STEP = /(?=[①-⑳])/;
+function T6Text({ text }) {
+  const parts = text.split(T6_STEP);
+  if (parts.length < 2) return <p>{renderRichText(text)}</p>;
+  const lead = /^[①-⑳]/.test(parts[0]) ? null : parts.shift();
+  return (
+    <React.Fragment>
+      {lead && <p>{renderRichText(lead.trim())}</p>}
+      <ol className="t6-steps">
+        {parts.map((s, i) => <li key={i}><span aria-hidden="true">{s[0]}</span><span>{renderRichText(s.slice(1).trim())}</span></li>)}
+      </ol>
+    </React.Fragment>);
+}
+const t6Smooth = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+function TLDetail({ id, x, caret, repo, onJump }) {
   const D = x.detail;
   const code = x.code ? [].concat(x.code) : [];
   // 적용처는 카드 태그 순서대로
@@ -1284,8 +1727,8 @@ function TLDetail({ id, x, caret, repo }) {
     style={caret != null ? { '--caret-x': caret + 'px' } : undefined}>
       <div className="tl-d-title" aria-hidden="true">{x.name}</div>
       <div className="tl-d-cols">
-        {D.why && <div className="tl-d-col"><div className="tl-d-k">도입 이유</div><p>{renderRichText(D.why)}</p></div>}
-        {D.how && <div className="tl-d-col"><div className="tl-d-k">동작 구조</div><p>{renderRichText(D.how)}</p></div>}
+        {D.why && <div className="tl-d-col"><div className="tl-d-k">도입 이유</div><T6Text text={D.why} /></div>}
+        {D.how && <div className="tl-d-col"><div className="tl-d-k">동작 구조</div><T6Text text={D.how} /></div>}
         {cases.length > 0 &&
         <div className="tl-d-col">
           <div className="tl-d-k">적용처별</div>
@@ -1305,6 +1748,11 @@ function TLDetail({ id, x, caret, repo }) {
         </span>
       </p>
       }
+      {onJump &&
+      <div className="t6-d-foot">
+        <button type="button" className="t6-jump" onClick={onJump}>전체 기록에서 보기 <span aria-hidden="true">↓</span></button>
+      </div>
+      }
     </div>);
 }
 
@@ -1312,8 +1760,42 @@ function AITimeline({ data: T }) {
   const [open, setOpen] = useState(() => new Set());
   const [carets, setCarets] = useState({});
   const cardRefs = useRef({});
-  const keys = [];
-  T.months.forEach((M, mi) => M.items.forEach((x, i) => {if (x.detail) keys.push(mi + '-' + i);}));
+  // 필터: 분류 · 적용처 · 코드 링크. 묶음마다 하나만 고르고 묶음끼리는 AND
+  const [fLayer, setFLayer] = useState(null);
+  const [fWhere, setFWhere] = useState(null);
+  const [fCode, setFCode] = useState(false);
+  const [view, setView] = useState('card'); // 'card' | 'list'
+  const [featOpen, setFeatOpen] = useState(null); // '먼저 볼 3장' 띠에서 펼친 카드의 키
+  const [curMonth, setCurMonth] = useState(null); // 달 바로가기 띠에 표시할 현재 달
+  const featRefs = useRef({});
+  const monthRefs = useRef({});
+  const barRef = useRef(null);
+  const pendingJump = useRef(null);
+  const filtered = !!(fLayer || fWhere || fCode);
+  const match = (x) => (!fLayer || x.layer === fLayer) && (!fWhere || x.where.includes(fWhere)) && (!fCode || !!x.code);
+  const resetFilter = () => {setFLayer(null);setFWhere(null);setFCode(false);};
+  const monthCount = T.months.map((M) => M.items.filter(match).length);
+  const shownCount = monthCount.reduce((a, b) => a + b, 0);
+  const sameYear = T.months.every((M) => M.m.slice(0, 4) === T.months[0].m.slice(0, 4));
+  // 먼저 볼 카드: 데이터의 featured(이름) → 타임라인 안 위치
+  const featured = (T.featured || []).map((name) => {
+    for (let mi = 0; mi < T.months.length; mi++) {
+      const i = T.months[mi].items.findIndex((x) => x.name === name);
+      if (i >= 0) return { k: mi + '-' + i, m: T.months[mi].m, x: T.months[mi].items[i] };
+    }
+    return null;
+  }).filter(Boolean);
+  const featNo = {};
+  featured.forEach((f, n) => {featNo[f.k] = n + 1;});
+  useEffect(() => {
+    (T.featured || []).forEach((name) => {
+      if (!T.months.some((M) => M.items.some((x) => x.name === name))) {
+        console.warn('[06 AI Harness] featured에 적힌 이름이 AI_TIMELINE 카드에 없음: ' + name);
+      }
+    });
+  }, [T]);
+  const keys = []; // 지금 보이는 카드 가운데 상세가 있는 것
+  T.months.forEach((M, mi) => M.items.forEach((x, i) => {if (x.detail && match(x)) keys.push(mi + '-' + i);}));
   const allOpen = keys.length > 0 && keys.every((k) => open.has(k));
   const toggle = (k) => setOpen((s) => {
     const n = new Set(s);
@@ -1329,12 +1811,70 @@ function AITimeline({ data: T }) {
         const el = cardRefs.current[k];
         if (el) next[k] = Math.round(el.offsetLeft + el.offsetWidth / 2);
       });
+      const fel = featOpen != null && featRefs.current[featOpen];
+      if (fel) next['f' + featOpen] = Math.round(fel.offsetLeft + fel.offsetWidth / 2);
       setCarets(next);
     };
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [open]);
+  }, [open, featOpen, view, fLayer, fWhere, fCode]);
+
+  // 띠의 '전체 기록에서 보기': 필터를 풀고 그 카드를 펼친 뒤, 렌더가 끝나면 그 자리로 이동
+  const jumpTo = (k) => {
+    resetFilter();
+    setOpen((s) => new Set(s).add(k));
+    pendingJump.current = k;
+  };
+  useEffect(() => {
+    const k = pendingJump.current;
+    if (k == null) return;
+    pendingJump.current = null;
+    const el = cardRefs.current[k];
+    if (!el) return;
+    el.scrollIntoView({ block: 'start', behavior: t6Smooth() });
+    const btn = el.querySelector('.tl-toggle');
+    if (btn) btn.focus({ preventScroll: true });
+  });
+  const goMonth = (mi) => {
+    const el = monthRefs.current[mi];
+    if (el) el.scrollIntoView({ block: 'start', behavior: t6Smooth() });
+  };
+  const goTop = () => {
+    const sc = barRef.current && barRef.current.closest('.page-scroll');
+    if (!sc) return;
+    sc.scrollTo({ top: 0, behavior: t6Smooth() });
+    sc.focus({ preventScroll: true }); // '위로' 버튼은 맨 위에서 숨겨지므로 포커스를 섹션 영역으로 넘김
+  };
+
+  // 현재 달: 달 바로가기 띠 바로 아래에 걸친 달. 타임라인에 닿기 전에는 없음
+  useEffect(() => {
+    const bar = barRef.current;
+    const sc = bar && bar.closest('.page-scroll');
+    if (!sc) return;
+    let raf = null;
+    const update = () => {
+      raf = null;
+      const line = bar.getBoundingClientRect().bottom + 32;
+      // 띠가 위에 붙기 전(타임라인을 읽기 전)에는 현재 달 · '위로'를 표시하지 않음
+      const stuck = bar.getBoundingClientRect().top - sc.getBoundingClientRect().top <= 1;
+      let cur = null;
+      if (stuck) T.months.forEach((M, mi) => {
+        const el = monthRefs.current[mi];
+        if (el && !el.hidden && el.getBoundingClientRect().top <= line) cur = mi;
+      });
+      setCurMonth((p) => p === cur ? p : cur);
+    };
+    const schedule = () => {if (raf === null) raf = requestAnimationFrame(update);};
+    update();
+    sc.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    return () => {
+      sc.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, [T, fLayer, fWhere, fCode, view]);
 
   return (
     <React.Fragment>
@@ -1343,53 +1883,147 @@ function AITimeline({ data: T }) {
         <div className="case-cat">{T.head.cat}</div>
         <h3>{T.head.headline.split('\n').map((l, i) =>
           <React.Fragment key={i}>{i > 0 && <br />}{l}</React.Fragment>)}</h3>
-        <p className="case-lead">{renderRichText(T.head.lead)}</p>
-        {T.head.meta &&
+        <div className="t6-lead-row">
+          <p className="case-lead">{renderRichText(T.head.lead)}</p>
+          {T.principles &&
+          <div className="tl-principles t6-principles">
+            <div className="label">원칙</div>
+            <ol>{T.principles.map((p, i) => <li key={i}><span>{renderRichText(p)}</span></li>)}</ol>
+          </div>
+          }
+        </div>
+        {(T.head.meta || T.head.repo) &&
         <div className="case-meta">
-          {T.head.meta.map((m, i) =>
+          {(T.head.meta || []).map((m, i) =>
           <div key={i}><span className="k">{m.k}</span><span className="v">{m.v}</span></div>
           )}
+          {T.head.repo &&
+          <div className="t6-repo">
+            <span className="k">Public Repo</span>
+            <span className="v">
+              <span className="proj-more"><ExtLink href={repoHref(T.head.repo)}>{T.head.repo.name}</ExtLink></span>
+              <span className="t6-repo-desc">{renderRichText(T.head.repo.desc)}</span>
+            </span>
+          </div>
+          }
         </div>
         }
-        {T.head.repo &&
-        <div className="tl-repo">
-          <span className="proj-more"><ExtLink href={repoHref(T.head.repo)}>{T.head.repo.name}</ExtLink></span>
-          <span>{renderRichText(T.head.repo.desc)}</span>
+      </div>
+      }
+      {/* 먼저 볼 N장: 데이터의 featured. 카드에는 달 · 분류 · 이름 · what · 적용처만, 누르면 띠 안에서 상세가 펴짐 */}
+      {featured.length > 0 &&
+      <div className="t6-feat">
+        <h4 className="t6-feat-title">먼저 볼 {featured.length}장</h4>
+        <div className="t6-feat-cards">
+          {featured.map((f, n) => {
+            const id = 'tl-f-' + f.k;
+            const isOpen = featOpen === f.k;
+            return (
+              <React.Fragment key={f.k}>
+                <article ref={(el) => {featRefs.current[f.k] = el;}} data-open={isOpen ? '' : undefined} className="t6-fcard">
+                  <div className="t6-fcard-top">
+                    <span className="t6-fno">{pad2(n + 1)}</span><span>{f.m}</span><span className="tl-layer">{f.x.layer}</span>
+                  </div>
+                  <h5><button type="button" className="tl-toggle" aria-expanded={isOpen} aria-controls={id}
+                    onClick={() => setFeatOpen(isOpen ? null : f.k)}>{f.x.name}</button></h5>
+                  <p className="t6-fwhat">{renderRichText(f.x.what)}</p>
+                  <div className="tl-where">
+                    {f.x.where.map((w) => <span key={w} className={'tl-tag ' + (TL_WHERE[w] || '')}>{w}</span>)}
+                    <span className="tl-more" aria-hidden="true">{isOpen ? '접기 −' : '상세 +'}</span>
+                  </div>
+                </article>
+                {isOpen && <TLDetail id={id} x={f.x} caret={carets['f' + f.k]} repo={T.head && T.head.repo} onJump={() => jumpTo(f.k)} />}
+              </React.Fragment>);
+          })}
+        </div>
+      </div>
+      }
+      {/* 전체 기록: 제목 줄 · 필터(분류 범례가 곧 칩) · 달 바로가기 띠 */}
+      <div className="t6-rec-head">
+        <h4 className="t6-rec-title">전체 기록<span> · 처음 적용한 달 순</span></h4>
+        <p className="t6-rec-hint">{T.hint}</p>
+        <div className="t6-rec-tools">
+          <div className="t6-seg" role="group" aria-label="보기 방식">
+            <button type="button" aria-pressed={view === 'card'} onClick={() => setView('card')}>카드</button>
+            <button type="button" aria-pressed={view === 'list'} onClick={() => setView('list')}>목록</button>
+          </div>
+          {keys.length > 0 &&
+          <button type="button" className="tl-all" aria-pressed={allOpen}
+          onClick={() => setOpen(allOpen ? new Set() : new Set(keys))}>{allOpen ? '상세 모두 접기' : '상세 모두 펼치기'}</button>
+          }
+        </div>
+      </div>
+      <div className="t6-filters">
+        {T.layers &&
+        <div className="t6-fgroup" role="group" aria-label="분류로 거르기">
+          <span className="t6-fk" aria-hidden="true">분류</span>
+          <div className="t6-chips t6-chips-layer">
+            {T.layers.map((L) =>
+            <button key={L.k} type="button" className="t6-chip" aria-pressed={fLayer === L.k}
+            onClick={() => setFLayer(fLayer === L.k ? null : L.k)}>
+              <span className="tl-layer">{L.k}</span><span className="t6-chip-def">{L.def}</span>
+            </button>
+            )}
+          </div>
         </div>
         }
-      </div>
-      }
-      {T.layers &&
-      <div className="tl-layers reveal">
-        {T.layers.map((L) =>
-        <div key={L.k} className="tl-layer-def"><span className="tl-layer">{L.k}</span><span>{L.def}</span></div>
-        )}
-        <div className="tl-where-key">
-          {Object.keys(TL_WHERE).map((w) => <span key={w} className={'tl-tag ' + TL_WHERE[w]}>{w}</span>)}
-          <span>적용처</span>
+        <div className="t6-fgroup" role="group" aria-label="적용처 · 코드 링크로 거르기">
+          <span className="t6-fk" aria-hidden="true">적용처</span>
+          <div className="t6-chips">
+            {Object.keys(TL_WHERE).map((w) =>
+            <button key={w} type="button" className="t6-chip" aria-pressed={fWhere === w}
+            onClick={() => setFWhere(fWhere === w ? null : w)}>
+              <span className={'tl-tag ' + TL_WHERE[w]}>{w}</span>
+            </button>
+            )}
+            {T.head && T.head.repo &&
+            <React.Fragment>
+              <span className="t6-chips-sep" aria-hidden="true" />
+              <button type="button" className="t6-chip t6-chip-plain" aria-pressed={fCode}
+              onClick={() => setFCode(!fCode)}>코드 링크 있는 카드만</button>
+            </React.Fragment>
+            }
+          </div>
         </div>
       </div>
-      }
-      {keys.length > 0 &&
-      <div className="tl-tools">
-        <span>{T.hint}</span>
-        <button type="button" className="tl-all" aria-pressed={allOpen}
-        onClick={() => setOpen(allOpen ? new Set() : new Set(keys))}>{allOpen ? '상세 모두 접기' : '상세 모두 펼치기'}</button>
+      <div className="t6-bar" ref={barRef}>
+        <nav className="t6-months" aria-label="달 바로가기">
+          {sameYear && <span className="t6-bar-k" aria-hidden="true">{T.months[0].m.slice(0, 4)}</span>}
+          {T.months.map((M, mi) =>
+          <button key={M.m} type="button" className="t6-mbtn" disabled={monthCount[mi] === 0}
+          aria-current={curMonth === mi ? 'true' : undefined} aria-label={M.m + '로 이동'}
+          onClick={() => goMonth(mi)}>{sameYear ? M.m.slice(5) : M.m.slice(2)}</button>
+          )}
+        </nav>
+        <div className="t6-status" role="status">
+          {filtered &&
+          <React.Fragment>
+            <span>{[fWhere, fLayer, fCode && '코드 링크 있음'].filter(Boolean).join(' · ')}</span>
+            <b>{shownCount}장</b>
+            <button type="button" className="t6-reset" onClick={resetFilter}>전체 보기</button>
+          </React.Fragment>
+          }
+        </div>
+        <button type="button" className="t6-up" data-idle={curMonth === null ? '' : undefined} onClick={goTop}>위로 <span aria-hidden="true">↑</span></button>
       </div>
+      {shownCount === 0 &&
+      <p className="t6-empty">조건에 맞는 카드 없음</p>
       }
-      <ol className="tl">
+      <ol className="tl" data-view={view}>
         {T.months.map((M, mi) =>
-        <li key={M.m} className="tl-month">
-          <div className="tl-mark"><span className="tl-dot" /><span className="tl-m">{M.m}</span><span className="tl-cnt">{pad2(M.items.length)}</span></div>
+        <li key={M.m} className="tl-month" hidden={monthCount[mi] === 0} ref={(el) => {monthRefs.current[mi] = el;}}>
+          <div className="tl-mark"><span className="tl-dot" /><span className="tl-m">{M.m}</span><span className="tl-cnt">{pad2(monthCount[mi])}</span></div>
           <div className="tl-cards">
             {M.items.map((x, i) => {
               const k = mi + '-' + i;
               const id = 'tl-d-' + k;
-              const isOpen = !!x.detail && open.has(k);
+              const shown = match(x);
+              const isOpen = !!x.detail && shown && open.has(k);
               return (
                 <React.Fragment key={i}>
                   {/* 펼침 상태는 data-open으로. className을 바꾸면 useReveal이 붙인 .in이 지워져 카드가 사라짐 */}
-                  <article ref={(el) => {cardRefs.current[k] = el;}} data-open={isOpen ? '' : undefined}
+                  {/* 필터에 걸러진 카드도 같은 이유로 언마운트하지 않고 hidden으로 숨김 */}
+                  <article ref={(el) => {cardRefs.current[k] = el;}} data-open={isOpen ? '' : undefined} hidden={!shown}
                   className={'tl-card reveal' + (x.detail ? ' has-detail' : '')}>
                     <div className="tl-head">
                       <h4>{x.detail ?
@@ -1401,6 +2035,8 @@ function AITimeline({ data: T }) {
                     {x.how && <p className="tl-how"><span className="k">적용</span>{renderRichText(x.how)}</p>}
                     <div className="tl-where">
                       {x.where.map((w) => <span key={w} className={'tl-tag ' + (TL_WHERE[w] || '')}>{w}</span>)}
+                      {featNo[k] && <span className="t6-mark t6-mark-feat">먼저 볼 {featured.length}장</span>}
+                      {x.code && T.head && T.head.repo && <span className="t6-mark" aria-hidden="true">코드 ↗</span>}
                       {x.detail && <span className="tl-more" aria-hidden="true">{isOpen ? '접기 −' : '상세 +'}</span>}
                     </div>
                   </article>
@@ -1411,12 +2047,6 @@ function AITimeline({ data: T }) {
         </li>
         )}
       </ol>
-      {T.principles &&
-      <div className="tl-principles reveal">
-        <div className="label">원칙</div>
-        <ol>{T.principles.map((p, i) => <li key={i}>{renderRichText(p)}</li>)}</ol>
-      </div>
-      }
       {T.note && <p className="case-note-inline">{renderRichText(T.note)}</p>}
     </React.Fragment>);
 }
@@ -1436,7 +2066,7 @@ function AIProjects() {
     <section id="ai-projects" className="case harness" data-screen-label={screenLabel('ai-projects')}>
       <div className="container">
         <SectionHeader slug="ai-projects" title="AI PROJECTS" meta={secNo('ai-projects')} />
-        <HarnessDeepDive data={window.PORTFOLIO_DATA.AI_PROJECTS} />
+        <P7Projects data={window.PORTFOLIO_DATA.AI_PROJECTS} />
       </div>
     </section>);
 }
@@ -1455,7 +2085,7 @@ function SkillRows({ items }) {
   return (
     <ul className="sk-list">
       {items.map((s) =>
-      <li key={s.n} className="sk-row">
+      <li key={s.n} className="sk-row" data-lv={s.lv}>
           <span className="sk-name">{s.n}</span>
           <SkillDots lv={s.lv} />
           <span className="sk-why"><b>{LV.find((x) => x.lv === s.lv).name}</b> · {s.why}</span>
@@ -1466,21 +2096,41 @@ function SkillRows({ items }) {
 
 function Skills() {
   const { SKILLS, AI_SKILL, SKILL_LEVELS, SKILLS_DRAFT } = window.PORTFOLIO_DATA;
+  // 범례를 누르면 그 숙련도 행만 진하게 남김(다시 누르면 해제)
+  const [lv, setLv] = useState(null);
+  const aiFirst = FX_LAYOUT.skillsAiFirst;
+  const aiGroup =
+  <div className="skill-group ai reveal">
+    <div className="gh">
+      <div>
+        <h4>{AI_SKILL.cat}</h4>
+        <div className="star-row">AUGMENTED WORKFLOW · 사후 검증 중심</div>
+      </div>
+      <span className="cnt">{pad2(AI_SKILL.items.length)}</span>
+    </div>
+    <div className="ai-h">
+      Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 작업 규칙과 검증을 코드로 만들어 두고, 결과물이 매번 달라지지 않게 합니다.
+    </div>
+    <SkillRows items={AI_SKILL.items} />
+  </div>;
   return (
-    <section id="skills" className="skills" data-screen-label={screenLabel('skills')}>
+    <section id="skills" className="skills" data-fx-lv={lv || undefined} data-screen-label={screenLabel('skills')}>
       <div className="container">
         <SectionHeader slug="skills" title="SKILLS" meta={`${pad2(SKILLS.length)} categories`} />
-        <div className="sk-legend reveal">
+        <div className="sk-legend reveal" role="group" aria-label="숙련도 필터">
           {SKILL_LEVELS.map((L) =>
-          <div key={L.lv} className="sk-legend-item">
+          <button type="button" key={L.lv} className="sk-legend-item fx-lv" aria-pressed={lv === L.lv}
+            onClick={() => setLv(lv === L.lv ? null : L.lv)}>
               <SkillDots lv={L.lv} />
               <b>{L.name}</b>
               <span>{L.def}</span>
-            </div>
+            </button>
           )}
+          <span className="fx-lv-hint">{lv ? '다시 누르면 전체 보기' : '숙련도를 누르면 해당 행만 강조'}</span>
           {SKILLS_DRAFT && <span className="sk-draft">DRAFT · 배정 확인 중</span>}
         </div>
-        <div className="skills-grid">
+        <div className={'skills-grid' + (aiFirst ? ' fx-ai-first' : '')}>
+          {aiFirst && aiGroup}
           {SKILLS.map((g) =>
           <div key={g.cat} className="skill-group reveal">
               <div className="gh">
@@ -1490,19 +2140,7 @@ function Skills() {
               <SkillRows items={g.items} />
             </div>
           )}
-          <div className="skill-group ai reveal">
-            <div className="gh">
-              <div>
-                <h4>{AI_SKILL.cat}</h4>
-                <div className="star-row">AUGMENTED WORKFLOW · 사후 검증 중심</div>
-              </div>
-              <span className="cnt">{pad2(AI_SKILL.items.length)}</span>
-            </div>
-            <div className="ai-h">
-              Claude Code 기반 <em>에이전틱 워크플로우</em>를 직접 설계해 작업 규칙과 검증을 코드로 만들어 두고, 결과물이 매번 달라지지 않게 합니다.
-            </div>
-            <SkillRows items={AI_SKILL.items} />
-          </div>
+          {!aiFirst && aiGroup}
         </div>
       </div>
     </section>);
